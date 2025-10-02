@@ -8,7 +8,7 @@ export const createUser = async (req, res) => {
 
   try {
     const query = `
-      INSERT INTO Users (UserUkeyId, Name, Email, Mobile1, Mobile2, Password)
+      INSERT INTO AdminLogin (UserUkeyId, Name, Email, Mobile1, Mobile2, Password)
       VALUES (:UserUkeyId, :Name, :Email, :Mobile1, :Mobile2, :Password);
     `;
 
@@ -25,13 +25,13 @@ export const createUser = async (req, res) => {
   }
 };
 
-// Get Users (with optional filters)
+// Get AdminLogin (with optional filters)
 export const getUsers = async (req, res) => {
   const { UserId, UserUkeyId, Name, Email, Mobile1, Mobile2 } = req.query;
   const sequelize = await getMasterConnection();
 
   try {
-    let query = "SELECT * FROM Users WHERE 1=1";
+    let query = "SELECT * FROM AdminLogin WHERE 1=1";
     const replacements = {};
 
     if (UserId) {
@@ -71,22 +71,28 @@ export const getUsers = async (req, res) => {
 
 // Update User
 export const updateUser = async (req, res) => {
-  const { UserUkeyId, Name, Email, Mobile1, Mobile2, Password } = req.body;
-  const sequelize = await getMasterConnection();
+    const { UserUkeyId, Name, Email, Mobile1, Mobile2, Password, CustId, UserName, IsActive } = req.body;
+    const sequelize = await getMasterConnection();
+    const IpAddress = req?.headers['x-forwarded-for'] || req?.socket?.remoteAddress || 'Not Found';
 
-  try {
+    try {
     const query = `
-      UPDATE Users
-      SET Name = :Name,
-          Email = :Email,
-          Mobile1 = :Mobile1,
-          Mobile2 = :Mobile2,
-          Password = :Password
-      WHERE UserUkeyId = :UserUkeyId
+        UPDATE AdminLogin
+        SET Name = :Name,
+            Email = :Email,
+            Mobile1 = :Mobile1,
+            Mobile2 = :Mobile2,
+            Password = :Password,
+            CustId = :CustId,
+            UserName = :UserName,
+            IsActive = :IsActive,
+            IpAddress = :IpAddress,
+            EntryDate = GETDATE()
+        WHERE UserUkeyId = :UserUkeyId
     `;
 
     await sequelize.query(query, {
-      replacements: { UserUkeyId, Name, Email, Mobile1, Mobile2, Password },
+        replacements: { UserUkeyId, Name, Email, Mobile1, Mobile2, Password, CustId, UserName, IsActive, IpAddress },
     });
 
     res.json({ message: "User updated successfully" });
@@ -104,7 +110,7 @@ export const deleteUser = async (req, res) => {
   const sequelize = await getMasterConnection();
 
   try {
-    const query = "DELETE FROM Users WHERE UserUkeyId = :UserUkeyId";
+    const query = "DELETE FROM AdminLogin WHERE UserUkeyId = :UserUkeyId";
     await sequelize.query(query, { replacements: { UserUkeyId } });
 
     res.json({ message: "User deleted successfully" });
@@ -114,4 +120,37 @@ export const deleteUser = async (req, res) => {
   } finally {
     await sequelize.close();
   }
+};
+
+// LOGIN (Generate JWT)
+export const loginUser = async (req, res) => {
+    const { UserName, Password } = req.body;
+    const sequelize = await getMasterConnection();
+
+    try {
+        const query = `
+            SELECT * FROM AdminLogin WHERE UserName = :UserName AND Password = :Password
+        `;
+        const [user] = await sequelize.query(query, {
+            replacements: { UserName, Password },
+        });
+      
+        if (!user || user.length === 0) {
+            return res.status(401).json({ error: "Invalid credentials" });
+        }
+      
+        const token = generateJWTT({
+            UserId: user[0].UserId,
+            UserName: user[0].UserName,
+            UserUkeyId: user[0].UserUkeyId,
+            Email: user[0].Email,
+        });
+      
+        res.json({ token });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Database error" });
+    } finally {
+        await sequelize.close();
+    }
 };

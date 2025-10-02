@@ -4,7 +4,7 @@ import { getMasterConnection } from "../config/db.js";
 const sequelize = await getMasterConnection();
 
 const Users = sequelize.define(
-  "Users",
+  "AdminLogin",
   {
     UserId: {
       type: DataTypes.BIGINT,
@@ -31,13 +31,33 @@ const Users = sequelize.define(
       type: DataTypes.STRING(15),
       allowNull: true,
     },
+    CustId: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+    },
     Password: {
       type: DataTypes.STRING(50),
       allowNull: true,
     },
+    UserName: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+    },
+    IsActive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+    },
+    IpAddress: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+    },
+    EntryDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
   },
   {
-    tableName: "Users",
+    tableName: "AdminLogin",
     timestamps: false,
   }
 );
