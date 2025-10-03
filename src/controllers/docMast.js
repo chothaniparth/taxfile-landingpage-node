@@ -69,37 +69,82 @@ export const createDoc = async (req, res) => {
   }
 };
 
-// Create Update Carousel
+// Update Carousel
 export const updateDoc = async (req, res) => {
-  const { UkeyId, Title = '', Name = '', IsDoc = false, IsActive = true, OrderId = 1, UserName = '', flag = 'A' } = req.body;
+  const { 
+    DocUkeyId, Master, MasterUkeyId, Link, IsActive, UserName = req.user?.UserName, FileType, flag = "U" 
+  } = req.body;
+
   const sequelize = await dbConection();
 
   try {
-    const IpAddress = req?.headers['x-forwarded-for'] || req?.socket?.remoteAddress || 'Not Found';
+    const IpAddress =
+      req?.headers["x-forwarded-for"] || req?.socket?.remoteAddress || "Not Found";
 
-    let query = ""
+    // get old doc
+    const [oldDoc] = await sequelize.query(
+      "SELECT FileName FROM DocMast WHERE DocUkeyId = :DocUkeyId",
+      {
+        replacements: { DocUkeyId },
+        type: sequelize.QueryTypes.SELECT,
+      }
+    );
 
-    if (flag === 'U') {
-      query += `
-        DELETE FROM carouselmast WHERE UkeyId = :UkeyId;
-      `
+    // ensure one new file uploaded
+    if (!req.files?.FileName || req.files.FileName.length === 0) {
+      return res.status(400).json({ error: "No file uploaded for update" });
     }
 
-    query += `
-      INSERT INTO carouselmast (UkeyId, Title, Name, IsDoc, IsActive, OrderId, IpAddress, EntryDate, UserName, flag)
-      VALUES (:UkeyId, :Title, :Name, :IsDoc, :IsActive, :OrderId, :IpAddress, GETDATE(), :UserName, :flag);
-    `;
+    const newFile = req.files.FileName[0].filename;
 
-    await sequelize.query(query, {
-      replacements: { UkeyId, Title, Name, IsDoc, IsActive, OrderId, IpAddress, UserName, flag },
-    });
+    // delete old DB row
+    await sequelize.query(
+      "DELETE FROM DocMast WHERE DocUkeyId = :DocUkeyId",
+      { replacements: { DocUkeyId } }
+    );
 
-    res.status(201).json({
-      message: flag === "A" ? "Carousel created successfully" : "Carousel updated successfully",
+    // insert new doc
+    await sequelize.query(
+      `INSERT INTO DocMast (
+          DocUkeyId, FileName, FileType, Master, MasterUkeyId, Link, 
+          IsActive, IpAddress, EntryDate, UserName, flag
+        )
+        VALUES (
+          :DocUkeyId, :FileName, :FileType, :Master, :MasterUkeyId, :Link, 
+          :IsActive, :IpAddress, GETDATE(), :UserName, :flag
+        )`,
+      {
+        replacements: {
+          DocUkeyId,
+          FileName: newFile,
+          FileType,
+          Master,
+          MasterUkeyId,
+          Link,
+          IsActive,
+          IpAddress,
+          UserName,
+          flag,
+        },
+      }
+    );
+
+    // delete old file if exists
+    if (oldDoc?.FileName) {
+      const oldPath = path.join("./media/Docs", oldDoc.FileName);
+      if (fs.existsSync(oldPath)) {
+        fs.unlinkSync(oldPath);
+        console.log("Deleted old file:", oldPath);
+      }
+    }
+
+    res.status(200).json({
+      message: "Document updated successfully",
+      updatedFile: newFile,
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Database error" });
+    console.error("Error updating document:", err);
+    res.status(500).json({ error: "Internal server error" });
   } finally {
     await sequelize.close();
   }
@@ -155,17 +200,38 @@ export const getdoc = async (req, res) => {
 
 // Delete Carousel
 export const deleteDoc = async (req, res) => {
-  const { UkeyId } = req.params;
+  const { DocUkeyId } = req.params;
   const sequelize = await dbConection();
 
   try {
-    const query = "DELETE FROM carouselmast WHERE UkeyId = :UkeyId";
-    await sequelize.query(query, { replacements: { UkeyId } });
+    // 1. Get document info from DB
+    const [doc] = await sequelize.query(
+      "SELECT FileName FROM DocMast WHERE DocUkeyId = :DocUkeyId",
+      {
+        replacements: { DocUkeyId },
+        type: sequelize.QueryTypes.SELECT,
+      }
+    );
 
-    res.json({ message: "User deleted successfully" });
+    if (!doc) {
+      return res.status(404).json({ error: "Document not found" });
+    }
+
+    // 3. Delete file if exists
+    if (doc.FileName) {
+      fs.unlinkSync("./media/Docs" + "/" + doc.FileName);
+    }
+
+    // 4. Delete record from DB
+    await sequelize.query(
+      "DELETE FROM DocMast WHERE DocUkeyId = :DocUkeyId",
+      { replacements: { DocUkeyId } }
+    );
+
+    res.json({ message: "Document deleted successfully" });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Database error" });
+    console.error("Error deleting document:", err);
+    res.status(500).json({ error: "Database or file system error" });
   } finally {
     await sequelize.close();
   }
