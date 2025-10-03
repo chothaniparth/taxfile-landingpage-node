@@ -1,9 +1,9 @@
-import { getMasterConnection } from "../config/db.js";
+import { dbConection } from "../config/db.js";
 
 // Create Update Carousel
 export const createCarousel = async (req, res) => {
   const { UkeyId, Title = '', Name = '', IsDoc = false, IsActive = true, OrderId = 1, UserName = '', flag = 'A' } = req.body;
-  const sequelize = await getMasterConnection();
+  const sequelize = await dbConection();
 
   try {
     const IpAddress = req?.headers['x-forwarded-for'] || req?.socket?.remoteAddress || 'Not Found';
@@ -39,7 +39,7 @@ export const createCarousel = async (req, res) => {
 // Get AdminLogin (with optional filters)
 export const getCarousel = async (req, res) => {
   const { UkeyId, Title, Name, IsDoc, IsActive, OrderId, UserName } = req.query;
-  const sequelize = await getMasterConnection();
+  const sequelize = await dbConection();
 
   try {
     let query = "SELECT * FROM carouselmast WHERE 1=1";
@@ -87,7 +87,7 @@ export const getCarousel = async (req, res) => {
 // Delete Carousel
 export const deleteCarousel = async (req, res) => {
   const { UkeyId } = req.params;
-  const sequelize = await getMasterConnection();
+  const sequelize = await dbConection();
 
   try {
     const query = "DELETE FROM carouselmast WHERE UkeyId = :UkeyId";

@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
-import { getMasterConnection } from "../config/db.js";
+import { dbConection } from "../config/db.js";
 
-const sequelize = await getMasterConnection();
+const sequelize = await dbConection();
 
 const Carousel = sequelize.define(
   "carouselmast",

@@ -1,10 +1,10 @@
-import { getMasterConnection } from "../config/db.js";
+import { dbConection } from "../config/db.js";
 import { generateJWTT } from "../utils/jwt.js";
 
 // Create User
 export const createUser = async (req, res) => {
   const { UserUkeyId, Name, Email, Mobile1, Mobile2, Password } = req.body;
-  const sequelize = await getMasterConnection();
+  const sequelize = await dbConection();
 
   try {
     const query = `
@@ -28,7 +28,7 @@ export const createUser = async (req, res) => {
 // Get AdminLogin (with optional filters)
 export const getUsers = async (req, res) => {
   const { UserId, UserUkeyId, Name, Email, Mobile1, Mobile2 } = req.query;
-  const sequelize = await getMasterConnection();
+  const sequelize = await dbConection();
 
   try {
     let query = "SELECT * FROM AdminLogin WHERE 1=1";
@@ -72,7 +72,7 @@ export const getUsers = async (req, res) => {
 // Update User
 export const updateUser = async (req, res) => {
     const { UserUkeyId, Name, Email, Mobile1, Mobile2, Password, CustId, UserName, IsActive } = req.body;
-    const sequelize = await getMasterConnection();
+    const sequelize = await dbConection();
     const IpAddress = req?.headers['x-forwarded-for'] || req?.socket?.remoteAddress || 'Not Found';
 
     try {
@@ -107,7 +107,7 @@ export const updateUser = async (req, res) => {
 // Delete User
 export const deleteUser = async (req, res) => {
   const { UserUkeyId } = req.params;
-  const sequelize = await getMasterConnection();
+  const sequelize = await dbConection();
 
   try {
     const query = "DELETE FROM AdminLogin WHERE UserUkeyId = :UserUkeyId";
@@ -125,7 +125,7 @@ export const deleteUser = async (req, res) => {
 // LOGIN (Generate JWT)
 export const loginUser = async (req, res) => {
     const { UserName, Password } = req.body;
-    const sequelize = await getMasterConnection();
+    const sequelize = await dbConection();
 
     try {
         const query = `

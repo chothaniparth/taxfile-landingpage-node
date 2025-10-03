@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
 
-export const getMasterConnection = async () => {
+export const dbConection = async () => {
   try {
     const masterConnection = new Sequelize(
       process.env.MASTER_DB_NAME,
