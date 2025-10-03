@@ -146,7 +146,7 @@ export const loginUser = async (req, res) => {
             Email: user[0].Email,
         });
       
-        res.json({ token });
+        res.json({ token, CustId : user[0].CustId, UserUkeyId: user[0].UserUkeyId, Email: user[0].Email, UserName: user[0].UserName });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Database error" });
