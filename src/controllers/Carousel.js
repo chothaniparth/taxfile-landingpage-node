@@ -25,7 +25,7 @@ export const createCarousel = async (req, res) => {
       replacements: { UkeyId, Title, Name, IsDoc, IsActive, OrderId, IpAddress, UserName, flag },
     });
 
-    res.status(201).json({
+    res.status(200).json({
       message: flag === "A" ? "Carousel created successfully" : "Carousel updated successfully",
     });
   } catch (err) {
@@ -119,7 +119,7 @@ export const deleteCarousel = async (req, res) => {
     const query = "DELETE FROM carouselmast WHERE UkeyId = :UkeyId";
     await sequelize.query(query, { replacements: { UkeyId } });
 
-    res.json({ message: "User deleted successfully" });
+    res.status(200).json({ message: "User deleted successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });

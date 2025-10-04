@@ -36,7 +36,7 @@ export const createYTvideo = async (req, res) => {
       replacements: { UkeyId, ProductUkeyId, URL, IsActive, IpAddress, UserName, flag },
     });
 
-    res.status(201).json({
+    res.status(200).json({
       message: flag === "A" ? "YT video created successfully" : "YT video updated successfully",
     });
   } catch (err) {
@@ -119,7 +119,7 @@ export const deleteYTvideo = async (req, res) => {
       return res.status(404).json({ error: "YT video not found" });
     }
 
-    res.json({ message: "YT video deleted successfully" });
+    res.status(200).json({ message: "YT video deleted successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });

@@ -30,7 +30,7 @@ export const createNews = async (req, res) => {
       replacements: { Title, Descrption, NewsDate, IsActive, IsDeleted, IpAddress, UserName, flag, UkeyId },
     });
 
-    res.status(201).json({
+    res.status(200).json({
       message: flag === "A" ? "News created successfully" : "News updated successfully",
     });
   } catch (err) {
@@ -111,7 +111,7 @@ export const deleteNews = async (req, res) => {
       return res.status(404).json({ error: "News record not found" });
     }
 
-    res.json({ message: "News deleted successfully" });
+    res.status(200).json({ message: "News deleted successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });

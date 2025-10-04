@@ -28,7 +28,7 @@ export const createFAQ = async (req, res) => {
       replacements: { FaqUkeyId, Ques, Ans, IsActive, IpAddress, UserName, flag },
     });
 
-    res.status(201).json({
+    res.status(200).json({
       message: flag === "A" ? "FAQ created successfully" : "FAQ updated successfully",
     });
   } catch (err) {
@@ -107,7 +107,7 @@ export const deleteFAQ = async (req, res) => {
     const query = "DELETE FROM FAQmast WHERE FaqUkeyId = :FaqUkeyId";
     await sequelize.query(query, { replacements: { FaqUkeyId } });
 
-    res.json({ message: "FAQ deleted successfully" });
+    res.status(200).json({ message: "FAQ deleted successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });

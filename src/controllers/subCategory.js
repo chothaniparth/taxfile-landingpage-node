@@ -110,7 +110,11 @@ export const deleteSubCategory = async (req, res) => {
 
   try {
     const query = "DELETE FROM  SubCateMast WHERE SubUkeyId = :SubUkeyId";
-    await sequelize.query(query, { replacements: { SubUkeyId } });
+    const result = await sequelize.query(query, { replacements: { SubUkeyId } });
+
+    if (result[1] === 0) {
+      return res.status(404).json({ error: "Sub category not found" });
+    }
 
     res.json({ message: "Sub category deleted successfully" });
   } catch (err) {

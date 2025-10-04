@@ -16,7 +16,7 @@ export const createUser = async (req, res) => {
       replacements: { UserUkeyId, Name, Email, Mobile1, Mobile2, Password },
     });
 
-    res.status(201).json({ message: "User created successfully" });
+    res.status(200).json({ message: "User created successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });
@@ -95,7 +95,7 @@ export const updateUser = async (req, res) => {
         replacements: { UserUkeyId, Name, Email, Mobile1, Mobile2, Password, CustId, UserName, IsActive, IpAddress },
     });
 
-    res.json({ message: "User updated successfully" });
+    res.status(200).json({ message: "User updated successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });
@@ -113,7 +113,7 @@ export const deleteUser = async (req, res) => {
     const query = "DELETE FROM AdminLogin WHERE UserUkeyId = :UserUkeyId";
     await sequelize.query(query, { replacements: { UserUkeyId } });
 
-    res.json({ message: "User deleted successfully" });
+    res.status(200).json({ message: "User deleted successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });
@@ -146,7 +146,7 @@ export const loginUser = async (req, res) => {
             Email: user[0].Email,
         });
       
-        res.json({ token, CustId : user[0].CustId, UserUkeyId: user[0].UserUkeyId, Email: user[0].Email, UserName: user[0].UserName });
+        res.status(200).json({ token, CustId : user[0].CustId, UserUkeyId: user[0].UserUkeyId, Email: user[0].Email, UserName: user[0].UserName });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Database error" });

@@ -38,7 +38,7 @@ export const createDoc = async (req, res) => {
 
     await transaction.commit();
 
-    res.status(201).json({
+    res.status(200).json({
       message: "Docs created successfully",
       inserted: FileNames.length,
     });
@@ -255,7 +255,7 @@ export const deleteDoc = async (req, res) => {
       { replacements: { DocUkeyId } }
     );
 
-    res.json({ message: "Document deleted successfully" });
+    res.status(200).json({ message: "Document deleted successfully" });
   } catch (err) {
     console.error("Error deleting document:", err);
     res.status(500).json({ error: "Database or file system error" });
