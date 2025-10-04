@@ -16,10 +16,10 @@ export const createUser = async (req, res) => {
       replacements: { UserUkeyId, Name, Email, Mobile1, Mobile2, Password },
     });
 
-    res.status(200).json({ message: "User created successfully" });
+    res.status(200).json({ message: "User created successfully", Success : true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: err.message, Success : false });
   } finally {
     await sequelize.close();
   }
@@ -95,10 +95,10 @@ export const updateUser = async (req, res) => {
         replacements: { UserUkeyId, Name, Email, Mobile1, Mobile2, Password, CustId, UserName, IsActive, IpAddress },
     });
 
-    res.status(200).json({ message: "User updated successfully" });
+    res.status(200).json({ message: "User updated successfully", Success : true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: err.message, Success : false });
   } finally {
     await sequelize.close();
   }
@@ -113,10 +113,10 @@ export const deleteUser = async (req, res) => {
     const query = "DELETE FROM AdminLogin WHERE UserUkeyId = :UserUkeyId";
     await sequelize.query(query, { replacements: { UserUkeyId } });
 
-    res.status(200).json({ message: "User deleted successfully" });
+    res.status(200).json({ message: "User deleted successfully", Success : true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: err.message, Success : false });
   } finally {
     await sequelize.close();
   }
@@ -146,10 +146,10 @@ export const loginUser = async (req, res) => {
             Email: user[0].Email,
         });
       
-        res.status(200).json({ token, CustId : user[0].CustId, UserUkeyId: user[0].UserUkeyId, Email: user[0].Email, UserName: user[0].UserName });
+        res.status(200).json({ token, CustId : user[0].CustId, UserUkeyId: user[0].UserUkeyId, Email: user[0].Email, UserName: user[0].UserName, Success : true });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: "Database error" });
+        res.status(500).json({ error: err.message, Success : false });
     } finally {
         await sequelize.close();
     }

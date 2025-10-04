@@ -37,11 +37,11 @@ export const createYTvideo = async (req, res) => {
     });
 
     res.status(200).json({
-      message: flag === "A" ? "YT video created successfully" : "YT video updated successfully",
+      message: flag === "A" ? "YT video created successfully" : "YT video updated successfully", Success : true
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: err.message, Success : false });
   } finally {
     await sequelize.close();
   }
@@ -100,7 +100,7 @@ export const getYTvideo = async (req, res) => {
     res.json({ data: results, totalCount });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: err.message, Success : false });
   } finally {
     await sequelize.close();
   }
@@ -119,10 +119,10 @@ export const deleteYTvideo = async (req, res) => {
       return res.status(404).json({ error: "YT video not found" });
     }
 
-    res.status(200).json({ message: "YT video deleted successfully" });
+    res.status(200).json({ message: "YT video deleted successfully", Success : true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: err.message, Success : false });
   } finally {
     await sequelize.close();
   }

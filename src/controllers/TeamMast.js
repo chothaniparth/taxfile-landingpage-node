@@ -31,11 +31,11 @@ export const createTeam = async (req, res) => {
     });
 
     res.status(200).json({
-      message: flag === "A" ? "Team record created successfully" : "Team record updated successfully",
+      message: flag === "A" ? "Team record created successfully" : "Team record updated successfully", Success : true,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error:  err.message });
+    res.status(500).json({ error:  err.message, Success : false });
   } finally {
     await sequelize.close();
   }
@@ -84,7 +84,7 @@ export const getTeam = async (req, res) => {
     res.json({ data: results, totalCount });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error:  err.message });
+    res.status(500).json({ error:  err.message, Success : false });
   } finally {
     await sequelize.close();
   }
@@ -103,10 +103,10 @@ export const deleteTeam = async (req, res) => {
       return res.status(404).json({ error: "Team record not found" });
     }
 
-    res.status(200).json({ message: "Team record deleted successfully" });
+    res.status(200).json({ message: "Team record deleted successfully" , Success : true});
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error:  err.message });
+    res.status(500).json({ error:  err.message, Success : false });
   } finally {
     await sequelize.close();
   }

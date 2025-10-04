@@ -26,11 +26,11 @@ export const createSubCategory = async (req, res) => {
     });
 
     res.status(201).json({
-      message: flag === "A" ? "Sub Category created successfully" : "Sub Category updated successfully",
+      message: flag === "A" ? "Sub Category created successfully" : "Sub Category updated successfully", Success : true
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: err.message, Success : false });
   } finally {
     await sequelize.close();
   }
@@ -116,10 +116,10 @@ export const deleteSubCategory = async (req, res) => {
       return res.status(404).json({ error: "Sub category not found" });
     }
 
-    res.json({ message: "Sub category deleted successfully" });
+    res.json({ message: "Sub category deleted successfully", Success : true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: err.message, Success : false });
   } finally {
     await sequelize.close();
   }

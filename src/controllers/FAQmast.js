@@ -29,11 +29,11 @@ export const createFAQ = async (req, res) => {
     });
 
     res.status(200).json({
-      message: flag === "A" ? "FAQ created successfully" : "FAQ updated successfully",
+      message: flag === "A" ? "FAQ created successfully" : "FAQ updated successfully", Success : true
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: err.message, Success : false });
   } finally {
     await sequelize.close();
   }
@@ -107,10 +107,10 @@ export const deleteFAQ = async (req, res) => {
     const query = "DELETE FROM FAQmast WHERE FaqUkeyId = :FaqUkeyId";
     await sequelize.query(query, { replacements: { FaqUkeyId } });
 
-    res.status(200).json({ message: "FAQ deleted successfully" });
+    res.status(200).json({ message: "FAQ deleted successfully", Success : true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: err.message, Success : false });
   } finally {
     await sequelize.close();
   }

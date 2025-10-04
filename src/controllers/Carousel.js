@@ -26,11 +26,11 @@ export const createCarousel = async (req, res) => {
     });
 
     res.status(200).json({
-      message: flag === "A" ? "Carousel created successfully" : "Carousel updated successfully",
+      message: flag === "A" ? "Carousel created successfully" : "Carousel updated successfully", Success : true
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: err.message, Success : false });
   } finally {
     await sequelize.close();
   }
@@ -119,10 +119,10 @@ export const deleteCarousel = async (req, res) => {
     const query = "DELETE FROM carouselmast WHERE UkeyId = :UkeyId";
     await sequelize.query(query, { replacements: { UkeyId } });
 
-    res.status(200).json({ message: "User deleted successfully" });
+    res.status(200).json({ message: "User deleted successfully", Success : true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: err.message, Success : false });
   } finally {
     await sequelize.close();
   }

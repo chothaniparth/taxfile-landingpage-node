@@ -34,11 +34,11 @@ export const createAboutUs = async (req, res) => {
 
     res.status(200).json({
       message:
-        flag === "A" ? "About Us record created successfully" : "About Us record updated successfully",
+        flag === "A" ? "About Us record created successfully" : "About Us record updated successfully", Success : true
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: err.message, Success : false });
   } finally {
     await sequelize.close();
   }
@@ -111,10 +111,10 @@ export const deleteAboutUs = async (req, res) => {
       return res.status(404).json({ error: "About Us record not found" });
     }
 
-    res.status(200).json({ message: "About Us record deleted successfully" });
+    res.status(200).json({ message: "About Us record deleted successfully", Success : true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Database error" });
+    res.status(500).json({ error: err.message, Success : false });
   } finally {
     await sequelize.close();
   }

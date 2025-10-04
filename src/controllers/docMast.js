@@ -41,6 +41,7 @@ export const createDoc = async (req, res) => {
     res.status(200).json({
       message: "Docs created successfully",
       inserted: FileNames.length,
+      Success : true
     });
   } catch (err) {
     console.error("Error inserting docs:", err);
@@ -63,7 +64,7 @@ export const createDoc = async (req, res) => {
       });
     }
 
-    res.status(500).json({ error: "Database error, files deleted" });
+    res.status(500).json({ error: err.message, Success : true });
   } finally {
     await sequelize.close();
   }
@@ -141,10 +142,11 @@ export const updateDoc = async (req, res) => {
     res.status(200).json({
       message: "Document updated successfully",
       updatedFile: newFile,
+      Success : true
     });
   } catch (err) {
     console.error("Error updating document:", err);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "Internal server error", Success : false });
   } finally {
     await sequelize.close();
   }
@@ -255,10 +257,10 @@ export const deleteDoc = async (req, res) => {
       { replacements: { DocUkeyId } }
     );
 
-    res.status(200).json({ message: "Document deleted successfully" });
+    res.status(200).json({ message: "Document deleted successfully", Success : true });
   } catch (err) {
     console.error("Error deleting document:", err);
-    res.status(500).json({ error: "Database or file system error" });
+    res.status(500).json({ error: "Database or file system error", Success : false });
   } finally {
     await sequelize.close();
   }
