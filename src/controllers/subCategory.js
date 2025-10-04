@@ -91,7 +91,7 @@ export const getSubCategory = async (req, res) => {
 
     const [results] = await sequelize.query(query, { replacements });
 
-    res.json({
+    res.status(200).json({
       data: results,
       totalCount,
     });

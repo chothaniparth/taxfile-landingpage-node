@@ -89,7 +89,7 @@ export const getNews = async (req, res) => {
     }
 
     const [results] = await sequelize.query(query, { replacements });
-    res.json({data : results, totalCount: CountResult.length});
+    res.status(200).json({data : results, totalCount: CountResult.length});
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });

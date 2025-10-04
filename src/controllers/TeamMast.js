@@ -81,7 +81,7 @@ export const getTeam = async (req, res) => {
     }
 
     const [results] = await sequelize.query(query, { replacements });
-    res.json({ data: results, totalCount });
+    res.status(200).json({ data: results, totalCount });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error:  err.message, Success : false });
