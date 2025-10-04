@@ -42,23 +42,25 @@ export const getSubCategory = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    let query = "SELECT * FROM  SubCateMast WHERE 1=1";
+    let query = `SELECT scm.*, cm.CategoryName FROM  SubCateMast scm
+    left join CategoryMast cm on cm.CategoryId = scm.CategoryId
+    WHERE 1=1 `;
     const replacements = {};
 
     if (SubUkeyId) {
-      query += " AND SubUkeyId = :SubUkeyId";
+      query += " AND scm.SubUkeyId = :SubUkeyId";
       replacements.SubUkeyId = SubUkeyId;
     }
     if (SubCateName) {
-      query += " AND SubCateName = :SubCateName";
+      query += " AND scm.SubCateName = :SubCateName";
       replacements.SubCateName = SubCateName;
     }
     if (CategoryId) {
-      query += " AND CategoryId LIKE :CategoryId";
+      query += " AND scm.CategoryId LIKE :CategoryId";
       replacements.CategoryId = `%${CategoryId}%`;
     }
     if (IsActive) {
-      query += " AND IsActive = :IsActive";
+      query += " AND scm.IsActive = :IsActive";
       replacements.IsActive = IsActive;
     }
 
