@@ -42,30 +42,41 @@ export const getSubCategory = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    let query = `SELECT scm.*, cm.CategoryName FROM  SubCateMast scm
-    left join CategoryMast cm on cm.CategoryId = scm.CategoryId
-    WHERE 1=1 `;
+    let query = `SELECT scm.*, cm.CategoryName FROM SubCateMast scm
+                 LEFT JOIN CategoryMast cm ON cm.CategoryId = scm.CategoryId
+                 WHERE 1=1`;
+    let countQuery = `SELECT COUNT(*) as totalCount FROM SubCateMast scm
+                      LEFT JOIN CategoryMast cm ON cm.CategoryId = scm.CategoryId
+                      WHERE 1=1`;
     const replacements = {};
 
     if (SubUkeyId) {
       query += " AND scm.SubUkeyId = :SubUkeyId";
+      countQuery += " AND scm.SubUkeyId = :SubUkeyId";
       replacements.SubUkeyId = SubUkeyId;
     }
     if (SubCateName) {
       query += " AND scm.SubCateName = :SubCateName";
+      countQuery += " AND scm.SubCateName = :SubCateName";
       replacements.SubCateName = SubCateName;
     }
     if (CategoryId) {
       query += " AND scm.CategoryId LIKE :CategoryId";
+      countQuery += " AND scm.CategoryId LIKE :CategoryId";
       replacements.CategoryId = `%${CategoryId}%`;
     }
     if (IsActive) {
       query += " AND scm.IsActive = :IsActive";
+      countQuery += " AND scm.IsActive = :IsActive";
       replacements.IsActive = IsActive;
     }
 
     // Always order by EntryDate DESC
     query += " ORDER BY scm.EntryDate DESC";
+
+    // Get total count first
+    const [countResult] = await sequelize.query(countQuery, { replacements });
+    const totalCount = countResult[0]?.totalCount || 0;
 
     // Apply pagination if provided
     const pageNum = parseInt(Page, 10);
@@ -79,7 +90,11 @@ export const getSubCategory = async (req, res) => {
     }
 
     const [results] = await sequelize.query(query, { replacements });
-    res.json(results);
+
+    res.json({
+      data: results,
+      totalCount,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });

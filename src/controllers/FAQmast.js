@@ -46,27 +46,36 @@ export const getFAQ = async (req, res) => {
 
   try {
     let query = "SELECT * FROM FAQmast WHERE 1=1";
+    let countQuery = "SELECT COUNT(*) as totalCount FROM FAQmast WHERE 1=1";
     const replacements = {};
 
     if (FaqUkeyId) {
       query += " AND FaqUkeyId = :FaqUkeyId";
+      countQuery += " AND FaqUkeyId = :FaqUkeyId";
       replacements.FaqUkeyId = FaqUkeyId;
     }
     if (Ques) {
       query += " AND Ques LIKE :Ques";
+      countQuery += " AND Ques LIKE :Ques";
       replacements.Ques = `%${Ques}%`;
     }
     if (Ans) {
       query += " AND Ans LIKE :Ans";
+      countQuery += " AND Ans LIKE :Ans";
       replacements.Ans = `%${Ans}%`;
     }
-    if (IsActive) {
+    if (IsActive !== undefined) {
       query += " AND IsActive = :IsActive";
+      countQuery += " AND IsActive = :IsActive";
       replacements.IsActive = IsActive;
     }
 
     // Always order by EntryDate DESC
     query += " ORDER BY EntryDate DESC";
+
+    // Get total count
+    const [countResult] = await sequelize.query(countQuery, { replacements });
+    const totalCount = countResult[0]?.totalCount || 0;
 
     // Apply pagination if provided
     const pageNum = parseInt(Page, 10);
@@ -80,7 +89,7 @@ export const getFAQ = async (req, res) => {
     }
 
     const [results] = await sequelize.query(query, { replacements });
-    res.json(results);
+    res.json({ data: results, totalCount });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });

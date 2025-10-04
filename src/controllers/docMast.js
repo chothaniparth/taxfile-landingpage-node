@@ -157,34 +157,42 @@ export const getdoc = async (req, res) => {
 
   try {
     let query = "SELECT * FROM DocMast WHERE 1=1";
+    let countQuery = "SELECT COUNT(*) as totalCount FROM DocMast WHERE 1=1";
     const replacements = {};
 
     if (DocUkeyId) {
       query += " AND DocUkeyId = :DocUkeyId";
+      countQuery += " AND DocUkeyId = :DocUkeyId";
       replacements.DocUkeyId = DocUkeyId;
     }
     if (FileType) {
       query += " AND FileType = :FileType";
+      countQuery += " AND FileType = :FileType";
       replacements.FileType = FileType;
     }
     if (Master) {
       query += " AND Master = :Master";
+      countQuery += " AND Master = :Master";
       replacements.Master = Master;
     }
-    if (IsActive) {
+    if (IsActive !== undefined) {
       query += " AND IsActive = :IsActive";
+      countQuery += " AND IsActive = :IsActive";
       replacements.IsActive = IsActive;
     }
     if (MasterUkeyId) {
       query += " AND MasterUkeyId = :MasterUkeyId";
+      countQuery += " AND MasterUkeyId = :MasterUkeyId";
       replacements.MasterUkeyId = MasterUkeyId;
     }
     if (UserName) {
       query += " AND UserName = :UserName";
+      countQuery += " AND UserName = :UserName";
       replacements.UserName = UserName;
     }
     if (Link) {
       query += " AND Link = :Link";
+      countQuery += " AND Link = :Link";
       replacements.Link = Link;
     }
 
@@ -202,8 +210,13 @@ export const getdoc = async (req, res) => {
       replacements.pageSize = pageSizeNum;
     }
 
+    // Get total count
+    const [countResult] = await sequelize.query(countQuery, { replacements });
+    const totalCount = countResult[0]?.totalCount || 0;
+
     const [results] = await sequelize.query(query, { replacements });
-    res.json(results);
+
+    res.json({ data: results, totalCount });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });

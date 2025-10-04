@@ -51,23 +51,31 @@ export const getAboutUs = async (req, res) => {
 
   try {
     let query = `SELECT * FROM AboutUsMast WHERE 1=1`;
+    let countQuery = `SELECT COUNT(*) as totalCount FROM AboutUsMast WHERE 1=1`;
     const replacements = {};
 
     if (AboutUkeyId) {
       query += " AND AboutUkeyId = :AboutUkeyId";
+      countQuery += " AND AboutUkeyId = :AboutUkeyId";
       replacements.AboutUkeyId = AboutUkeyId;
     }
     if (Mission) {
       query += " AND Mission LIKE :Mission";
+      countQuery += " AND Mission LIKE :Mission";
       replacements.Mission = `%${Mission}%`;
     }
     if (Vision) {
       query += " AND Vision LIKE :Vision";
+      countQuery += " AND Vision LIKE :Vision";
       replacements.Vision = `%${Vision}%`;
     }
 
     // Always order by EntryDate DESC
     query += " ORDER BY EntryDate DESC";
+
+    // Get total count
+    const [countResult] = await sequelize.query(countQuery, { replacements });
+    const totalCount = countResult[0]?.totalCount || 0;
 
     // Apply pagination if provided
     const pageNum = parseInt(Page, 10);
@@ -81,7 +89,7 @@ export const getAboutUs = async (req, res) => {
     }
 
     const [results] = await sequelize.query(query, { replacements });
-    res.json(results);
+    res.json({ data: results, totalCount });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });

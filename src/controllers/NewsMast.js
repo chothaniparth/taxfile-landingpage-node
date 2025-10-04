@@ -48,22 +48,27 @@ export const getNews = async (req, res) => {
 
   try {
     let query = "SELECT * FROM NewsMast WHERE 1=1";
+    let countQuery = "SELECT COUNT(*) as totalCount FROM NewsMast WHERE 1=1";
     const replacements = {};
 
     if (UkeyId) {
       query += " AND UkeyId = :UkeyId";
+      countQuery += " AND UkeyId = :UkeyId";
       replacements.UkeyId = UkeyId;
     }
     if (Title) {
       query += " AND Title LIKE :Title";
+      countQuery += " AND Title LIKE :Title";
       replacements.Title = `%${Title}%`;
     }
-    if (IsActive !== undefined) {
+    if (IsActive) {
       query += " AND IsActive = :IsActive";
+      countQuery += " AND IsActive = :IsActive";
       replacements.IsActive = IsActive;
     }
-    if (IsDeleted !== undefined) {
+    if (IsDeleted) {
       query += " AND IsDeleted = :IsDeleted";
+      countQuery += " AND IsDeleted = :IsDeleted";
       replacements.IsDeleted = IsDeleted;
     }
 
@@ -74,6 +79,8 @@ export const getNews = async (req, res) => {
     const pageNum = parseInt(Page, 10);
     const pageSizeNum = parseInt(PageSize, 10);
 
+    const [CountResult] = await sequelize.query(query, { replacements });
+
     if (!isNaN(pageNum) && !isNaN(pageSizeNum) && pageNum > 0 && pageSizeNum > 0) {
       const offset = (pageNum - 1) * pageSizeNum;
       query += " OFFSET :offset ROWS FETCH NEXT :pageSize ROWS ONLY";
@@ -82,7 +89,7 @@ export const getNews = async (req, res) => {
     }
 
     const [results] = await sequelize.query(query, { replacements });
-    res.json(results);
+    res.json({data : results, totalCount: CountResult.length});
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });

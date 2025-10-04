@@ -43,39 +43,51 @@ export const getCarousel = async (req, res) => {
 
   try {
     let query = "SELECT * FROM carouselmast WHERE 1=1";
+    let countQuery = "SELECT COUNT(*) as totalCount FROM carouselmast WHERE 1=1";
     const replacements = {};
 
     if (UkeyId) {
       query += " AND UkeyId = :UkeyId";
+      countQuery += " AND UkeyId = :UkeyId";
       replacements.UkeyId = UkeyId;
     }
     if (Title) {
       query += " AND Title = :Title";
+      countQuery += " AND Title = :Title";
       replacements.Title = Title;
     }
     if (Name) {
       query += " AND Name LIKE :Name";
+      countQuery += " AND Name LIKE :Name";
       replacements.Name = `%${Name}%`;
     }
-    if (IsDoc) {
+    if (IsDoc !== undefined) {
       query += " AND IsDoc = :IsDoc";
+      countQuery += " AND IsDoc = :IsDoc";
       replacements.IsDoc = IsDoc;
     }
-    if (IsActive) {
+    if (IsActive !== undefined) {
       query += " AND IsActive = :IsActive";
+      countQuery += " AND IsActive = :IsActive";
       replacements.IsActive = IsActive;
     }
     if (OrderId) {
       query += " AND OrderId = :OrderId";
+      countQuery += " AND OrderId = :OrderId";
       replacements.OrderId = OrderId;
     }
     if (UserName) {
       query += " AND UserName = :UserName";
+      countQuery += " AND UserName = :UserName";
       replacements.UserName = UserName;
     }
 
     // Always order by EntryDate DESC
     query += " ORDER BY EntryDate DESC";
+
+    // Get total count
+    const [countResult] = await sequelize.query(countQuery, { replacements });
+    const totalCount = countResult[0]?.totalCount || 0;
 
     // Apply pagination if provided
     const pageNum = parseInt(Page, 10);
@@ -89,7 +101,7 @@ export const getCarousel = async (req, res) => {
     }
 
     const [results] = await sequelize.query(query, { replacements });
-    res.json(results);
+    res.json({ data: results, totalCount });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });

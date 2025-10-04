@@ -53,28 +53,37 @@ export const getYTvideo = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    let query = `SELECT * FROM YTvideoMast WHERE 1=1 `;
+    let query = `SELECT * FROM YTvideoMast WHERE 1=1`;
+    let countQuery = `SELECT COUNT(*) as totalCount FROM YTvideoMast WHERE 1=1`;
     const replacements = {};
 
     if (UkeyId) {
       query += " AND UkeyId = :UkeyId";
+      countQuery += " AND UkeyId = :UkeyId";
       replacements.UkeyId = UkeyId;
     }
     if (ProductUkeyId) {
       query += " AND ProductUkeyId = :ProductUkeyId";
+      countQuery += " AND ProductUkeyId = :ProductUkeyId";
       replacements.ProductUkeyId = ProductUkeyId;
     }
     if (URL) {
       query += " AND URL = :URL";
+      countQuery += " AND URL = :URL";
       replacements.URL = URL;
     }
-    if (IsActive) {
+    if (IsActive !== undefined) {
       query += " AND IsActive = :IsActive";
+      countQuery += " AND IsActive = :IsActive";
       replacements.IsActive = IsActive;
     }
 
     // Always order by EntryDate DESC
     query += " ORDER BY EntryDate DESC";
+
+    // Get total count
+    const [countResult] = await sequelize.query(countQuery, { replacements });
+    const totalCount = countResult[0]?.totalCount || 0;
 
     // Apply pagination if provided
     const pageNum = parseInt(Page, 10);
@@ -88,7 +97,7 @@ export const getYTvideo = async (req, res) => {
     }
 
     const [results] = await sequelize.query(query, { replacements });
-    res.json(results);
+    res.json({ data: results, totalCount });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });
