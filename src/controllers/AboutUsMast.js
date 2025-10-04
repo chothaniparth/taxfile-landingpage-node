@@ -46,7 +46,7 @@ export const createAboutUs = async (req, res) => {
 
 // Get AboutUs (with optional filters)
 export const getAboutUs = async (req, res) => {
-  const { AboutUkeyId, Mission, Vision } = req.query;
+  const { AboutUkeyId, Mission, Vision, Page, PageSize } = req.query;
   const sequelize = await dbConection();
 
   try {
@@ -64,6 +64,20 @@ export const getAboutUs = async (req, res) => {
     if (Vision) {
       query += " AND Vision LIKE :Vision";
       replacements.Vision = `%${Vision}%`;
+    }
+
+    // Always order by EntryDate DESC
+    query += " ORDER BY EntryDate DESC";
+
+    // Apply pagination if provided
+    const pageNum = parseInt(Page, 10);
+    const pageSizeNum = parseInt(PageSize, 10);
+
+    if (!isNaN(pageNum) && !isNaN(pageSizeNum) && pageNum > 0 && pageSizeNum > 0) {
+      const offset = (pageNum - 1) * pageSizeNum;
+      query += " OFFSET :offset ROWS FETCH NEXT :pageSize ROWS ONLY";
+      replacements.offset = offset;
+      replacements.pageSize = pageSizeNum;
     }
 
     const [results] = await sequelize.query(query, { replacements });

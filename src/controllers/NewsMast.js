@@ -41,9 +41,9 @@ export const createNews = async (req, res) => {
   }
 };
 
-// GET News (with optional filters)
+// GET News (with optional filters and pagination)
 export const getNews = async (req, res) => {
-  const { UkeyId, Title, IsActive, IsDeleted } = req.query;
+  const { UkeyId, Title, IsActive, IsDeleted, Page, PageSize } = req.query;
   const sequelize = await dbConection();
 
   try {
@@ -65,6 +65,20 @@ export const getNews = async (req, res) => {
     if (IsDeleted !== undefined) {
       query += " AND IsDeleted = :IsDeleted";
       replacements.IsDeleted = IsDeleted;
+    }
+
+    // Always order by EntryDate DESC
+    query += " ORDER BY EntryDate DESC";
+
+    // Apply pagination if provided
+    const pageNum = parseInt(Page, 10);
+    const pageSizeNum = parseInt(PageSize, 10);
+
+    if (!isNaN(pageNum) && !isNaN(pageSizeNum) && pageNum > 0 && pageSizeNum > 0) {
+      const offset = (pageNum - 1) * pageSizeNum;
+      query += " OFFSET :offset ROWS FETCH NEXT :pageSize ROWS ONLY";
+      replacements.offset = offset;
+      replacements.pageSize = pageSizeNum;
     }
 
     const [results] = await sequelize.query(query, { replacements });

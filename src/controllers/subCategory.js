@@ -38,7 +38,7 @@ export const createSubCategory = async (req, res) => {
 
 // Get AdminLogin (with optional filters)
 export const getSubCategory = async (req, res) => {
-  const { SubUkeyId, SubCateName, CategoryId, IsActive } = req.query;
+  const { SubUkeyId, SubCateName, CategoryId, IsActive, Page, PageSize } = req.query;
   const sequelize = await dbConection();
 
   try {
@@ -62,6 +62,20 @@ export const getSubCategory = async (req, res) => {
     if (IsActive) {
       query += " AND scm.IsActive = :IsActive";
       replacements.IsActive = IsActive;
+    }
+
+    // Always order by EntryDate DESC
+    query += " ORDER BY scm.EntryDate DESC";
+
+    // Apply pagination if provided
+    const pageNum = parseInt(Page, 10);
+    const pageSizeNum = parseInt(PageSize, 10);
+
+    if (!isNaN(pageNum) && !isNaN(pageSizeNum) && pageNum > 0 && pageSizeNum > 0) {
+      const offset = (pageNum - 1) * pageSizeNum;
+      query += " OFFSET :offset ROWS FETCH NEXT :pageSize ROWS ONLY";
+      replacements.offset = offset;
+      replacements.pageSize = pageSizeNum;
     }
 
     const [results] = await sequelize.query(query, { replacements });

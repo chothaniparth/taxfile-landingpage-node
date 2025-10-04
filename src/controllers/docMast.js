@@ -152,7 +152,7 @@ export const updateDoc = async (req, res) => {
 
 // Get AdminLogin (with optional filters)
 export const getdoc = async (req, res) => {
-  const { DocUkeyId, FileType, Master, MasterUkeyId, Link, IsActive, UserName } = req.query;
+  const { DocUkeyId, FileType, Master, MasterUkeyId, Link, IsActive, UserName, Page, PageSize } = req.query;
   const sequelize = await dbConection();
 
   try {
@@ -186,6 +186,20 @@ export const getdoc = async (req, res) => {
     if (Link) {
       query += " AND Link = :Link";
       replacements.Link = Link;
+    }
+
+    // Always order by EntryDate DESC
+    query += " ORDER BY EntryDate DESC";
+
+    // Apply pagination if provided
+    const pageNum = parseInt(Page, 10);
+    const pageSizeNum = parseInt(PageSize, 10);
+
+    if (!isNaN(pageNum) && !isNaN(pageSizeNum) && pageNum > 0 && pageSizeNum > 0) {
+      const offset = (pageNum - 1) * pageSizeNum;
+      query += " OFFSET :offset ROWS FETCH NEXT :pageSize ROWS ONLY";
+      replacements.offset = offset;
+      replacements.pageSize = pageSizeNum;
     }
 
     const [results] = await sequelize.query(query, { replacements });

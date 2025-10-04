@@ -38,7 +38,7 @@ export const createCarousel = async (req, res) => {
 
 // Get AdminLogin (with optional filters)
 export const getCarousel = async (req, res) => {
-  const { UkeyId, Title, Name, IsDoc, IsActive, OrderId, UserName } = req.query;
+  const { UkeyId, Title, Name, IsDoc, IsActive, OrderId, UserName, Page, PageSize } = req.query;
   const sequelize = await dbConection();
 
   try {
@@ -72,6 +72,20 @@ export const getCarousel = async (req, res) => {
     if (UserName) {
       query += " AND UserName = :UserName";
       replacements.UserName = UserName;
+    }
+
+    // Always order by EntryDate DESC
+    query += " ORDER BY EntryDate DESC";
+
+    // Apply pagination if provided
+    const pageNum = parseInt(Page, 10);
+    const pageSizeNum = parseInt(PageSize, 10);
+
+    if (!isNaN(pageNum) && !isNaN(pageSizeNum) && pageNum > 0 && pageSizeNum > 0) {
+      const offset = (pageNum - 1) * pageSizeNum;
+      query += " OFFSET :offset ROWS FETCH NEXT :pageSize ROWS ONLY";
+      replacements.offset = offset;
+      replacements.pageSize = pageSizeNum;
     }
 
     const [results] = await sequelize.query(query, { replacements });
