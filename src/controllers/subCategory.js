@@ -25,7 +25,7 @@ export const createSubCategory = async (req, res) => {
       replacements: { SubUkeyId, SubCateName, CategoryId, IsActive, IpAddress, UserName, flag },
     });
 
-    res.status(201).json({
+    res.status(200).json({
       message: flag === "A" ? "Sub Category created successfully" : "Sub Category updated successfully", Success : true
     });
   } catch (err) {
@@ -116,7 +116,7 @@ export const deleteSubCategory = async (req, res) => {
       return res.status(404).json({ error: "Sub category not found" });
     }
 
-    res.json({ message: "Sub category deleted successfully", Success : true });
+    res.status(200).json({ message: "Sub category deleted successfully", Success : true });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message, Success : false });

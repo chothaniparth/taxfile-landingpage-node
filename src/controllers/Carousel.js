@@ -42,43 +42,43 @@ export const getCarousel = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    let query = "SELECT * FROM carouselmast WHERE 1=1";
-    let countQuery = "SELECT COUNT(*) as totalCount FROM carouselmast WHERE 1=1";
+    let query = "SELECT cm.*, dm.FileName FROM carouselmast cm left join DocMast dm on cm.UkeyId = dm.MasterUkeyId";
+    let countQuery = "SELECT COUNT(*) as totalCount FROM carouselmast cm WHERE 1=1";
     const replacements = {};
 
     if (UkeyId) {
-      query += " AND UkeyId = :UkeyId";
-      countQuery += " AND UkeyId = :UkeyId";
+      query += " AND cm.UkeyId = :UkeyId";
+      countQuery += " AND cm.UkeyId = :UkeyId";
       replacements.UkeyId = UkeyId;
     }
     if (Title) {
-      query += " AND Title = :Title";
-      countQuery += " AND Title = :Title";
+      query += " AND cm.Title = :Title";
+      countQuery += " AND cm.Title = :Title";
       replacements.Title = Title;
     }
     if (Name) {
-      query += " AND Name LIKE :Name";
-      countQuery += " AND Name LIKE :Name";
+      query += " AND cm.Name LIKE :Name";
+      countQuery += " AND cm.Name LIKE :Name";
       replacements.Name = `%${Name}%`;
     }
     if (IsDoc !== undefined) {
-      query += " AND IsDoc = :IsDoc";
-      countQuery += " AND IsDoc = :IsDoc";
+      query += " AND cm.IsDoc = :IsDoc";
+      countQuery += " AND cm.IsDoc = :IsDoc";
       replacements.IsDoc = IsDoc;
     }
     if (IsActive !== undefined) {
-      query += " AND IsActive = :IsActive";
-      countQuery += " AND IsActive = :IsActive";
+      query += " AND cm.IsActive = :IsActive";
+      countQuery += " AND cm.IsActive = :IsActive";
       replacements.IsActive = IsActive;
     }
     if (OrderId) {
-      query += " AND OrderId = :OrderId";
-      countQuery += " AND OrderId = :OrderId";
+      query += " AND cm.OrderId = :OrderId";
+      countQuery += " AND cm.OrderId = :OrderId";
       replacements.OrderId = OrderId;
     }
     if (UserName) {
-      query += " AND UserName = :UserName";
-      countQuery += " AND UserName = :UserName";
+      query += " AND cm.UserName = :UserName";
+      countQuery += " AND cm.UserName = :UserName";
       replacements.UserName = UserName;
     }
 
