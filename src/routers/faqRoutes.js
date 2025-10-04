@@ -12,10 +12,10 @@ import {
 const router = express.Router();
 
 // Public routes
-router.get("/", getFAQ);
+router.get("/faqList", getFAQ);
 
 // Protected routes
-router.post("/", authenticateJWT, validate(createFAQSchema), createFAQ);
-router.delete("/:FaqUkeyId", authenticateJWT, validate(deleteFAQSchema, 'params'), deleteFAQ);
+router.post("/addUpdateFaq", authenticateJWT, validate(createFAQSchema), createFAQ);
+router.delete("/deleteFaq/:FaqUkeyId", authenticateJWT, validate(deleteFAQSchema, 'params'), deleteFAQ);
 
 export default router;

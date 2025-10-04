@@ -12,10 +12,10 @@ import {
 const router = express.Router();
 
 // Public routes
-router.get("/", getYTvideo);
+router.get("/youtubeList", getYTvideo);
 
 // Protected routes
-router.post("/", authenticateJWT, validate(createOrUpdateYTvideoSchema), createYTvideo);
-router.delete("/:UkeyId", authenticateJWT, validate(deleteYTvideoSchema, 'params'), deleteYTvideo);
+router.post("/addUpdateYoutube", authenticateJWT, validate(createOrUpdateYTvideoSchema), createYTvideo);
+router.delete("/deleteYoutube/:UkeyId", authenticateJWT, validate(deleteYTvideoSchema, 'params'), deleteYTvideo);
 
 export default router;

@@ -11,10 +11,10 @@ import {
 const router = express.Router();
 
 // Public routes
-router.get("/", getAboutUs);
+router.get("/listAboutUs", getAboutUs);
 
 // Protected routes
-router.post("/", authenticateJWT, validate(createAboutUsSchema), createAboutUs);
-router.delete("/:AboutUkeyId", authenticateJWT, validate(deleteAboutUsSchema), deleteAboutUs);
+router.post("/AddUpdateAboutUs", authenticateJWT, validate(createAboutUsSchema), createAboutUs);
+router.delete("/DeleteAboutUs/:AboutUkeyId", authenticateJWT, validate(deleteAboutUsSchema), deleteAboutUs);
 
 export default router;

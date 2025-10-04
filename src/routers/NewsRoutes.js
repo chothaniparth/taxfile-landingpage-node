@@ -11,10 +11,10 @@ import {
 const router = express.Router();
 
 // Public routes
-router.get("/", getNews);
+router.get("/newsList", getNews);
 
 // Protected routes
-router.post("/", authenticateJWT, validate(createNewsSchema), createNews);
-router.delete("/:UkeyId", authenticateJWT, validate(deleteNewsSchema), deleteNews);
+router.post("/addUpdateNews", authenticateJWT, validate(createNewsSchema), createNews);
+router.delete("/deleteNews/:UkeyId", authenticateJWT, validate(deleteNewsSchema), deleteNews);
 
 export default router;

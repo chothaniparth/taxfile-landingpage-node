@@ -11,10 +11,10 @@ import {
 const router = express.Router();
 
 // Public routes
-router.get("/", getTeam);
+router.get("/TeamList", getTeam);
 
 // Protected routes
-router.post("/", authenticateJWT, validate(createTeamSchema), createTeam);
-router.delete("/:UkeyId", authenticateJWT, validate(deleteTeamSchema), deleteTeam);
+router.post("/addUdateTeam", authenticateJWT, validate(createTeamSchema), createTeam);
+router.delete("/deleteTeam/:UkeyId", authenticateJWT, validate(deleteTeamSchema), deleteTeam);
 
 export default router;

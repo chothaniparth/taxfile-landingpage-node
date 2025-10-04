@@ -12,10 +12,10 @@ import {
 const router = express.Router();
 
 // Public routes
-router.get("/", getSubCategory);
+router.get("/subCategoryList", getSubCategory);
 
 // Protected routes
-router.post("/", authenticateJWT, validate(createSubCategorySchema), createSubCategory);
-router.delete("/:SubUkeyId", authenticateJWT, validate(deleteSubCategorySchema, 'params'), deleteSubCategory);
+router.post("/AddUpdateSubCategory", authenticateJWT, validate(createSubCategorySchema), createSubCategory);
+router.delete("/deleteSubCategory/:SubUkeyId", authenticateJWT, validate(deleteSubCategorySchema, 'params'), deleteSubCategory);
 
 export default router;
