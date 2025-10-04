@@ -6,6 +6,7 @@ import SubCategory from './subCategory.js';
 import faqRoutes from './faqRoutes.js';
 import YTvideoRoutes from './YTvideoRoutes.js';
 import AboutUsRoutes from './AboutUsRoutes.js';
+import NewsRoutes from './NewsRoutes.js';
 
 const router = express.Router();
 
@@ -16,5 +17,6 @@ router.use("/subcategory", SubCategory);
 router.use("/faqs", faqRoutes);
 router.use("/ytvideos", YTvideoRoutes);
 router.use("/aboutus", AboutUsRoutes);
+router.use("/news", NewsRoutes);
 
 export default router;
