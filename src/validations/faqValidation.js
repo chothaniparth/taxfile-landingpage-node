@@ -1,10 +1,10 @@
 import Joi from "joi";
 
-// CREATE (POST /subcategories)
-export const createSubCategorySchema = Joi.object({
-  SubUkeyId: Joi.string().max(200).required(),
-  SubCateName: Joi.string().max(200).required(),
-  CategoryId: Joi.number().integer().required(),
+// CREATE (POST /faqs)
+export const createFAQSchema = Joi.object({
+  FaqUkeyId: Joi.string().max(200).required(),
+  Ques: Joi.string().max(1000).required(),
+  Ans: Joi.string().max(1000).required(),
   IsActive: Joi.boolean().default(true),
   IpAddress: Joi.string().max(200).optional(),
   EntryDate: Joi.date().optional(),
@@ -19,7 +19,7 @@ export const createSubCategorySchema = Joi.object({
     }),
 });
 
-// DELETE (DELETE /subcategories/:id)
-export const deleteSubCategorySchema = Joi.object({
-  SubUkeyId: Joi.string().required(),
+// DELETE (DELETE /faqs/:FaqUkeyId)
+export const deleteFAQSchema = Joi.object({
+  FaqUkeyId: Joi.string().required(),
 });

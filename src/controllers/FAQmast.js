@@ -1,0 +1,94 @@
+import { dbConection } from "../config/db.js";
+
+// Create/Update FAQ
+export const createFAQ = async (req, res) => {
+  const { 
+    FaqUkeyId = "", Ques = "", Ans = "", IsActive = true, UserName = req.user.UserName, flag = "A" 
+  } = req.body;
+
+  const sequelize = await dbConection();
+
+  try {
+    const IpAddress = req?.headers["x-forwarded-for"] || req?.socket?.remoteAddress || "Not Found";
+
+    let query = "";
+
+    if (flag === "U") {
+      query += `
+        DELETE FROM FAQmast WHERE FaqUkeyId = :FaqUkeyId;
+      `;
+    }
+
+    query += `
+      INSERT INTO FAQmast (FaqUkeyId, Ques, Ans, IsActive, IpAddress, EntryDate, UserName, flag)
+      VALUES (:FaqUkeyId, :Ques, :Ans, :IsActive, :IpAddress, GETDATE(), :UserName, :flag);
+    `;
+
+    await sequelize.query(query, {
+      replacements: { FaqUkeyId, Ques, Ans, IsActive, IpAddress, UserName, flag },
+    });
+
+    res.status(201).json({
+      message: flag === "A" ? "FAQ created successfully" : "FAQ updated successfully",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  } finally {
+    await sequelize.close();
+  }
+};
+
+// Get FAQ (with optional filters)
+export const getFAQ = async (req, res) => {
+  const { FaqUkeyId, Ques, Ans, IsActive } = req.query;
+  const sequelize = await dbConection();
+
+  try {
+    let query = "SELECT * FROM FAQmast WHERE 1=1";
+    const replacements = {};
+
+    if (FaqUkeyId) {
+      query += " AND FaqUkeyId = :FaqUkeyId";
+      replacements.FaqUkeyId = FaqUkeyId;
+    }
+    if (Ques) {
+      query += " AND Ques LIKE :Ques";
+      replacements.Ques = `%${Ques}%`;
+    }
+    if (Ans) {
+      query += " AND Ans LIKE :Ans";
+      replacements.Ans = `%${Ans}%`;
+    }
+    if (IsActive) {
+      query += " AND IsActive = :IsActive";
+      replacements.IsActive = IsActive;
+    }
+
+    const [results] = await sequelize.query(query, { replacements });
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  } finally {
+    await sequelize.close();
+  }
+};
+
+// Delete FAQ
+export const deleteFAQ = async (req, res) => {
+  const { FaqUkeyId } = req.params;
+  const sequelize = await dbConection();
+
+  try {
+    const query = "DELETE FROM FAQmast WHERE FaqUkeyId = :FaqUkeyId";
+    await sequelize.query(query, { replacements: { FaqUkeyId } });
+
+    res.json({ message: "FAQ deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Database error" });
+  } finally {
+    await sequelize.close();
+  }
+};
