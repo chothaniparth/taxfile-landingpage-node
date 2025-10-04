@@ -10,11 +10,11 @@ import { DocUploadV1 } from "../middlewares/multerMiddleware.js";
 const router = express.Router();
 
 // Public routes
-router.get("/", getdoc);
+router.get("/DocumentList", getdoc);
 
 // Protected routes
-router.post("/:Master", authenticateJWT, validate(createDocMastSchema), DocUploadV1, createDoc);
-router.put("/", authenticateJWT, validate(createDocMastSchema), DocUploadV1, updateDoc);
-router.delete("/:DocUkeyId", authenticateJWT, deleteDoc);
+router.post("/AddDocument/:Master", authenticateJWT, validate(createDocMastSchema), DocUploadV1, createDoc);
+router.put("/UpdateDocument/", authenticateJWT, validate(createDocMastSchema), DocUploadV1, updateDoc);
+router.delete("/deleteDocument/:DocUkeyId", authenticateJWT, deleteDoc);
 
 export default router;

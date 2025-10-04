@@ -11,10 +11,10 @@ import {
 const router = express.Router();
 
 // Public routes
-router.get("/", getCarousel);
+router.get("/carouselList", getCarousel);
 
 // Protected routes
-router.post("/", validate(createCarouselSchema), createCarousel);
-router.delete("/:UkeyId", authenticateJWT, deleteCarousel);
+router.post("/carouselAdd", validate(createCarouselSchema), createCarousel);
+router.delete("/carouselDelete/:UkeyId", authenticateJWT, deleteCarousel);
 
 export default router;
