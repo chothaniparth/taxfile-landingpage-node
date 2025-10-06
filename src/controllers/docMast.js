@@ -132,11 +132,7 @@ export const updateDoc = async (req, res) => {
 
     // delete old file if exists
     if (oldDoc?.FileName) {
-      const oldPath = path.join("./media/Docs", oldDoc.FileName);
-      if (fs.existsSync(oldPath)) {
-        fs.unlinkSync(oldPath);
-        console.log("Deleted old file:", oldPath);
-      }
+        fs.unlinkSync("./media/Gallery/" + oldDoc.FileName);
     }
 
     res.status(200).json({
@@ -248,7 +244,7 @@ export const deleteDoc = async (req, res) => {
 
     // 3. Delete file if exists
     if (doc.FileName) {
-      fs.unlinkSync("./media/Docs" + "/" + doc.FileName);
+      fs.unlinkSync("./media/Gallery/" + doc.FileName);
     }
 
     // 4. Delete record from DB

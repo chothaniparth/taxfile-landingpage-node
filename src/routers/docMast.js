@@ -14,7 +14,7 @@ router.get("/DocumentList", getdoc);
 
 // Protected routes
 router.post("/AddDocument/:Master", authenticateJWT, validate(createDocMastSchema), DocUploadV1, createDoc);
-router.put("/UpdateDocument/", authenticateJWT, validate(createDocMastSchema), DocUploadV1, updateDoc);
+router.put("/UpdateDocument/:Master", authenticateJWT, validate(createDocMastSchema), DocUploadV1, updateDoc);
 router.delete("/deleteDocument/:DocUkeyId", authenticateJWT, deleteDoc);
 
 export default router;
