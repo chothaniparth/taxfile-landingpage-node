@@ -7,9 +7,6 @@ export const createClientSchema = Joi.object({
   Remarks: Joi.string().max(1000).optional().allow(null, ""),
   Link: Joi.string().max(1000).optional().allow(null, ""),
   IsActive: Joi.boolean().default(true),
-  IpAddress: Joi.string().max(200).optional(),
-  EntryDate: Joi.date().optional(),
-  UserName: Joi.string().max(100).optional(),
   flag: Joi.string()
     .valid("A", "U")
     .required()
