@@ -42,7 +42,7 @@ export const getCarousel = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    let query = "SELECT cm.*, dm.FileName FROM carouselmast cm left join DocMast dm on cm.UkeyId = dm.MasterUkeyId";
+    let query = "SELECT cm.*, dm.FileName, dm.DocUkeyId FROM carouselmast cm left join DocMast dm on cm.UkeyId = dm.MasterUkeyId";
     let countQuery = "SELECT COUNT(*) as totalCount FROM carouselmast cm WHERE 1=1";
     const replacements = {};
 
