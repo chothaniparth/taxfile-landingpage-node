@@ -128,7 +128,7 @@ export const updateDoc = async (req, res) => {
 
     // delete old file if exists
     if (oldDoc?.FileName) {
-        fs.unlinkSync("./media/Gallery/" + oldDoc.FileName);
+        fs.unlinkSync("./media/"+ req?.params?.Master +"/" + oldDoc.FileName);
     }
 
     res.status(200).json({
