@@ -8,6 +8,7 @@ import YTvideoRoutes from './YTvideoRoutes.js';
 import AboutUsRoutes from './AboutUsRoutes.js';
 import NewsRoutes from './NewsRoutes.js';
 import TeamRoutes from './TeamRoutes.js'
+import clientRoutes from './clientRoutes.js';
 
 const router = express.Router();
 
@@ -20,5 +21,6 @@ router.use("/ytvideos", YTvideoRoutes);
 router.use("/aboutus", AboutUsRoutes);
 router.use("/news", NewsRoutes);
 router.use("/team", TeamRoutes);
+router.use("/clients", clientRoutes);
 
 export default router;
