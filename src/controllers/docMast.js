@@ -53,11 +53,7 @@ export const createDoc = async (req, res) => {
     if (FileNames.length > 0) {
       FileNames.forEach((file) => {
         try {
-          const filePath = path.join("media", file); // adjust if your multer path differs
-          if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);
-            console.log(`Deleted file: ${filePath}`);
-          }
+          fs.unlinkSync('./media/Gallery/' + file);
         } catch (unlinkErr) {
           console.error("Error deleting file:", unlinkErr);
         }
@@ -142,7 +138,7 @@ export const updateDoc = async (req, res) => {
     });
   } catch (err) {
     console.error("Error updating document:", err);
-    res.status(500).json({ error: "Internal server error", Success : false });
+    res.status(500).json({ error: err.message, Success : false });
   } finally {
     await sequelize.close();
   }
