@@ -63,3 +63,8 @@ export const createProductSchema = Joi.object({
       "any.required": "content array is required",
     }),
 });
+
+// DELETE (DELETE /about-us/:AboutUkeyId)
+export const deleteProductSchema = Joi.object({
+  ProductUkeyId: Joi.string().required(),
+});

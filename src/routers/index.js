@@ -9,6 +9,7 @@ import AboutUsRoutes from './AboutUsRoutes.js';
 import NewsRoutes from './NewsRoutes.js';
 import TeamRoutes from './TeamRoutes.js'
 import clientRoutes from './clientRoutes.js';
+import productRoutes from './productRoutes.js';
 
 const router = express.Router();
 
@@ -22,5 +23,6 @@ router.use("/aboutus", AboutUsRoutes);
 router.use("/news", NewsRoutes);
 router.use("/team", TeamRoutes);
 router.use("/clients", clientRoutes);
+router.use("/product", productRoutes);
 
 export default router;
