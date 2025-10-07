@@ -12,6 +12,8 @@ import clientRoutes from './clientRoutes.js';
 import productRoutes from './productRoutes.js';
 import vacancyRoutes from './vacancyRoutes.js';
 import branchRoutes from './branchRoutes.js';
+import InqueryRoutes from './InqueryRoutes.js';
+import ImpDatesRoutes from './ImpDatesRoutes.js';
 
 const router = express.Router();
 
@@ -28,5 +30,7 @@ router.use("/clients", clientRoutes);
 router.use("/product", productRoutes);
 router.use("/vacancy", vacancyRoutes);
 router.use("/branch", branchRoutes);
+router.use("/inquiries", InqueryRoutes);
+router.use("/impdates", ImpDatesRoutes);
 
 export default router;

@@ -115,9 +115,9 @@ export const deleteYTvideo = async (req, res) => {
     const query = "DELETE FROM YTvideoMast WHERE UkeyId = :UkeyId";
     const result = await sequelize.query(query, { replacements: { UkeyId } });
     
-    if (!result[1].rowCount) {
-      return res.status(404).json({ error: "YT video not found" });
-    }
+    // if (!result[1].rowCount) {
+    //   return res.status(404).json({ error: "YT video not found" });
+    // }
 
     res.status(200).json({ message: "YT video deleted successfully", Success : true });
   } catch (err) {
