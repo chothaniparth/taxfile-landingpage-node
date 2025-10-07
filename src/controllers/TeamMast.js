@@ -3,7 +3,7 @@ import { dbConection } from "../config/db.js";
 // Create / Update Team
 export const createTeam = async (req, res) => {
   const {
-    UkeyId = "", Name = "", Designation = "", Links = "", IsActive = true, UserName = req.user?.UserName || "System", flag = "A",
+    UkeyId = "", Name = "", Designation = "", IsActive = true, UserName = req.user?.UserName || "System", flag = "A", INSTA, TWITER, YT, FB
   } = req.body;
 
   const sequelize = await dbConection();
@@ -21,13 +21,13 @@ export const createTeam = async (req, res) => {
 
     query += `
       INSERT INTO TeamMast
-      (UkeyId, Name, Designation, Links, IsActive, IpAddress, EntryDate, UserName, flag)
+      (UkeyId, Name, Designation, IsActive, IpAddress, EntryDate, UserName, flag, INSTA, TWITER, YT, FB)
       VALUES
-      (:UkeyId, :Name, :Designation, :Links, :IsActive, :IpAddress, GETDATE(), :UserName, :flag);
+      (:UkeyId, :Name, :Designation, :IsActive, :IpAddress, GETDATE(), :UserName, :flag, :INSTA, :TWITER, :YT, :FB);
     `;
 
     await sequelize.query(query, {
-      replacements: { UkeyId, Name, Designation, Links, IsActive, IpAddress, UserName, flag },
+      replacements: { UkeyId, Name, Designation, IsActive, IpAddress, UserName, flag, INSTA, TWITER, YT, FB },
     });
 
     res.status(200).json({

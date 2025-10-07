@@ -3,24 +3,33 @@ import { dbConection } from "../config/db.js";
 
 const sequelize = await dbConection();
 
-const Team = sequelize.define(
-  "TeamMast",
+const Vacancy = sequelize.define(
+  "VacancyMast",
   {
     Id: {
       type: DataTypes.BIGINT,
       primaryKey: true,
       autoIncrement: true,
     },
-    UkeyId: {
+    Title: {
       type: DataTypes.STRING(200),
       allowNull: false,
     },
-    Name: {
-      type: DataTypes.STRING(400),
+    PostedDate: {
+      type: DataTypes.DATE,
       allowNull: false,
     },
-    Designation: {
+    NoofPost: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    Experience: {
       type: DataTypes.STRING(200),
+      allowNull: false,
+    },
+    Details: {
+      type: DataTypes.TEXT, // nvarchar(max)
       allowNull: false,
     },
     IsActive: {
@@ -44,27 +53,11 @@ const Team = sequelize.define(
       type: DataTypes.STRING(4),
       allowNull: true,
     },
-    INSTA: {
-      type: DataTypes.STRING(200),
-      allowNull: true,
-    },
-    TWITER: {
-      type: DataTypes.STRING(200),
-      allowNull: true,
-    },
-    YT: {
-      type: DataTypes.STRING(200),
-      allowNull: true,
-    },    
-    FB: {
-      type: DataTypes.STRING(200),
-      allowNull: true,
-    },    
   },
   {
-    tableName: "TeamMast",
+    tableName: "VacancyMast",
     timestamps: false,
   }
 );
 
-export default Team;
+export default Vacancy;
