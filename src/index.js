@@ -13,10 +13,10 @@ dotenv.config();
 const app = express();
 
 // Basic Security Headers
-app.use(helmet());
+// app.use(helmet());
 
 // Parse cookies
-app.use(cookieParser());
+// app.use(cookieParser());
 
 // Parse body
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -25,20 +25,20 @@ app.use(express.json());
 app.use(cors());
 
 // Express Session Setup
-app.use(
-  session({
-    name: 'session_id', // cookie name
-    secret: process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex'),
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      httpOnly: true, // Prevent JS access (XSS protection)
-      secure: process.env.NODE_ENV === 'production', // true only for HTTPS
-      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // for cross-origin cookies
-      maxAge: 1000 * 60 * 60 * 24 * 30, // 30 day
-    },
-  })
-);
+// app.use(
+//   session({
+//     name: 'session_id', // cookie name
+//     secret: process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex'),
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//       httpOnly: true, // Prevent JS access (XSS protection)
+//       secure: process.env.NODE_ENV === 'production', // true only for HTTPS
+//       sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // for cross-origin cookies
+//       maxAge: 1000 * 60 * 60 * 24 * 30, // 30 day
+//     },
+//   })
+// );
 
 app.use('/api', routes);
 

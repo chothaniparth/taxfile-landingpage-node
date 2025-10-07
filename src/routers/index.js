@@ -11,6 +11,7 @@ import TeamRoutes from './TeamRoutes.js'
 import clientRoutes from './clientRoutes.js';
 import productRoutes from './productRoutes.js';
 import vacancyRoutes from './vacancyRoutes.js';
+import branchRoutes from './branchRoutes.js';
 
 const router = express.Router();
 
@@ -26,5 +27,6 @@ router.use("/team", TeamRoutes);
 router.use("/clients", clientRoutes);
 router.use("/product", productRoutes);
 router.use("/vacancy", vacancyRoutes);
+router.use("/branch", branchRoutes);
 
 export default router;
