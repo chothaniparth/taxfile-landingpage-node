@@ -53,7 +53,7 @@ export const getYTvideo = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    let query = `select ytm.*, pm.ProductUkeyId from YTvideoMast ytm left join ProductMast pm on pm.ProductUkeyId = ytm.ProductUkeyId WHERE 1=1`;
+    let query = `select ytm.*, pm.ProductName from YTvideoMast ytm left join ProductMast pm on pm.ProductUkeyId = ytm.ProductUkeyId WHERE 1=1`;
     let countQuery = `SELECT COUNT(*) as totalCount FROM YTvideoMast ytm left join ProductMast pm on pm.ProductUkeyId = ytm.ProductUkeyId WHERE 1=1`;
     const replacements = {};
 
