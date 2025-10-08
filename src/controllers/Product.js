@@ -192,13 +192,13 @@ export const getProductById = async (req, res) => {
 
     // Get ProductPricing child data
     const [pricingResult] = await sequelize.query(
-      "SELECT * FROM ProductPricing WHERE ProductUkeyId = :ProductUkeyId ORDER BY EntryDate DESC",
+      "SELECT * FROM ProductPricing WHERE ProductUkeyId = :ProductUkeyId ORDER BY EntryDate ASC",
       { replacements: { ProductUkeyId } }
     );
 
     // Get ProductContent child data
     const [contentResult] = await sequelize.query(
-      "SELECT * FROM ProductContent WHERE ProductUkeyId = :ProductUkeyId ORDER BY EntryDate DESC",
+      "SELECT * FROM ProductContent WHERE ProductUkeyId = :ProductUkeyId ORDER BY EntryDate ASC",
       { replacements: { ProductUkeyId } }
     );
 
