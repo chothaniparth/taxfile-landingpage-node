@@ -33,10 +33,10 @@ export const createProductSchema = Joi.object({
       Joi.object({
         PriceUkeyId: Joi.string().max(200).required(),
         ProductUkeyId: Joi.string().max(200).required(),
-        SingleUser: Joi.number().precision(2).required(),
-        MultiUser: Joi.number().precision(2).required(),
-        UpdateSingle: Joi.number().precision(2).optional(),
-        Updatemulti: Joi.number().precision(2).optional(),
+        SingleUser: Joi.string().allow(null, "").optional(),
+        MultiUser: Joi.string().allow(null, "").optional(),
+        UpdateSingle: Joi.string().allow(null, "").optional(),
+        Updatemulti: Joi.string().allow(null, "").optional(),
         IsActive: Joi.boolean().required(),
       })
     )
