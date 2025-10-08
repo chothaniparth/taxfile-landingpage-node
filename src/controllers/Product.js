@@ -126,7 +126,7 @@ export const getProducts = async (req, res) => {
   const { ProductUkeyId, ProductName, Page, PageSize } = req.query;
   const sequelize = await dbConection();
   try {
-    let query = `select pm.*,SubCateName from ProductMast pm left join SubCateMast sm on sm.SubUkeyId=pm.SubUkeyId WHERE 1=1`;
+    let query = `select pm.*,SubCateName, cm.CategoryName from ProductMast pm left join SubCateMast sm on sm.SubUkeyId=pm.SubUkeyId left join CategoryMast cm on cm.CategoryId = pm.CategoryId WHERE 1=1`;
     let countQuery = `SELECT COUNT(*) as totalCount FROM ProductMast pm WHERE 1=1`;
     const replacements = {};
 
@@ -180,7 +180,7 @@ export const getProductById = async (req, res) => {
   try {
     // Get Product Master data
     const [productResult] = await sequelize.query(
-      "select pm.*,SubCateName from ProductMast pm left join SubCateMast sm on sm.SubUkeyId=pm.SubUkeyId WHERE pm.ProductUkeyId = :ProductUkeyId",
+      "select pm.*,SubCateName, cm.CategoryName from ProductMast pm left join SubCateMast sm on sm.SubUkeyId=pm.SubUkeyId left join CategoryMast cm on cm.CategoryId = pm.CategoryId WHERE pm.ProductUkeyId = :ProductUkeyId",
       { replacements: { ProductUkeyId } }
     );
 
