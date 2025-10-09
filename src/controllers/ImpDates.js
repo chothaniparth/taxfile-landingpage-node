@@ -17,7 +17,7 @@ export const createImpDate = async (req, res) => {
     // For update, delete existing record with the same Name and ImpDate (or you can use UkeyId if available)
     if (flag === "U") {
       query += `
-        DELETE FROM ImpDates WHERE Name = :Name AND UkeyId = :UkeyId;
+        DELETE FROM ImpDates WHERE UkeyId = :UkeyId;
       `;
     }
 
