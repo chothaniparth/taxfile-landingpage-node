@@ -47,8 +47,8 @@ export const getNews = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    let query = "SELECT * FROM NewsMast WHERE 1=1";
-    let countQuery = "SELECT COUNT(*) as totalCount FROM NewsMast WHERE 1=1";
+    let query = " SELECT nm.*, dm.FileName, dm.DocUkeyId FROM NewsMast nm left join DocMast dm on dm.MasterUkeyId = nm.UkeyId WHERE 1=1";
+    let countQuery = "SELECT COUNT(*) as totalCount FROM NewsMast nm WHERE 1=1";
     const replacements = {};
 
     if (UkeyId) {
