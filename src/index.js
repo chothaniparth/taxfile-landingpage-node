@@ -12,40 +12,52 @@ dotenv.config();
 
 const app = express();
 
-// Basic Security Headers
-// app.use(helmet());
+// Allow static files first
+app.use('/', express.static('./media'));
 
-// Parse cookies
-// app.use(cookieParser());
+// Helmet config
+if (process.env.NODE_ENV === 'production') {
+  app.use(helmet());
+} else {
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: false,
+      crossOriginEmbedderPolicy: false,
+    })
+  );
+}
 
-// Parse body
+// Cookie and body parsers
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.json());
-app.use(cors());
 
-// Express Session Setup
-// app.use(
-//   session({
-//     name: 'session_id', // cookie name
-//     secret: process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex'),
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//       httpOnly: true, // Prevent JS access (XSS protection)
-//       secure: process.env.NODE_ENV === 'production', // true only for HTTPS
-//       sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // for cross-origin cookies
-//       maxAge: 1000 * 60 * 60 * 24 * 30, // 30 day
-//     },
-//   })
-// );
+// CORS config
+app.use(
+  cors()
+);
+
+// Session config
+app.use(
+  session({
+    name: 'session_id',
+    secret: process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex'),
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // false for localhost
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+      maxAge: 1000 * 60 * 60 * 24 * 30,
+    },
+  })
+);
 
 app.use('/api', routes);
 
-app.use('/', express.static(`./media`));
-
 app.get('/', (req, res) => {
-    res.send('API is running...');
+  res.send('API is running...');
 });
 
 const PORT = process.env.PORT || 5000;
