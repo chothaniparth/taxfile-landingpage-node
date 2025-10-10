@@ -16,12 +16,12 @@ export const createProductSchema = Joi.object({
     CategoryId: Joi.number().integer().required(),
     SubUkeyId: Joi.string().max(200).optional(),
     Tagline1: Joi.string().max(500).optional(),
-    Tagline2: Joi.string().max(500).optional(),
+    Tagline2: Joi.string().max(500).optional().allow(null, ""),
     IsActive: Joi.boolean().required(),
     IsDeleted: Joi.boolean().required(),
-    HSNCode: Joi.string().max(100).optional(),
-    OrderId: Joi.number().integer().optional(),
-    ProductWebsite: Joi.string().max(500).optional(),
+    HSNCode: Joi.string().max(100).optional().allow(null, ""),
+    OrderId: Joi.number().integer().optional().allow(null),
+    ProductWebsite: Joi.string().max(500).optional().allow(null, ""),
   })
     .required()
     .messages({
