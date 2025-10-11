@@ -7,6 +7,7 @@ import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import crypto from 'crypto';
+import {notificationQueue} from './Queues/queues.js'
 
 dotenv.config();
 
@@ -58,6 +59,39 @@ app.use('/api', routes);
 
 app.get('/', (req, res) => {
   res.send('API is running...');
+});
+
+app.post('/notification-worker', async (req, res) => {
+  try {
+    const { name, token, message, scheduleAt } = req.body;
+
+    if (!name || !token || !message) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // If scheduling time is provided, calculate delay
+    let delay = 0;
+    if (scheduleAt) {
+      const scheduleTime = new Date(scheduleAt).getTime();
+      delay = Math.max(scheduleTime - Date.now(), 0);
+    }
+
+    // Add job to queue
+    const job = await notificationQueue.add(
+      'sendNotification',
+      { name, token, message },
+      { delay, removeOnComplete: true, removeOnFail: 10 }
+    );
+
+    res.status(200).json({
+      success: true,
+      jobId: job.id,
+      message: 'Notification job added to queue successfully.',
+    });
+  } catch (err) {
+    console.error('Error adding job to notification queue:', err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 const PORT = process.env.PORT || 5000;
