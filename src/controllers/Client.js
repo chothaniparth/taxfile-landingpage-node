@@ -51,8 +51,8 @@ export const getClients = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    let query = `SELECT * FROM ClientMast WHERE 1=1`;
-    let countQuery = `SELECT COUNT(*) as totalCount FROM ClientMast WHERE 1=1`;
+    let query = `SELECT cm.*, dm.FileName, dm.DocUkeyId FROM ClientMast cm left join DocMast dm on dm.MasterUkeyId = cm.ClientUkeyId WHERE 1=1`;
+    let countQuery = `SELECT COUNT(*) as totalCount FROM ClientMast cm WHERE 1=1`;
     const replacements = {};
 
     if (ClientUkeyId) {
