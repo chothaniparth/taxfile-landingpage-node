@@ -49,7 +49,7 @@ export const createVacancy = async (req, res) => {
 
 // Get Vacancy list with optional filters and pagination
 export const getVacancy = async (req, res) => {
-  const { Title, Experience, Page, PageSize } = req.query;
+  const { Title, Experience, Page, PageSize, VacancyUkeyId } = req.query;
   const sequelize = await dbConection();
 
   try {
@@ -61,6 +61,11 @@ export const getVacancy = async (req, res) => {
       query += " AND Title LIKE :Title";
       countQuery += " AND Title LIKE :Title";
       replacements.Title = `%${Title}%`;
+    }
+    if (VacancyUkeyId) {
+      query += " AND VacancyUkeyId LIKE :VacancyUkeyId";
+      countQuery += " AND VacancyUkeyId LIKE :VacancyUkeyId";
+      replacements.VacancyUkeyId = `${VacancyUkeyId}`;
     }
     if (Experience) {
       query += " AND Experience LIKE :Experience";
