@@ -180,7 +180,7 @@ export const getProductById = async (req, res) => {
   try {
     // Get Product Master data
     const [productResult] = await sequelize.query(
-      "select pm.*,SubCateName, cm.CategoryName, dm.FileName, dm.DocUkeyId from ProductMast pm left join SubCateMast sm on sm.SubUkeyId=pm.SubUkeyId left join CategoryMast cm on cm.CategoryId = pm.CategoryId left join DocMast dm on dm.MasterUkeyId = pm.ProductUkeyId",
+      "select pm.*,SubCateName, cm.CategoryName, dm.FileName, dm.DocUkeyId from ProductMast pm left join SubCateMast sm on sm.SubUkeyId=pm.SubUkeyId left join CategoryMast cm on cm.CategoryId = pm.CategoryId left join DocMast dm on dm.MasterUkeyId = pm.ProductUkeyId where ProductUkeyId = :ProductUkeyId",
       { replacements: { ProductUkeyId } }
     );
 
