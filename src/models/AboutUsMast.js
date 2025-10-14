@@ -27,7 +27,19 @@ const AboutUs = sequelize.define(
       type: DataTypes.TEXT, // nvarchar(max)
       allowNull: false,
     },
-    Core: {
+    Core1: {
+      type: DataTypes.TEXT, // nvarchar(max)
+      allowNull: false,
+    },
+    Core2: {
+      type: DataTypes.TEXT, // nvarchar(max)
+      allowNull: false,
+    },
+    Core3: {
+      type: DataTypes.TEXT, // nvarchar(max)
+      allowNull: false,
+    },
+    Core4: {
       type: DataTypes.TEXT, // nvarchar(max)
       allowNull: false,
     },

@@ -3,10 +3,13 @@ import Joi from "joi";
 // CREATE / UPDATE (POST /about-us)
 export const createAboutUsSchema = Joi.object({
   AboutUkeyId: Joi.string().max(200).required(),
-  LongDetails: Joi.string().required(),
-  Mission: Joi.string().required(),
-  Vision: Joi.string().required(),
-  Core: Joi.string().required(),
+  LongDetails: Joi.string().optional(),
+  Mission: Joi.string().optional(),
+  Vision: Joi.string().optional(),
+  Core1: Joi.string().optional(),
+  Core2: Joi.string().optional(),
+  Core3: Joi.string().optional(),
+  Core4: Joi.string().optional(),
   Counter1: Joi.number().integer().min(0).default(0),
   Counter2: Joi.number().integer().min(0).default(0),
   Counter3: Joi.number().integer().min(0).default(0),

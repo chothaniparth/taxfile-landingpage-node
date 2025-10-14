@@ -4,6 +4,7 @@ import Joi from "joi";
 export const createOrUpdateYTvideoSchema = Joi.object({
   UkeyId: Joi.string().max(200).required(),
   ProductUkeyId: Joi.string().max(200).required(),
+  Title: Joi.string().max(200).required(),
   URL: Joi.string().uri().max(1000).required(), // URL validation
   IsActive: Joi.boolean().default(true),
   IpAddress: Joi.string().max(200).optional(),

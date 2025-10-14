@@ -8,7 +8,8 @@ export const createYTvideo = async (req, res) => {
     URL = '',
     IsActive = true,
     UserName = req.user.UserName,
-    flag = 'A'
+    flag = 'A',
+    Title = ''
   } = req.body;
 
   const sequelize = await dbConection();
@@ -28,12 +29,12 @@ export const createYTvideo = async (req, res) => {
     }
 
     query += `
-      INSERT INTO YTvideoMast (UkeyId, ProductUkeyId, URL, IsActive, IpAddress, EntryDate, UserName, flag)
-      VALUES (:UkeyId, :ProductUkeyId, :URL, :IsActive, :IpAddress, GETDATE(), :UserName, :flag);
+      INSERT INTO YTvideoMast (UkeyId, ProductUkeyId, URL, IsActive, IpAddress, EntryDate, UserName, flag, Title)
+      VALUES (:UkeyId, :ProductUkeyId, :URL, :IsActive, :IpAddress, GETDATE(), :UserName, :flag, :Title);
     `;
 
     await sequelize.query(query, {
-      replacements: { UkeyId, ProductUkeyId, URL, IsActive, IpAddress, UserName, flag },
+      replacements: { UkeyId, ProductUkeyId, URL, IsActive, IpAddress, UserName, flag, Title },
     });
 
     res.status(200).json({

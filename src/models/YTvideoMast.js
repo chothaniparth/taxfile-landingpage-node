@@ -19,6 +19,10 @@ const YTvideo = sequelize.define(
       type: DataTypes.STRING(200),
       allowNull: false,
     },
+    Title: {
+      type: DataTypes.STRING(150),
+      allowNull: false,
+    },
     URL: {
       type: DataTypes.STRING(1000),
       allowNull: false,
