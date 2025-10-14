@@ -43,6 +43,26 @@ const AboutUs = sequelize.define(
       type: DataTypes.TEXT, // nvarchar(max)
       allowNull: false,
     },
+    Twitter: {
+      type: DataTypes.STRING(200),
+      allowNull: false,
+    },
+    YT: {
+      type: DataTypes.STRING(200),
+      allowNull: false,
+    },
+    Linkedin: {
+      type: DataTypes.STRING(200),
+      allowNull: false,
+    },
+    Insta: {
+      type: DataTypes.STRING(200),
+      allowNull: false,
+    },
+    FB: {
+      type: DataTypes.STRING(200),
+      allowNull: false,
+    },
     Counter1: {
       type: DataTypes.BIGINT,
       allowNull: false,

@@ -3,7 +3,7 @@ import { dbConection } from "../config/db.js";
 // Create / Update AboutUs
 export const createAboutUs = async (req, res) => {
   const {
-    AboutUkeyId = "", LongDetails = "", Mission = "", Vision = "", Core1 = "", Counter1 = 0, Counter2 = 0, Counter3 = 0, Counter4 = 0, UserName = req.user?.UserName || "System", flag = "A", Core2, Core3, Core4
+    AboutUkeyId = "", LongDetails = "", Mission = "", Vision = "", Core1 = "", Counter1 = 0, Counter2 = 0, Counter3 = 0, Counter4 = 0, UserName = req.user?.UserName || "System", flag = "A", Core2, Core3, Core4, FB, Insta, Linkedin, YT, Twitter
   } = req.body;
 
   const sequelize = await dbConection();
@@ -21,14 +21,14 @@ export const createAboutUs = async (req, res) => {
 
     query += `
       INSERT INTO AboutUsMast
-      (AboutUkeyId, LongDetails, Mission, Vision, Core1, Counter1, Counter2, Counter3, Counter4, IpAddress, EntryDate, UserName, flag, Core2, Core3, Core4)
+      (AboutUkeyId, LongDetails, Mission, Vision, Core1, Counter1, Counter2, Counter3, Counter4, IpAddress, EntryDate, UserName, flag, Core2, Core3, Core4, FB, Insta, Linkedin, YT, Twitter)
       VALUES
-      (:AboutUkeyId, :LongDetails, :Mission, :Vision, :Core1, :Counter1, :Counter2, :Counter3, :Counter4, :IpAddress, GETDATE(), :UserName, :flag, :Core2, :Core3, :Core4);
+      (:AboutUkeyId, :LongDetails, :Mission, :Vision, :Core1, :Counter1, :Counter2, :Counter3, :Counter4, :IpAddress, GETDATE(), :UserName, :flag, :Core2, :Core3, :Core4, :FB, :Insta, :Linkedin, :YT, :Twitter);
     `;
 
     await sequelize.query(query, {
       replacements: {
-        AboutUkeyId, LongDetails, Mission, Vision, Core1, Counter1, Counter2, Counter3, Counter4, IpAddress, UserName, flag, Core2, Core3, Core4
+        AboutUkeyId, LongDetails, Mission, Vision, Core1, Counter1, Counter2, Counter3, Counter4, IpAddress, UserName, flag, Core2, Core3, Core4, FB, Insta, Linkedin, YT, Twitter
       },
     });
 
