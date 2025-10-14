@@ -58,23 +58,23 @@ export const getYTvideo = async (req, res) => {
     const replacements = {};
 
     if (UkeyId) {
-      query += " AND UkeyId = :UkeyId";
-      countQuery += " AND UkeyId = :UkeyId";
+      query += " AND ytm.UkeyId = :UkeyId";
+      countQuery += " AND ytm.UkeyId = :UkeyId";
       replacements.UkeyId = UkeyId;
     }
     if (ProductUkeyId) {
-      query += " AND ProductUkeyId = :ProductUkeyId";
-      countQuery += " AND ProductUkeyId = :ProductUkeyId";
+      query += " AND ytm.ProductUkeyId = :ProductUkeyId";
+      countQuery += " AND ytm.ProductUkeyId = :ProductUkeyId";
       replacements.ProductUkeyId = ProductUkeyId;
     }
     if (URL) {
-      query += " AND URL = :URL";
-      countQuery += " AND URL = :URL";
+      query += " AND ytm.URL = :URL";
+      countQuery += " AND ytm.URL = :URL";
       replacements.URL = URL;
     }
     if (IsActive !== undefined) {
-      query += " AND IsActive = :IsActive";
-      countQuery += " AND IsActive = :IsActive";
+      query += " AND ytm.IsActive = :IsActive";
+      countQuery += " AND ytm.IsActive = :IsActive";
       replacements.IsActive = IsActive;
     }
 
