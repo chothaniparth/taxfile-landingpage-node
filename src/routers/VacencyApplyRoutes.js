@@ -14,7 +14,7 @@ const router = express.Router();
 router.get("/vacencyApplyList", getVacancyApply);
 
 // Protected routes
-router.post("/addUpdateVacencyApply", authenticateJWT, validate(createVacancyApplySchema), createVacancyApply);
-router.delete("/deleveVacencyApply/:UkeyId", authenticateJWT, validate(deleteVacancyApplySchema), deleteVacancyApply);
+router.post("/addUpdateVacencyApply", validate(createVacancyApplySchema), createVacancyApply);
+router.delete("/deleveVacencyApply/:UkeyId", validate(deleteVacancyApplySchema), deleteVacancyApply);
 
 export default router;
