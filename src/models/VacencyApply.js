@@ -15,6 +15,10 @@ const VacancyApply = sequelize.define(
       type: DataTypes.STRING(200),
       allowNull: false,
     },
+    vacencyMastUkeyId: {
+      type: DataTypes.STRING(200),
+      allowNull: false,
+    },
     Name: {
       type: DataTypes.STRING(300),
       allowNull: false,

@@ -4,6 +4,7 @@ import Joi from "joi";
 export const createVacancyApplySchema = Joi.object({
   UkeyId: Joi.string().max(200).required(),
   Name: Joi.string().max(300).required(),
+  vacencyMastUkeyId: Joi.string().max(300).optional(),
   Mobile: Joi.string()
     .pattern(/^[0-9]{8,24}$/)
     .message("Mobile number must contain only digits and be 8–24 characters long")

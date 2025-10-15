@@ -3,7 +3,7 @@ import { dbConection } from "../config/db.js";
 // CREATE / UPDATE VacancyApply
 export const createVacancyApply = async (req, res) => {
   const {
-    UkeyId = "", Name = "", Mobile = "", Email = "", UserName = req.user?.UserName || "System", flag = "A",
+    UkeyId = "", Name = "", Mobile = "", Email = "", UserName = req.user?.UserName || "System", flag = "A", vacencyMastUkeyId = ''
   } = req.body;
 
   const sequelize = await dbConection();
@@ -21,9 +21,9 @@ export const createVacancyApply = async (req, res) => {
 
     query += `
       INSERT INTO VacancyApply
-      (UkeyId, Name, Mobile, Email, IpAddress, EntryDate, UserName, flag)
+      (UkeyId, Name, Mobile, Email, IpAddress, EntryDate, UserName, flag, vacencyMastUkeyId)
       VALUES
-      (:UkeyId, :Name, :Mobile, :Email, :IpAddress, GETDATE(), :UserName, :flag);
+      (:UkeyId, :Name, :Mobile, :Email, :IpAddress, GETDATE(), :UserName, :flag, :vacencyMastUkeyId);
     `;
 
     await sequelize.query(query, {
