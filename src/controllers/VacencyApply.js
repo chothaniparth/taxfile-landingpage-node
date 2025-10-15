@@ -28,7 +28,7 @@ export const createVacancyApply = async (req, res) => {
 
     await sequelize.query(query, {
       replacements: {
-        UkeyId, Name, Mobile, Email, IpAddress, UserName, flag,
+        UkeyId, Name, Mobile, Email, IpAddress, UserName, flag, vacencyMastUkeyId
       },
     });
 
