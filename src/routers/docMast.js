@@ -13,7 +13,7 @@ const router = express.Router();
 router.get("/DocumentList", getdoc);
 
 // Protected routes
-router.post("/AddDocument/:Master", authenticateJWT, validate(createDocMastSchema), DocUploadV1, createDoc);
+router.post("/AddDocument/:Master", validate(createDocMastSchema), DocUploadV1, createDoc);
 router.put("/UpdateDocument/:Master", authenticateJWT, validate(createDocMastSchema), DocUploadV1, updateDoc);
 router.delete("/deleteDocument/:DocUkeyId", authenticateJWT, deleteDoc);
 
