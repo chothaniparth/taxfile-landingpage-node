@@ -47,18 +47,18 @@ export const getTeam = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    let query = `SELECT * FROM TeamMast WHERE 1=1`;
-    let countQuery = `SELECT COUNT(*) as totalCount FROM TeamMast WHERE 1=1`;
+    let query = `SELECT tm.*, dm.FileName, dm.DocUkeyId FROM TeamMast tm left join DocMast dm on dm.MasterUkeyId = tm.UkeyId WHERE 1=1`;
+    let countQuery = `SELECT COUNT(*) as totalCount FROM TeamMast tm WHERE 1=1`;
     const replacements = {};
 
     if (UkeyId) {
-      query += " AND UkeyId = :UkeyId";
-      countQuery += " AND UkeyId = :UkeyId";
+      query += " AND tm.UkeyId = :UkeyId";
+      countQuery += " AND tm.UkeyId = :UkeyId";
       replacements.UkeyId = UkeyId;
     }
     if (IsActive !== undefined) {
-      query += " AND IsActive = :IsActive";
-      countQuery += " AND IsActive = :IsActive";
+      query += " AND tm.IsActive = :IsActive";
+      countQuery += " AND tm.IsActive = :IsActive";
       replacements.IsActive = IsActive;
     }
 
