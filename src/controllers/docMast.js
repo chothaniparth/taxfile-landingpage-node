@@ -252,7 +252,7 @@ export const deleteDoc = async (req, res) => {
     res.status(200).json({ message: "Document deleted successfully", Success : true });
   } catch (err) {
     console.error("Error deleting document:", err);
-    res.status(500).json({ error: "Database or file system error", Success : false });
+    res.status(500).json({ error: err.message, Success : false });
   } finally {
     await sequelize.close();
   }
