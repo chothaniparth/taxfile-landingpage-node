@@ -43,7 +43,7 @@ export const createNews = async (req, res) => {
 
 // GET News (with optional filters and pagination)
 export const getNews = async (req, res) => {
-  const { UkeyId, Title, IsActive, IsDeleted, Page, PageSize } = req.query;
+  const { UkeyId, Title, IsActive, IsDeleted, Page, PageSize, Type } = req.query;
   const sequelize = await dbConection();
 
   try {
@@ -55,6 +55,11 @@ export const getNews = async (req, res) => {
       query += " AND UkeyId = :UkeyId";
       countQuery += " AND UkeyId = :UkeyId";
       replacements.UkeyId = UkeyId;
+    }
+    if (Type) {
+      query += " AND Type = :Type";
+      countQuery += " AND Type = :Type";
+      replacements.Type = Type;
     }
     if (Title) {
       query += " AND Title LIKE :Title";
