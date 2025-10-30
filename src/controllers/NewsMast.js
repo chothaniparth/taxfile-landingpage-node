@@ -23,7 +23,7 @@ export const createNews = async (req, res) => {
       INSERT INTO NewsMast
         (UkeyId, Title, Descrption, NewsDate, IsActive, IsDeleted, IpAddress, EntryDate, UserName, flag, Type)
       VALUES
-        (:UkeyId, :Title, :Descrption, :NewsDate, :IsActive, :IsDeleted, :IpAddress, GETDATE(), :UserName, :flag, Type);
+        (:UkeyId, :Title, :Descrption, :NewsDate, :IsActive, :IsDeleted, :IpAddress, GETDATE(), :UserName, :flag, :Type);
     `;
 
     await sequelize.query(query, {
