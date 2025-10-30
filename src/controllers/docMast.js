@@ -227,7 +227,7 @@ export const deleteDoc = async (req, res) => {
   try {
     // 1. Get document info from DB
     const [doc] = await sequelize.query(
-      "SELECT FileName FROM DocMast WHERE DocUkeyId = :DocUkeyId",
+      "SELECT FileName, Master FROM DocMast WHERE DocUkeyId = :DocUkeyId",
       {
         replacements: { DocUkeyId },
         type: sequelize.QueryTypes.SELECT,
@@ -240,7 +240,7 @@ export const deleteDoc = async (req, res) => {
 
     // 3. Delete file if exists
     if (doc.FileName) {
-      fs.unlinkSync("./media/Gallery/" + doc.FileName);
+      fs.unlinkSync(`./media/${doc.Master}/${doc.FileName}`);
     }
 
     // 4. Delete record from DB
