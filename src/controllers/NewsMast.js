@@ -3,7 +3,7 @@ import { dbConection } from "../config/db.js";
 // CREATE / UPDATE News
 export const createNews = async (req, res) => {
   const {
-    UkeyId, Title = "", Descrption = "", NewsDate = null, IsActive = true, IsDeleted = false, UserName = req.user?.UserName, flag = "A",
+    UkeyId, Title = "", Descrption = "", NewsDate = null, IsActive = true, IsDeleted = false, UserName = req.user?.UserName, flag = "A", Type = "",
   } = req.body;
 
   const sequelize = await dbConection();
@@ -21,13 +21,13 @@ export const createNews = async (req, res) => {
 
     query += `
       INSERT INTO NewsMast
-        (UkeyId, Title, Descrption, NewsDate, IsActive, IsDeleted, IpAddress, EntryDate, UserName, flag)
+        (UkeyId, Title, Descrption, NewsDate, IsActive, IsDeleted, IpAddress, EntryDate, UserName, flag, Type)
       VALUES
-        (:UkeyId, :Title, :Descrption, :NewsDate, :IsActive, :IsDeleted, :IpAddress, GETDATE(), :UserName, :flag);
+        (:UkeyId, :Title, :Descrption, :NewsDate, :IsActive, :IsDeleted, :IpAddress, GETDATE(), :UserName, :flag, Type);
     `;
 
     await sequelize.query(query, {
-      replacements: { Title, Descrption, NewsDate, IsActive, IsDeleted, IpAddress, UserName, flag, UkeyId },
+      replacements: { Title, Descrption, NewsDate, IsActive, IsDeleted, IpAddress, UserName, flag, UkeyId, Type },
     });
 
     res.status(200).json({

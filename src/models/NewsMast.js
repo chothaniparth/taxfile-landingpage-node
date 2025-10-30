@@ -53,6 +53,10 @@ const News = sequelize.define(
       type: DataTypes.STRING(4),
       allowNull: true,
     },
+    Type: {
+      type: DataTypes.STRING(10),
+      allowNull: true,
+    },
   },
   {
     tableName: "NewsMast",

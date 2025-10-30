@@ -16,6 +16,7 @@ export const createNewsSchema = Joi.object({
       "any.only": "flag can be A or U only",
       "any.required": "flag is required",
     }),
+  Type: Joi.string().allow(null, "").optional(),
 });
 
 // DELETE NewsMast
