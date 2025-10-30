@@ -141,6 +141,8 @@ export const getProducts = async (req, res) => {
       replacements.ProductName = `%${ProductName}%`;
     }
 
+    query += " AND dm.FileType <> 'pdf'";
+
     query += " ORDER BY pm.EntryDate DESC";
 
     // total count
@@ -201,11 +203,18 @@ export const getProductById = async (req, res) => {
       "SELECT * FROM ProductContent WHERE ProductUkeyId = :ProductUkeyId ORDER BY EntryDate ASC",
       { replacements: { ProductUkeyId } }
     );
+    
+    // Get ProductContent child data
+    const [brochureResult] = await sequelize.query(
+      "SELECT FileType, DocUkeyId, FileName FROM DocMast WHERE MasterUkeyId = :ProductUkeyId and FileType = 'pdf' ORDER BY EntryDate ASC",
+      { replacements: { ProductUkeyId } }
+    );
 
     res.status(200).json({
       Master: product,
       price: pricingResult,
       content: contentResult,
+      brochure: brochureResult[0],
       Success: true
     });
   } catch (err) {
