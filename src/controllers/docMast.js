@@ -82,7 +82,7 @@ export const updateDoc = async (req, res) => {
     const [oldDoc] = await sequelize.query(
       "SELECT FileName FROM DocMast WHERE DocUkeyId = :DocUkeyId",
       {
-        replacements: { DocUkeyId },
+        replacements: { DocUkeyId, FileType },
         type: sequelize.QueryTypes.SELECT,
       }
     );
@@ -92,24 +92,27 @@ export const updateDoc = async (req, res) => {
     //   return res.status(400).json({ error: "No file uploaded for update" });
     // }
 
-    const newFile = req.files.FileName?.[0]?.filename || req.body.FileName ;
+    const newFile = req.files.FileName?.[0]?.filename || req?.body?.FileName ;
 
     // delete old DB row
-    await sequelize.query(
-      "DELETE FROM DocMast WHERE DocUkeyId = :DocUkeyId",
-      { replacements: { DocUkeyId } }
-    );
+    // await sequelize.query(
+    //   "DELETE FROM DocMast WHERE DocUkeyId = :DocUkeyId and FileType = :FileType",
+    //   { replacements: { DocUkeyId, FileType } }
+    // );
 
-    // insert new doc
+    // update existing doc
     await sequelize.query(
-      `INSERT INTO DocMast (
-          DocUkeyId, FileName, FileType, Master, MasterUkeyId, Link, 
-          IsActive, IpAddress, EntryDate, UserName, flag
-        )
-        VALUES (
-          :DocUkeyId, :FileName, :FileType, :Master, :MasterUkeyId, :Link, 
-          :IsActive, :IpAddress, GETDATE(), :UserName, :flag
-        )`,
+      `UPDATE DocMast SET
+          FileName = :FileName, 
+          Master = :Master, 
+          MasterUkeyId = :MasterUkeyId, 
+          Link = :Link, 
+          IsActive = :IsActive, 
+          IpAddress = :IpAddress, 
+          EntryDate = GETDATE(), 
+          UserName = :UserName, 
+          flag = :flag
+        WHERE DocUkeyId = :DocUkeyId AND FileType = :FileType`,
       {
         replacements: {
           DocUkeyId,
@@ -125,9 +128,9 @@ export const updateDoc = async (req, res) => {
         },
       }
     );
-
+        
     // delete old file if exists
-    if (req?.files?.FileNam) {
+    if (req?.files?.FileName) {
         fs.unlinkSync("./media/"+ req?.params?.Master +"/" + oldDoc.FileName);
     }
 
