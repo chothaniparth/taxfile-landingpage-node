@@ -44,8 +44,9 @@ const Carousel = sequelize.define(
       allowNull: true,
     },
     EntryDate: {
-      type: DataTypes.DATE,
-      allowNull: true,
+      type: DataTypes.STRING,
+      // The value is a date and time passed from JavaScript. This is done because using the model directly causes an error.
+      allowNull: false,
     },
     flag: {
       type: DataTypes.STRING(2),
