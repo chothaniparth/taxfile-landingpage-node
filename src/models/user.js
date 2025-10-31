@@ -52,8 +52,9 @@ const Users = sequelize.define(
       allowNull: true,
     },
     EntryDate: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING, // value is date and time. it is passed using javascript. this is because if using model then it is giving error.
       allowNull: true,
+      defaultValue: DataTypes.NOW,
     },
   },
   {
