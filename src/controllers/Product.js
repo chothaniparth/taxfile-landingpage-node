@@ -126,7 +126,7 @@ export const getProducts = async (req, res) => {
   const { ProductUkeyId, ProductName, Page, PageSize } = req.query;
   const sequelize = await dbConection();
   try {
-    let query = `select pm.*,SubCateName, cm.CategoryName, dm.FileName, dm.DocUkeyId from ProductMast pm left join SubCateMast sm on sm.SubUkeyId=pm.SubUkeyId left join CategoryMast cm on cm.CategoryId = pm.CategoryId left join DocMast dm on dm.MasterUkeyId = pm.ProductUkeyId WHERE 1=1`;
+    let query = `select pm.*,SubCateName, cm.CategoryName, dm.FileName, dm.DocUkeyId from ProductMast pm left join SubCateMast sm on sm.SubUkeyId=pm.SubUkeyId left join CategoryMast cm on cm.CategoryId = pm.CategoryId left join DocMast dm on dm.MasterUkeyId = pm.ProductUkeyId AND dm.FileType <> 'pdf' WHERE 1=1`;
     let countQuery = `SELECT COUNT(*) as totalCount FROM ProductMast pm WHERE 1=1`;
     const replacements = {};
 
@@ -140,8 +140,6 @@ export const getProducts = async (req, res) => {
       countQuery += " AND pm.ProductName LIKE :ProductName";
       replacements.ProductName = `%${ProductName}%`;
     }
-
-    query += " AND dm.FileType <> 'pdf'";
 
     query += " ORDER BY pm.EntryDate DESC";
 
