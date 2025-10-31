@@ -88,11 +88,11 @@ export const updateDoc = async (req, res) => {
     );
 
     // ensure one new file uploaded
-    if (!req.files?.FileName || req.files.FileName.length === 0) {
-      return res.status(400).json({ error: "No file uploaded for update" });
-    }
+    // if (!req.files?.FileName || req.files.FileName.length === 0) {
+    //   return res.status(400).json({ error: "No file uploaded for update" });
+    // }
 
-    const newFile = req.files.FileName[0].filename;
+    const newFile = req.files.FileName?.[0]?.filename || req.body.FileName ;
 
     // delete old DB row
     await sequelize.query(
@@ -127,7 +127,7 @@ export const updateDoc = async (req, res) => {
     );
 
     // delete old file if exists
-    if (oldDoc?.FileName) {
+    if (req?.files?.FileNam) {
         fs.unlinkSync("./media/"+ req?.params?.Master +"/" + oldDoc.FileName);
     }
 
