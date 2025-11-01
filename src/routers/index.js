@@ -16,6 +16,7 @@ import InqueryRoutes from './InqueryRoutes.js';
 import ImpDatesRoutes from './ImpDatesRoutes.js';
 import CategoryRoutes from './category.js';
 import VacancyApplyRoutes from "./VacencyApplyRoutes.js";
+import OTPController from '../controllers/OTP.js';
 
 const router = express.Router();
 
@@ -36,5 +37,6 @@ router.use("/inquiries", InqueryRoutes);
 router.use("/impdates", ImpDatesRoutes);
 router.use("/category", CategoryRoutes);
 router.use('/vacencyApply', VacancyApplyRoutes);
+router.get('/sendOTP/:MobileNumber', OTPController);
 
 export default router;
