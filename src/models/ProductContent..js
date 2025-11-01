@@ -21,11 +21,11 @@ const ProductContent = sequelize.define(
     },
     Title: {
       type: DataTypes.STRING(100),
-      allowNull: false,
+      allowNull: true,
     },
     Details: {
       type: DataTypes.TEXT, // nvarchar(max)
-      allowNull: false,
+      allowNull: true,
     },
     IsActive: {
       type: DataTypes.BOOLEAN,
