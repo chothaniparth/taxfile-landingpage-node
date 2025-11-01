@@ -57,12 +57,12 @@ export const createProductSchema = Joi.object({
         IsActive: Joi.boolean().required(),
       })
     )
-    .min(1)
-    .required()
-    .messages({
-      "array.min": "At least one content record is required",
-      "any.required": "content array is required",
-    }),
+    .optional()
+    // .min(1)
+    // .messages({
+    //   "array.min": "At least one content record is required",
+    //   "any.required": "content array is required",
+    // }),
 });
 
 // DELETE (DELETE /about-us/:AboutUkeyId)
