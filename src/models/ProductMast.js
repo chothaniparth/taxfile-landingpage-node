@@ -66,7 +66,7 @@ const ProductMast = sequelize.define(
       allowNull: true,
     },
     EntryDate: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING(100),
       allowNull: true,
     },
     UserName: {

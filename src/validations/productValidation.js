@@ -52,6 +52,7 @@ export const createProductSchema = Joi.object({
       Joi.object({
         ContentUkeyId: Joi.string().max(200).required(),
         ProductUkeyId: Joi.string().max(200).required(),
+        Title: Joi.string().max(100).optional().allow(null, ""),
         Details: Joi.string().required(),
         IsActive: Joi.boolean().required(),
       })

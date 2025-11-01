@@ -11,6 +11,10 @@ const ProductPricing = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
+    PriceUkeyId: {
+      type: DataTypes.STRING(200),
+      allowNull: false,
+    },
     ProductUkeyId: {
       type: DataTypes.STRING(200),
       allowNull: false,
@@ -45,7 +49,7 @@ const ProductPricing = sequelize.define(
       allowNull: true,
     },
     EntryDate: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING(100),
       allowNull: true,
     },
     UserName: {

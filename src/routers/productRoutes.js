@@ -15,7 +15,7 @@ router.get("/productList", getProducts);
 router.get("/productList/:ProductUkeyId", getProductById);
 
 // Protected routes
-router.post("/AddUpdateProduct", authenticateJWT, validate(createProductSchema), createOrUpdateProduct);
+router.post("/AddUpdateProduct", authenticateJWT, (req, res, next)=>{console.log(req.body); next();}, validate(createProductSchema), createOrUpdateProduct);
 router.delete("/deleteProduct/:ProductUkeyId", authenticateJWT, validate(deleteProductSchema), deleteProduct);
 
 export default router;

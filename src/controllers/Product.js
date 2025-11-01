@@ -1,118 +1,83 @@
 import { dbConection } from "../config/db.js";
+import ProductMast from "../models/ProductMast.js";
+import ProductPricing from "../models/ProductPricing.js";
+import ProductContent from "../models/ProductContent..js"; // fixed double-dot typo
 
 // CREATE / UPDATE Product
 export const createOrUpdateProduct = async (req, res) => {
   const { flag, Master, price = [], content = [] } = req.body;
   const sequelize = await dbConection();
   const UserName = req.user?.UserName || "System";
-  const IpAddress = req?.headers["x-forwarded-for"] || req?.socket?.remoteAddress || "Not Found";
+  const IpAddress =
+    req?.headers["x-forwarded-for"] || req?.socket?.remoteAddress || "Not Found";
 
   const transaction = await sequelize.transaction();
 
   try {
+    // --- Step 1: Delete old records if flag === "U" ---
     if (flag === "U") {
-      // Delete existing product data
-      await sequelize.query(
-        "DELETE FROM ProductMast WHERE ProductUkeyId = :ProductUkeyId",
-        { replacements: { ProductUkeyId: Master.ProductUkeyId }, transaction }
-      );
-      await sequelize.query(
-        "DELETE FROM ProductPricing WHERE ProductUkeyId = :ProductUkeyId",
-        { replacements: { ProductUkeyId: Master.ProductUkeyId }, transaction }
-      );
-      await sequelize.query(
-        "DELETE FROM ProductContent WHERE ProductUkeyId = :ProductUkeyId",
-        { replacements: { ProductUkeyId: Master.ProductUkeyId }, transaction }
-      );
+      await ProductMast.destroy({
+        where: { ProductUkeyId: Master.ProductUkeyId }, transaction,
+      });
+
+      await ProductPricing.destroy({
+        where: { ProductUkeyId: Master.ProductUkeyId }, transaction,
+      });
+
+      await ProductContent.destroy({
+        where: { ProductUkeyId: Master.ProductUkeyId }, transaction,
+      });
     }
 
-    // Insert into ProductMast
-    await sequelize.query(
-      `
-      INSERT INTO ProductMast
-      (ProductUkeyId, ProductName, ShortCode, CategoryId, SubUkeyId, Tagline1, Tagline2, IsActive, IsDeleted, HSNCode, OrderId, ProductWebsite, IpAddress, EntryDate, UserName, flag)
-      VALUES
-      (:ProductUkeyId, :ProductName, :ShortCode, :CategoryId, :SubUkeyId, :Tagline1, :Tagline2, :IsActive, :IsDeleted, :HSNCode, :OrderId, :ProductWebsite, :IpAddress, GETDATE(), :UserName, :flag)
-      `,
+    // --- Step 2: Insert into ProductMast ---
+    await ProductMast.create(
       {
-        replacements: {
-          ProductUkeyId: Master.ProductUkeyId,
-          ProductName: Master.ProductName,
-          ShortCode: Master.ShortCode,
-          CategoryId: String(Master.CategoryId),
-          SubUkeyId: Master.SubUkeyId,
-          Tagline1: Master.Tagline1,
-          Tagline2: Master.Tagline2,
-          IsActive: Master.IsActive,
-          IsDeleted: Master.IsDeleted,
-          HSNCode: Master.HSNCode,
-          OrderId: String(Master.OrderId),
-          ProductWebsite: Master.ProductWebsite,
-          IpAddress,
-          UserName,
-          flag
-        },
-        transaction
-      }
+        ...Master,
+        IpAddress,
+        EntryDate: new Date().toJSON().toString(), // replaces GETDATE()
+        UserName,
+        flag,
+      },
+      { transaction }
     );
 
-    // Insert ProductPricing
+    // --- Step 3: Insert into ProductPricing ---
     for (const p of price) {
-      await sequelize.query(
-        `
-        INSERT INTO ProductPricing
-        (PriceUkeyId, ProductUkeyId, SingleUser, MultiUser, UpdateSingle, Updatemulti, IsActive, IpAddress, EntryDate, UserName, flag)
-        VALUES
-        (:PriceUkeyId, :ProductUkeyId, :SingleUser, :MultiUser, :UpdateSingle, :Updatemulti, :IsActive, :IpAddress, GETDATE(), :UserName, :flag)
-        `,
+      await ProductPricing.create(
         {
-          replacements: {
-            PriceUkeyId: p.PriceUkeyId,
-            ProductUkeyId: p.ProductUkeyId,
-            SingleUser: p.SingleUser,
-            MultiUser: p.MultiUser,
-            UpdateSingle: p.UpdateSingle,
-            Updatemulti: p.Updatemulti,
-            IsActive: p.IsActive,
-            IpAddress,
-            UserName,
-            flag
-          },
-          transaction
-        }
+          ...p,
+          IpAddress,
+          EntryDate: new Date().toJSON().toString(),
+          UserName,
+          flag,
+        },
+        { transaction }
       );
     }
 
-    // Insert ProductContent
+    // --- Step 4: Insert into ProductContent ---
     for (const c of content) {
-      await sequelize.query(
-        `
-        INSERT INTO ProductContent
-        (ContentUkeyId, ProductUkeyId, Details, IsActive, IpAddress, EntryDate, UserName, flag)
-        VALUES
-        (:ContentUkeyId, :ProductUkeyId, :Details, :IsActive, :IpAddress, GETDATE(), :UserName, :flag)
-        `,
+      await ProductContent.create(
         {
-          replacements: {
-            ContentUkeyId: c.ContentUkeyId,
-            ProductUkeyId: c.ProductUkeyId,
-            Details: c.Details,
-            IsActive: c.IsActive,
-            IpAddress,
-            UserName,
-            flag
-          },
-          transaction
-        }
+          ...c,
+          IpAddress,
+          EntryDate: new Date().toJSON().toString(),
+          UserName,
+          flag,
+        },
+        { transaction }
       );
     }
 
+    // --- Step 5: Commit Transaction ---
     await transaction.commit();
+
     res.status(200).json({
       message: flag === "A" ? "Product added successfully" : "Product updated successfully",
-      Success: true
+      Success: true,
     });
   } catch (err) {
+    // --- Step 6: Rollback on error ---
     await transaction.rollback();
     console.error(err);
     res.status(500).json({ error: err.message, Success: false });
@@ -230,12 +195,17 @@ export const deleteProduct = async (req, res) => {
   const transaction = await sequelize.transaction();
 
   try {
-    // delete from child tables first
-    await sequelize.query("DELETE FROM ProductPricing WHERE ProductUkeyId = :ProductUkeyId", { replacements: { ProductUkeyId }, transaction });
-    await sequelize.query("DELETE FROM ProductContent WHERE ProductUkeyId = :ProductUkeyId", { replacements: { ProductUkeyId }, transaction });
-    
-    // delete from master
-    const [result] = await sequelize.query("DELETE FROM ProductMast WHERE ProductUkeyId = :ProductUkeyId", { replacements: { ProductUkeyId }, transaction });
+      await ProductMast.destroy({
+        where: { ProductUkeyId: ProductUkeyId }, transaction,
+      });
+
+      await ProductPricing.destroy({
+        where: { ProductUkeyId: ProductUkeyId }, transaction,
+      });
+
+      await ProductContent.destroy({
+        where: { ProductUkeyId: ProductUkeyId }, transaction,
+      });
 
     await transaction.commit();
     res.status(200).json({ message: "Product deleted successfully", Success: true });

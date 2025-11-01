@@ -19,6 +19,10 @@ const ProductContent = sequelize.define(
       type: DataTypes.STRING(200),
       allowNull: false,
     },
+    Title: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
     Details: {
       type: DataTypes.TEXT, // nvarchar(max)
       allowNull: false,
@@ -33,7 +37,7 @@ const ProductContent = sequelize.define(
       allowNull: true,
     },
     EntryDate: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING(100),
       allowNull: true,
     },
     UserName: {
