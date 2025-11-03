@@ -3,7 +3,7 @@ import { dbConection } from "../config/db.js";
 // Create / Update Inquiry
 export const createInquiry = async (req, res) => {
   const {
-    UkeyId = "", ProductUkeyId = "", inquiryMode = "", Name = "", CompanyName = "", Address = "", City = "", State = "", PinCode = "", Email = "", Mobile = "", Message = "", IsActive = true, UserName = req.user?.UserName || "System", flag = "A",
+    UkeyId = "", ProductUkeyId = "", inquiryMode = "", Name = "", CompanyName = "", Address = "", City = "", State = "", PinCode = "", Email = "", Mobile = "", Message = "", IsActive = true, UserName = req.user?.UserName || "System", flag = "A", Status = ""
   } = req.body;
 
   const sequelize = await dbConection();
@@ -22,9 +22,9 @@ export const createInquiry = async (req, res) => {
 
     query += `
       INSERT INTO InquiryMast
-      (UkeyId, ProductUkeyId, inquiryMode, Name, CompanyName, Address, City, State, PinCode, Email, Mobile, Message, IsActive, IpAddress, EntryDate, UserName, flag)
+      (UkeyId, ProductUkeyId, inquiryMode, Name, CompanyName, Address, City, State, PinCode, Email, Mobile, Message, IsActive, IpAddress, EntryDate, UserName, flag, Status)
       VALUES
-      (:UkeyId, :ProductUkeyId, :inquiryMode, :Name, :CompanyName, :Address, :City, :State, :PinCode, :Email, :Mobile, :Message, :IsActive, :IpAddress, GETDATE(), :UserName, :flag);
+      (:UkeyId, :ProductUkeyId, :inquiryMode, :Name, :CompanyName, :Address, :City, :State, :PinCode, :Email, :Mobile, :Message, :IsActive, :IpAddress, GETDATE(), :UserName, :flag, :Status);
     `;
 
     await sequelize.query(query, {
@@ -45,6 +45,7 @@ export const createInquiry = async (req, res) => {
         IpAddress,
         UserName,
         flag,
+        Status,
       },
     });
 
@@ -62,7 +63,7 @@ export const createInquiry = async (req, res) => {
 
 // Get Inquiry (with optional filters)
 export const getInquiries = async (req, res) => {
-  const { UkeyId, Name, CompanyName, Page, PageSize, ProductUkeyId, inquiryMode } = req.query;
+  const { UkeyId, Name, CompanyName, Page, PageSize, ProductUkeyId, inquiryMode, Status } = req.query;
   const sequelize = await dbConection();
 
   try {
@@ -72,9 +73,14 @@ left join ProductMast pm on im.ProductUkeyId = pm.ProductUkeyId WHERE 1=1`;
     const replacements = {};
 
     if (UkeyId) {
-      query += " AND UkeyId = :UkeyId";
+      query += " AND im.UkeyId = :UkeyId";
       countQuery += " AND UkeyId = :UkeyId";
       replacements.UkeyId = UkeyId;
+    }
+    if (Status) {
+      query += " AND im.Status = :Status";
+      countQuery += " AND Status = :Status";
+      replacements.Status = Status;
     }
     if (ProductUkeyId) {
       query += " AND pm.ProductUkeyId = :ProductUkeyId";

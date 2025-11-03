@@ -47,6 +47,10 @@ const InquiryMast = sequelize.define(
       type: DataTypes.STRING(20),
       allowNull: true,
     },
+    Status: {
+      type: DataTypes.STRING(20),
+      allowNull: true,
+    },
     Email: {
       type: DataTypes.STRING(200),
       allowNull: true,
