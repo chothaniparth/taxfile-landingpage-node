@@ -62,11 +62,12 @@ export const createInquiry = async (req, res) => {
 
 // Get Inquiry (with optional filters)
 export const getInquiries = async (req, res) => {
-  const { UkeyId, Name, CompanyName, Page, PageSize } = req.query;
+  const { UkeyId, Name, CompanyName, Page, PageSize, ProductUkeyId, inquiryMode } = req.query;
   const sequelize = await dbConection();
 
   try {
-    let query = `SELECT * FROM InquiryMast WHERE 1=1`;
+    let query = `select im.*, pm.ProductName from InquiryMast im
+left join ProductMast pm on im.ProductUkeyId = pm.ProductUkeyId WHERE 1=1`;
     let countQuery = `SELECT COUNT(*) as totalCount FROM InquiryMast WHERE 1=1`;
     const replacements = {};
 
@@ -74,6 +75,16 @@ export const getInquiries = async (req, res) => {
       query += " AND UkeyId = :UkeyId";
       countQuery += " AND UkeyId = :UkeyId";
       replacements.UkeyId = UkeyId;
+    }
+    if (ProductUkeyId) {
+      query += " AND pm.ProductUkeyId = :ProductUkeyId";
+      countQuery += " AND ProductUkeyId = :ProductUkeyId";
+      replacements.ProductUkeyId = ProductUkeyId;
+    }
+    if (inquiryMode) {
+      query += " AND im.inquiryMode = :inquiryMode";
+      countQuery += " AND inquiryMode = :inquiryMode";
+      replacements.inquiryMode = inquiryMode;
     }
     if (Name) {
       query += " AND Name LIKE :Name";
