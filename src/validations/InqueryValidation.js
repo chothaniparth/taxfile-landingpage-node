@@ -6,7 +6,7 @@ export const createInquirySchema = Joi.object({
   ProductUkeyId: Joi.string().max(200).required(),
   inquiryMode: Joi.string().max(100).required(),
   Name: Joi.string().max(300).required(),
-  CompanyName: Joi.string().max(300).required(),
+  CompanyName: Joi.string().max(300).optional().allow("", null),
   Address: Joi.string().max(800).optional().allow("", null),
   City: Joi.string().max(100).optional().allow("", null),
   State: Joi.string().max(100).optional().allow("", null),
