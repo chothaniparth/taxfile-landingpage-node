@@ -19,6 +19,17 @@ export const createInquirySchema = Joi.object({
   IpAddress: Joi.string().max(200).optional(),
   EntryDate: Joi.date().optional(),
   UserName: Joi.string().max(100).optional(),
+  EstablishmentYear: Joi.string().max(500).optional().allow("", null),
+  PAN: Joi.string().max(500).optional().allow("", null),
+  GST: Joi.string().max(500).optional().allow("", null),
+  ContactPerson: Joi.string().max(500).optional().allow("", null),
+  Remark1: Joi.string().max(500).optional().allow("", null),
+  Remark2: Joi.string().max(500).optional().allow("", null),
+  Remark3: Joi.string().max(500).optional().allow("", null),
+  Remark4: Joi.string().max(500).optional().allow("", null),
+  Remark5: Joi.string().max(500).optional().allow("", null),
+  Remark6: Joi.string().max(500).optional().allow("", null),
+  Subject: Joi.string().max(500).optional().allow("", null),
   flag: Joi.string()
     .valid("A", "U")
     .required()
