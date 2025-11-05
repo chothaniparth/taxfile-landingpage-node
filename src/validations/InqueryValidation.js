@@ -3,9 +3,9 @@ import Joi from "joi";
 // CREATE / UPDATE (POST /inquiry)
 export const createInquirySchema = Joi.object({
   UkeyId: Joi.string().max(200).required(),
-  ProductUkeyId: Joi.string().max(200).required(),
-  inquiryMode: Joi.string().max(100).required(),
-  Name: Joi.string().max(300).required(),
+  ProductUkeyId: Joi.string().max(200).optional().allow("", null),
+  inquiryMode: Joi.string().max(100).optional().allow("", null),
+  Name: Joi.string().max(300).optional().allow("", null),
   CompanyName: Joi.string().max(300).optional().allow("", null),
   Address: Joi.string().max(800).optional().allow("", null),
   City: Joi.string().max(100).optional().allow("", null),
