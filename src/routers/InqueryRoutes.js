@@ -14,7 +14,7 @@ const router = express.Router();
 router.get("/inqueryList", getInquiries);
 
 // Protected routes
-router.post("/AddUpdateInquery", authenticateJWT, validate(createInquirySchema), createInquiry);
+router.post("/AddUpdateInquery", validate(createInquirySchema), createInquiry);
 router.delete("/deleteInquery/:UkeyId", authenticateJWT, validate(deleteInquirySchema), deleteInquiry);
 
 export default router;
