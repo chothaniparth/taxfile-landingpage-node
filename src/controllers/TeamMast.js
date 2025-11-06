@@ -3,7 +3,7 @@ import { dbConection } from "../config/db.js";
 // Create / Update Team
 export const createTeam = async (req, res) => {
   const {
-    UkeyId = "", Name = "", Designation = "", IsActive = true, UserName = req.user?.UserName || "System", flag = "A", INSTA, TWITER, YT, FB, Discription = "", Type = "",
+    UkeyId = "", Name = "", Designation = "", IsActive = true, UserName = req.user?.UserName || "System", flag = "A", INSTA, TWITER, YT, FB, Discription = "", Type = "", LinkedIn = ''
   } = req.body;
 
   const sequelize = await dbConection();
@@ -21,13 +21,13 @@ export const createTeam = async (req, res) => {
 
     query += `
       INSERT INTO TeamMast
-      (UkeyId, Name, Designation, IsActive, IpAddress, EntryDate, UserName, flag, INSTA, TWITER, YT, FB, Discription, Type)
+      (UkeyId, Name, Designation, IsActive, IpAddress, EntryDate, UserName, flag, INSTA, TWITER, YT, FB, Discription, Type, LinkedIn)
       VALUES
-      (:UkeyId, :Name, :Designation, :IsActive, :IpAddress, GETDATE(), :UserName, :flag, :INSTA, :TWITER, :YT, :FB, :Discription, :Type);
+      (:UkeyId, :Name, :Designation, :IsActive, :IpAddress, GETDATE(), :UserName, :flag, :INSTA, :TWITER, :YT, :FB, :Discription, :Type, :LinkedIn);
     `;
 
     await sequelize.query(query, {
-      replacements: { UkeyId, Name, Designation, IsActive, IpAddress, UserName, flag, INSTA, TWITER, YT, FB, Discription, Type },
+      replacements: { UkeyId, Name, Designation, IsActive, IpAddress, UserName, flag, INSTA, TWITER, YT, FB, Discription, Type, LinkedIn },
     });
 
     res.status(200).json({

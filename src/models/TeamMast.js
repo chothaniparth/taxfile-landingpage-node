@@ -60,6 +60,10 @@ const Team = sequelize.define(
       type: DataTypes.STRING(200),
       allowNull: true,
     },    
+    LinkedIn: {
+      type: DataTypes.STRING(200),
+      allowNull: true,
+    },    
     Discription: {
       type: DataTypes.STRING(200),
       allowNull: true,
