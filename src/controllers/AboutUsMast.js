@@ -90,7 +90,7 @@ export const getAboutUs = async (req, res) => {
 
     const [results] = await sequelize.query(query, { replacements });
 
-    const [team] = await sequelize.query(`select * from TeamMast`)
+    const [team] = await sequelize.query(`select * from TeamMast where Type = 'FounderManagement'`)
     res.status(200).json({ data: results, totalCount, team });
   } catch (err) {
     console.error(err);
