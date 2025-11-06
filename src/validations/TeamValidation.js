@@ -10,6 +10,8 @@ export const createTeamSchema = Joi.object({
   IpAddress: Joi.string().max(200).optional(),
   EntryDate: Joi.date().optional(),
   UserName: Joi.string().max(100).optional(),
+  Discription: Joi.string().max(100).optional(),
+  Type: Joi.string().max(100).optional(),
   INSTA: Joi.string().max(100).optional(),
   TWITER: Joi.string().max(100).optional(),
   YT: Joi.string().max(100).optional(),

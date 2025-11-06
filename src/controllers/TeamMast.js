@@ -3,7 +3,7 @@ import { dbConection } from "../config/db.js";
 // Create / Update Team
 export const createTeam = async (req, res) => {
   const {
-    UkeyId = "", Name = "", Designation = "", IsActive = true, UserName = req.user?.UserName || "System", flag = "A", INSTA, TWITER, YT, FB
+    UkeyId = "", Name = "", Designation = "", IsActive = true, UserName = req.user?.UserName || "System", flag = "A", INSTA, TWITER, YT, FB, Discription = "", Type = "",
   } = req.body;
 
   const sequelize = await dbConection();
@@ -21,13 +21,13 @@ export const createTeam = async (req, res) => {
 
     query += `
       INSERT INTO TeamMast
-      (UkeyId, Name, Designation, IsActive, IpAddress, EntryDate, UserName, flag, INSTA, TWITER, YT, FB)
+      (UkeyId, Name, Designation, IsActive, IpAddress, EntryDate, UserName, flag, INSTA, TWITER, YT, FB, Discription, Type)
       VALUES
-      (:UkeyId, :Name, :Designation, :IsActive, :IpAddress, GETDATE(), :UserName, :flag, :INSTA, :TWITER, :YT, :FB);
+      (:UkeyId, :Name, :Designation, :IsActive, :IpAddress, GETDATE(), :UserName, :flag, :INSTA, :TWITER, :YT, :FB, :Discription, :Type);
     `;
 
     await sequelize.query(query, {
-      replacements: { UkeyId, Name, Designation, IsActive, IpAddress, UserName, flag, INSTA, TWITER, YT, FB },
+      replacements: { UkeyId, Name, Designation, IsActive, IpAddress, UserName, flag, INSTA, TWITER, YT, FB, Discription, Type },
     });
 
     res.status(200).json({
@@ -43,7 +43,7 @@ export const createTeam = async (req, res) => {
 
 // Get Team (with optional filters)
 export const getTeam = async (req, res) => {
-  const { UkeyId, IsActive, Page, PageSize } = req.query;
+  const { UkeyId, IsActive, Page, PageSize, Type } = req.query;
   const sequelize = await dbConection();
 
   try {
@@ -55,6 +55,11 @@ export const getTeam = async (req, res) => {
       query += " AND tm.UkeyId = :UkeyId";
       countQuery += " AND tm.UkeyId = :UkeyId";
       replacements.UkeyId = UkeyId;
+    }
+    if (Type) {
+      query += " AND tm.Type = :Type";
+      countQuery += " AND tm.Type = :Type";
+      replacements.Type = Type;
     }
     if (IsActive !== undefined) {
       query += " AND tm.IsActive = :IsActive";

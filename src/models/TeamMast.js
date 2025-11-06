@@ -60,6 +60,14 @@ const Team = sequelize.define(
       type: DataTypes.STRING(200),
       allowNull: true,
     },    
+    Discription: {
+      type: DataTypes.STRING(200),
+      allowNull: true,
+    },    
+    Type: {
+      type: DataTypes.STRING(200),
+      allowNull: true,
+    },    
   },
   {
     tableName: "TeamMast",
