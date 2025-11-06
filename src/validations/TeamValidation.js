@@ -16,7 +16,7 @@ export const createTeamSchema = Joi.object({
   TWITER: Joi.string().max(100).optional(),
   YT: Joi.string().max(100).optional(),
   FB: Joi.string().max(100).optional(),
-  LinkedIn: Joi.string().max(100).optional(),
+  LinkedIn: Joi.string().max(100).optional().allow('', null),
   flag: Joi.string()
     .valid("A", "U")
     .required()
