@@ -3,7 +3,7 @@ import { dbConection } from "../config/db.js";
 // Create / Update BranchMast
 export const createBranchMast = async (req, res) => {
   const {
-    BranchUkeyId = "", BranchName = "", City = "", Add1 = "", ContactPerson = "", Email = "", Mode = "", IsActive = true, UserName = req.user?.UserName || "System", flag = "A",
+    BranchUkeyId = "", BranchName = "", City = "", Add1 = "", ContactPerson = "", Email = "", Mode = "", IsActive = true, UserName = req.user?.UserName || "System", flag = "A", Link = "",
   } = req.body;
 
   const sequelize = await dbConection();
@@ -21,14 +21,14 @@ export const createBranchMast = async (req, res) => {
 
     query += `
       INSERT INTO BranchMast
-      (BranchUkeyId, BranchName, City, Add1, ContactPerson, Email, Mode, IsActive, IpAddress, EntryDate, UserName, flag)
+      (BranchUkeyId, BranchName, City, Add1, ContactPerson, Email, Mode, IsActive, IpAddress, EntryDate, UserName, flag, Link)
       VALUES
-      (:BranchUkeyId, :BranchName, :City, :Add1, :ContactPerson, :Email, :Mode, :IsActive, :IpAddress, GETDATE(), :UserName, :flag);
+      (:BranchUkeyId, :BranchName, :City, :Add1, :ContactPerson, :Email, :Mode, :IsActive, :IpAddress, GETDATE(), :UserName, :flag, :Link);
     `;
 
     await sequelize.query(query, {
       replacements: {
-        BranchUkeyId, BranchName, City, Add1, ContactPerson, Email, Mode, IsActive, IpAddress, UserName, flag,
+        BranchUkeyId, BranchName, City, Add1, ContactPerson, Email, Mode, IsActive, IpAddress, UserName, flag, Link,
       },
     });
 

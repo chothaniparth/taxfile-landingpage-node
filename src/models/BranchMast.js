@@ -15,6 +15,10 @@ const BranchMast = sequelize.define(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
+    Link: {
+      type: DataTypes.STRING(500),
+      allowNull: false,
+    },
     BranchName: {
       type: DataTypes.STRING(100),
       allowNull: false,
