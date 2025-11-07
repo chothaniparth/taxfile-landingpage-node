@@ -19,6 +19,10 @@ const DocMast = sequelize.define(
       type: DataTypes.STRING(400),   // multer will save file path or filename here
       allowNull: false,
     },
+    Message: {
+      type: DataTypes.STRING(500),
+      allowNull: false,
+    },
     FileType: {
       type: DataTypes.STRING(100),
       allowNull: false,

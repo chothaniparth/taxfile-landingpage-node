@@ -4,7 +4,7 @@ import { dbConection } from "../config/db.js";
 
 // Create Carousel
 export const createDoc = async (req, res) => {
-  const { Master, MasterUkeyId, Link, IsActive, UserName = '', FileType, flag = "A" } = req.body;
+  const { Master, MasterUkeyId, Link, IsActive, UserName = '', FileType, flag = "A", Message } = req.body;
   const FileNames = req.files?.FileName?.map(file => file.filename) || [];
 
   const sequelize = await dbConection();
@@ -23,15 +23,15 @@ export const createDoc = async (req, res) => {
     FileNames.forEach((file, idx) => {
       query += `
         INSERT INTO DocMast 
-        (DocUkeyId, FileName, FileType, Master, MasterUkeyId, Link, IsActive, IpAddress, EntryDate, UserName, flag)
-        VALUES (newid(), :FileName${idx}, :FileType, :Master, :MasterUkeyId, :Link, :IsActive, :IpAddress, GETDATE(), :UserName, :flag);
+        (DocUkeyId, FileName, FileType, Master, MasterUkeyId, Link, IsActive, IpAddress, EntryDate, UserName, flag, Message)
+        VALUES (newid(), :FileName${idx}, :FileType, :Master, :MasterUkeyId, :Link, :IsActive, :IpAddress, GETDATE(), :UserName, :flag, :Message);
       `;
 
       replacements[`FileName${idx}`] = file;
     });
 
     Object.assign(replacements, {
-      Master, MasterUkeyId, Link, IsActive, UserName, flag, IpAddress, FileType,
+      Master, MasterUkeyId, Link, IsActive, UserName, flag, IpAddress, FileType, Message
     });
 
     await sequelize.query(query, { replacements, transaction });
@@ -69,7 +69,7 @@ export const createDoc = async (req, res) => {
 // Update Carousel
 export const updateDoc = async (req, res) => {
   const { 
-    DocUkeyId, Master, MasterUkeyId, Link, IsActive, UserName = req.user?.UserName, FileType, flag = "U" 
+    DocUkeyId, Master, MasterUkeyId, Link, IsActive, UserName = req.user?.UserName, FileType, flag = "U" , Message = ''
   } = req.body;
 
   const sequelize = await dbConection();
@@ -111,6 +111,7 @@ export const updateDoc = async (req, res) => {
           IpAddress = :IpAddress, 
           EntryDate = GETDATE(), 
           UserName = :UserName, 
+          Message = :Message,
           flag = :flag
         WHERE DocUkeyId = :DocUkeyId AND FileType = :FileType`,
       {
@@ -125,6 +126,7 @@ export const updateDoc = async (req, res) => {
           IpAddress,
           UserName,
           flag,
+          Message
         },
       }
     );

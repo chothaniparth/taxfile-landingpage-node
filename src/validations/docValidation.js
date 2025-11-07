@@ -3,9 +3,10 @@ import Joi from "joi";
 export const createDocMastSchema = Joi.object({
   DocUkeyId: Joi.string().max(200).required(),   // required
   FileName: Joi.string().max(400).required(),    // multer path/filename
+  Message: Joi.string().max(400).optional().optional(null, ''),
   FileType: Joi.string().max(100).required(),
   Master: Joi.string().max(100).required(),
-  MasterUkeyId: Joi.string().max(200).required(),
+  MasterUkeyId: Joi.string().max(200).optional().allow(null, ""),
   Link: Joi.string().allow(null, "").optional(), // TEXT, can be null
   IsActive: Joi.boolean().optional(),            // defaults true in DB
   IpAddress: Joi.string().max(200).allow(null, "").optional(),
