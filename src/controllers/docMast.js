@@ -69,7 +69,7 @@ export const createDoc = async (req, res) => {
 // Update Carousel
 export const updateDoc = async (req, res) => {
   const { 
-    DocUkeyId, Master, MasterUkeyId, Link, IsActive, UserName = req.user?.UserName, FileType, flag = "U" , Message = ''
+    DocUkeyId, Master, MasterUkeyId = '', Link, IsActive, UserName = req.user?.UserName, FileType, flag = "U" , Message = ''
   } = req.body;
 
   const sequelize = await dbConection();
