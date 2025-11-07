@@ -4,7 +4,7 @@ import { dbConection } from "../config/db.js";
 
 // Create Carousel
 export const createDoc = async (req, res) => {
-  const { Master, MasterUkeyId = '', Link, IsActive, UserName = '', FileType, flag = "A", Message } = req.body;
+  const { Master = '', MasterUkeyId = '', Link = '', IsActive = '', UserName = '', FileType = '', flag = "A", Message = '' } = req.body;
   const FileNames = req.files?.FileName?.map(file => file.filename) || [];
 
   const sequelize = await dbConection();
@@ -69,7 +69,7 @@ export const createDoc = async (req, res) => {
 // Update Carousel
 export const updateDoc = async (req, res) => {
   const { 
-    DocUkeyId, Master, MasterUkeyId = '', Link, IsActive, UserName = req.user?.UserName, FileType, flag = "U" , Message = ''
+    DocUkeyId = '', Master = '', MasterUkeyId = '', Link = '', IsActive = '', UserName = req.user?.UserName, FileType, flag = "U" , Message = ''
   } = req.body;
 
   const sequelize = await dbConection();
