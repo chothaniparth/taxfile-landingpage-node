@@ -14,6 +14,8 @@ export const createBranchMastSchema = Joi.object({
   EntryDate: Joi.date().optional().allow(null, ""),
   UserName: Joi.string().max(100).optional().allow(null, ""),
   Link: Joi.string().max(500).optional().allow(null, ""),
+  Mobile: Joi.string().max(15).optional().allow(null, ""),
+  Phone: Joi.string().max(30).optional().allow(null, ""),
   flag: Joi.string()
     .valid("A", "U")
     .required()

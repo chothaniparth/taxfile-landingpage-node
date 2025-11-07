@@ -63,6 +63,14 @@ const BranchMast = sequelize.define(
       type: DataTypes.STRING(4),
       allowNull: true,
     },
+    Mobile: {
+      type: DataTypes.STRING(15),
+      allowNull: true,
+    },
+    Phone: {
+      type: DataTypes.STRING(30),
+      allowNull: true,
+    },
   },
   {
     tableName: "BranchMast",
