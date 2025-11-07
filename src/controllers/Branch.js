@@ -67,7 +67,7 @@ export const getBranchMast = async (req, res) => {
     if (City) {
       query += " AND City LIKE :City";
       countQuery += " AND City LIKE :City";
-      replacements.City = `%${City}%`;
+      replacements.City = City;
     }
 
     query += " ORDER BY EntryDate DESC";
