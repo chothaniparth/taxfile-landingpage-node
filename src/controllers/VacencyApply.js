@@ -50,22 +50,22 @@ export const getVacancyApply = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    let query = `SELECT va.*, dm.FileName FROM VacancyApply va left join DocMast dm on dm.MasterUkeyId = va.UkeyId WHERE 1=1`;
+    let query = `SELECT va.*, dm.FileName, vm.Title FROM VacancyApply va left join DocMast dm on dm.MasterUkeyId = va.UkeyId left join VacancyMast vm on vm.VacancyUkeyId = va.vacencyMastUkeyId WHERE 1=1`;
     let countQuery = `SELECT COUNT(*) as totalCount FROM VacancyApply va WHERE 1=1`;
     const replacements = {};
 
     if (UkeyId) {
-      query += " AND UkeyId = :UkeyId";
+      query += " AND va.UkeyId = :UkeyId";
       countQuery += " AND UkeyId = :UkeyId";
       replacements.UkeyId = UkeyId;
     }
     if (Name) {
-      query += " AND Name LIKE :Name";
+      query += " AND va.Name LIKE :Name";
       countQuery += " AND Name LIKE :Name";
       replacements.Name = `%${Name}%`;
     }
     if (Email) {
-      query += " AND Email LIKE :Email";
+      query += " AND va.Email LIKE :Email";
       countQuery += " AND Email LIKE :Email";
       replacements.Email = `%${Email}%`;
     }
