@@ -22,7 +22,7 @@ export const createProductSchema = Joi.object({
     HSNCode: Joi.string().max(100).optional().allow(null, ""),
     OrderId: Joi.number().integer().optional().allow(null),
     ProductWebsite: Joi.string().max(500).optional().allow(null, ""),
-    cromProductUkeyId: Joi.string().max(100).optional().allow(null, ""),
+    crmProductUkeyId: Joi.string().max(100).optional().allow(null, ""),
   })
     .required()
     .messages({

@@ -19,7 +19,7 @@ const ProductMast = sequelize.define(
       type: DataTypes.STRING(200),
       allowNull: false,
     },
-    cromProductUkeyId: {
+    crmProductUkeyId: {
       type: DataTypes.STRING(200),
       allowNull: false,
     },
