@@ -28,7 +28,7 @@ export const dbConection = async () => {
       );
 
       await masterConnection.authenticate();
-      // console.log("✅ Database connected successfully");
+      // console.log("✅ Database connected successfully...");
       return masterConnection;
 
     } catch (err) {
