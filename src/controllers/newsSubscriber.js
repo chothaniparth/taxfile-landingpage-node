@@ -10,8 +10,9 @@ export const addUpdateNewsLetter = async (req , res)=> {
                 email
             }
         })
+        console.log(checkEmailExist);
         
-        if(checkEmailExist){
+        if(checkEmailExist[1]){
             return res.status(400).json({Success : false, error : 'you already subscribed for news letter.'})
         }
 
@@ -30,7 +31,7 @@ export const addUpdateNewsLetter = async (req , res)=> {
             return res.status(400).json({Success : false, message : 'internal server error.'})
         }
 
-        res.status(200).json({ message: "About Us record created successfully", Success : true});
+        res.status(200).json({ message: "created successfully", Success : true});
     }catch(err){
         console.error(err);
         res.status(500).json({ error: err.message, Success : false });
