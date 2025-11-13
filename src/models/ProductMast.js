@@ -19,6 +19,10 @@ const ProductMast = sequelize.define(
       type: DataTypes.STRING(200),
       allowNull: false,
     },
+    crmProductUkeyId: {
+      type: DataTypes.STRING(200),
+      allowNull: false,
+    },
     ShortCode: {
       type: DataTypes.STRING(10),
       allowNull: false,

@@ -1,41 +1,36 @@
 import { dbConection } from "../config/db.js";
-import Carousel from "../models/carousel.js";
 
-// Create / Update Carousel
+// Create Update Carousel
 export const createCarousel = async (req, res) => {
+  const { UkeyId, Title = '', Name = '', IsDoc = false, IsActive = true, OrderId = 1, UserName = '', flag = 'A' } = req.body;
   const sequelize = await dbConection();
-  const transaction = await sequelize.transaction();
 
   try {
     const IpAddress = req?.headers['x-forwarded-for'] || req?.socket?.remoteAddress || 'Not Found';
 
-    // If flag = 'U' → Delete the existing record first
-    if (req.body.flag === 'U') {
-      await Carousel.destroy({
-        where: { UkeyId : req.body.UkeyId },
-        transaction,
-      });
+    let query = ""
+
+    if (flag === 'U') {
+      query += `
+        DELETE FROM carouselmast WHERE UkeyId = :UkeyId;
+      `
     }
 
-    // Then insert the new record using Sequelize model
-    await Carousel.create(
-      {
-        ...req.body, IpAddress, EntryDate: new Date().toJSON().toString(),
-      },
-      { transaction }
-    );
+    query += `
+      INSERT INTO carouselmast (UkeyId, Title, Name, IsDoc, IsActive, OrderId, IpAddress, EntryDate, UserName, flag)
+      VALUES (:UkeyId, :Title, :Name, :IsDoc, :IsActive, :OrderId, :IpAddress, GETDATE(), :UserName, :flag);
+    `;
 
-    await transaction.commit();
+    await sequelize.query(query, {
+      replacements: { UkeyId, Title, Name, IsDoc, IsActive, OrderId, IpAddress, UserName, flag },
+    });
 
     res.status(200).json({
-      message: req.body.flag === 'A'
-        ? 'Carousel created successfully' : 'Carousel updated successfully',
-      Success: true,
+      message: flag === "A" ? "Carousel created successfully" : "Carousel updated successfully", Success : true
     });
   } catch (err) {
-    await transaction.rollback();
     console.error(err);
-    res.status(500).json({ error: err.message, Success: false });
+    res.status(500).json({ error: err.message, Success : false });
   } finally {
     await sequelize.close();
   }
@@ -117,12 +112,12 @@ export const getCarousel = async (req, res) => {
 
 // Delete Carousel
 export const deleteCarousel = async (req, res) => {
+  const { UkeyId } = req.params;
   const sequelize = await dbConection();
 
   try {
-    await Carousel.destroy({
-      where: { UkeyId : req.params.UkeyId },
-    });
+    const query = "DELETE FROM carouselmast WHERE UkeyId = :UkeyId";
+    await sequelize.query(query, { replacements: { UkeyId } });
 
     res.status(200).json({ message: "User deleted successfully", Success : true });
   } catch (err) {

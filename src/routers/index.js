@@ -17,7 +17,9 @@ import ImpDatesRoutes from './ImpDatesRoutes.js';
 import CategoryRoutes from './category.js';
 import VacancyApplyRoutes from "./VacencyApplyRoutes.js";
 import OTPController from '../controllers/OTP.js';
-import textContentController from './TextContents.js' 
+import textContentRouters from './TextContents.js'; 
+import EmpSettingRouters from "./EmpSetting.js";
+import NewsLetterRouters from './newsLSubscriber.js';
 
 const router = express.Router();
 
@@ -38,7 +40,9 @@ router.use("/inquiries", InqueryRoutes);
 router.use("/impdates", ImpDatesRoutes);
 router.use("/category", CategoryRoutes);
 router.use('/vacencyApply', VacancyApplyRoutes);
-router.use('/textContents', textContentController);
+router.use('/textContents', textContentRouters);
+router.use('/empSetting', EmpSettingRouters);
+router.use('/newsLetter', NewsLetterRouters);
 router.get('/sendOTP/:MobileNumber', OTPController);
 
 export default router;
