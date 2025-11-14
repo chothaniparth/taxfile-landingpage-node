@@ -81,7 +81,7 @@ export const getInquiries = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    let query = `select im.*, pm.ProductName from InquiryMast im
+    let query = `select im.*, pm.ProductName, dm.FileName, dm.DocUkeyId, dm.FileType from InquiryMast im
 left join ProductMast pm on im.ProductUkeyId = pm.ProductUkeyId 
 left join DocMast dm on dm.MasterUkeyId = im.UkeyId
 WHERE 1=1`;
