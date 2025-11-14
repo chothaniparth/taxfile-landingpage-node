@@ -84,6 +84,18 @@ const InquiryMast = sequelize.define(
       type: DataTypes.STRING(4),
       allowNull: true,
     },
+    ExpStartDate: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    Industry: {
+      type: DataTypes.STRING(50),
+      allowNull: true
+    },
+    ExpBudget: {
+      type: DataTypes.FLOAT,
+      allowNull: true
+    }
   },
   {
     tableName: "InquiryMast",

@@ -3,7 +3,7 @@ import { dbConection } from "../config/db.js";
 // Create / Update Inquiry
 export const createInquiry = async (req, res) => {
   const {
-    UkeyId = "", ProductUkeyId = "", inquiryMode = "", Name = "", CompanyName = "", Address = "", City = "", State = "", PinCode = "", Email = "", Mobile = "", Message = "", IsActive = true, UserName = req.user?.UserName || "System", flag = "A", Status = "", EstablishmentYear = "", PAN = "", GST = "", ContactPerson = "", Remark1 = "", Remark2 = "", Remark3 = "", Remark4 = "", Remark5 = "", Remark6 = "", Subject = ""
+    UkeyId = "", ProductUkeyId = "", inquiryMode = "", Name = "", CompanyName = "", Address = "", City = "", State = "", PinCode = "", Email = "", Mobile = "", Message = "", IsActive = true, UserName = req.user?.UserName || "System", flag = "A", Status = "", EstablishmentYear = "", PAN = "", GST = "", ContactPerson = "", Remark1 = "", Remark2 = "", Remark3 = "", Remark4 = "", Remark5 = "", Remark6 = "", Subject = "", ExpStartDate = "" , Industry = "", ExpBudget = ""
   } = req.body;
 
   const sequelize = await dbConection();
@@ -22,9 +22,9 @@ export const createInquiry = async (req, res) => {
 
     query += `
       INSERT INTO InquiryMast
-      (UkeyId, ProductUkeyId, inquiryMode, Name, CompanyName, Address, City, State, PinCode, Email, Mobile, Message, IsActive, IpAddress, EntryDate, UserName, flag, Status, EstablishmentYear, PAN, GST, ContactPerson, Remark1, Remark2, Remark3, Remark4, Remark5, Remark6, Subject)
+      (UkeyId, ProductUkeyId, inquiryMode, Name, CompanyName, Address, City, State, PinCode, Email, Mobile, Message, IsActive, IpAddress, EntryDate, UserName, flag, Status, EstablishmentYear, PAN, GST, ContactPerson, Remark1, Remark2, Remark3, Remark4, Remark5, Remark6, Subject, ExpStartDate, Industry, ExpBudget)
       VALUES
-      (:UkeyId, :ProductUkeyId, :inquiryMode, :Name, :CompanyName, :Address, :City, :State, :PinCode, :Email, :Mobile, :Message, :IsActive, :IpAddress, GETDATE(), :UserName, :flag, :Status, :EstablishmentYear, :PAN, :GST, :ContactPerson, :Remark1, :Remark2, :Remark3, :Remark4, :Remark5, :Remark6, :Subject);
+      (:UkeyId, :ProductUkeyId, :inquiryMode, :Name, :CompanyName, :Address, :City, :State, :PinCode, :Email, :Mobile, :Message, :IsActive, :IpAddress, GETDATE(), :UserName, :flag, :Status, :EstablishmentYear, :PAN, :GST, :ContactPerson, :Remark1, :Remark2, :Remark3, :Remark4, :Remark5, :Remark6, :Subject, :ExpStartDate, :Industry, :ExpBudget);
     `;
 
     await sequelize.query(query, {
@@ -56,7 +56,10 @@ export const createInquiry = async (req, res) => {
         Remark4,
         Remark5,
         Remark6,
-        Subject
+        Subject,
+        ExpStartDate,
+        Industry,
+        ExpBudget
       },
     });
 
