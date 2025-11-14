@@ -82,7 +82,9 @@ export const getInquiries = async (req, res) => {
 
   try {
     let query = `select im.*, pm.ProductName from InquiryMast im
-left join ProductMast pm on im.ProductUkeyId = pm.ProductUkeyId WHERE 1=1`;
+left join ProductMast pm on im.ProductUkeyId = pm.ProductUkeyId 
+left join DocMast dm on dm.MasterUkeyId = im.UkeyId
+WHERE 1=1`;
     let countQuery = `SELECT COUNT(*) as totalCount FROM InquiryMast WHERE 1=1`;
     const replacements = {};
 
