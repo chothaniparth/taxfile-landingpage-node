@@ -51,9 +51,9 @@ export const createDoc = async (req, res) => {
 
     // Delete uploaded files if DB insert fails
     if (FileNames.length > 0) {
-      FileNames.forEach((file) => {
+      FileNames.forEach(async (file) => {
         try {
-          fs.unlinkSync('./media/Gallery/' + file);
+          await fs.unlinkSync('./media/Gallery/' + file);
         } catch (unlinkErr) {
           console.error("Error deleting file:", unlinkErr);
         }
@@ -112,8 +112,9 @@ export const updateDoc = async (req, res) => {
           EntryDate = GETDATE(), 
           UserName = :UserName, 
           Message = :Message,
-          flag = :flag
-        WHERE DocUkeyId = :DocUkeyId AND FileType = :FileType`,
+          flag = :flag,
+          FileType = :FileType
+        WHERE DocUkeyId = :DocUkeyId`,
       {
         replacements: {
           DocUkeyId,
@@ -132,8 +133,8 @@ export const updateDoc = async (req, res) => {
     );
         
     // delete old file if exists
-    if (req?.files?.FileName) {
-        fs.unlinkSync("./media/"+ req?.params?.Master +"/" + oldDoc.FileName);
+    if (req?.files?.FileName && !req?.body?.FileName) {
+        await fs.unlinkSync("./media/"+ req?.params?.Master +"/" + oldDoc.FileName);
     }
 
     res.status(200).json({
@@ -245,7 +246,7 @@ export const deleteDoc = async (req, res) => {
 
     // 3. Delete file if exists
     if (doc.FileName) {
-      fs.unlinkSync(`./media/${doc.Master}/${doc.FileName}`);
+      await fs.unlinkSync(`./media/${doc.Master}/${doc.FileName}`);
     }
 
     // 4. Delete record from DB
