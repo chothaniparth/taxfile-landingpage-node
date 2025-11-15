@@ -1,4 +1,4 @@
-import Joi, { allow } from "joi";
+import Joi from "joi";
 
 // CREATE / UPDATE (POST /inquiry)
 export const createInquirySchema = Joi.object({
