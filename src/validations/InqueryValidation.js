@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi, { allow } from "joi";
 
 // CREATE / UPDATE (POST /inquiry)
 export const createInquirySchema = Joi.object({
@@ -30,9 +30,9 @@ export const createInquirySchema = Joi.object({
   Remark5: Joi.string().max(500).optional().allow("", null),
   Remark6: Joi.string().max(500).optional().allow("", null),
   Subject: Joi.string().max(500).optional().allow("", null),
-  ExpStartDate: Joi.date().optional(),
+  ExpStartDate: Joi.date().optional().allow("", null),
   Industry: Joi.string().max(500).optional().allow("", null),
-  ExpBudget: Joi.number().optional(),
+  ExpBudget: Joi.number().optional().allow("", null),
   flag: Joi.string()
     .valid("A", "U")
     .required()
