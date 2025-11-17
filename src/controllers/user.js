@@ -124,29 +124,50 @@ export const deleteUser = async (req, res) => {
 
 // LOGIN (Generate JWT)
 export const loginUser = async (req, res) => {
-    const { UserName, Password } = req.body;
+    const { UserName, Password, Mode = 'Admin', CustomerId, Mobile1, Email1 } = req.body;
     const sequelize = await dbConection();
 
     try {
-        const query = `
+      let query = ''
+
+      if(Mode == 'Admin'){
+        query = `
             SELECT * FROM AdminLogin WHERE UserName = :UserName AND Password = :Password
         `;
+      }
+      else if(Mode == 'User'){
+        if(CustomerId){
+          query = `select * from Party where CustomerId = :CustomerId and CustomerPassword = :Password`
+        }else if(Mobile1){
+          query = `select * from Party where Mobile1 = :Mobile1 and CustomerPassword = :Password`
+        }else if(Email1){
+          query = `select * from Party where Email1 = :Email1 and CustomerPassword = :Password`
+        }
+      }
         const [user] = await sequelize.query(query, {
-            replacements: { UserName, Password },
+            replacements: { UserName, Password, CustomerId, Mobile1, Email1},
         });
       
         if (!user || user.length === 0) {
             return res.status(401).json({ error: "Invalid credentials" });
         }
       
-        const token = generateJWTT({
-            UserId: user[0].UserId,
-            UserName: user[0].UserName,
-            UserUkeyId: user[0].UserUkeyId,
-            Email: user[0].Email,
+        const token = generateJWTT(Mode == 'Admin' ? {
+          UserId: user[0].UserId,
+          UserName: user[0].UserName,
+          UserUkeyId: user[0].UserUkeyId,
+          Email: user[0].Email,
+          Role: Mode
+        } : {
+          Role: Mode,
+          CustomerId : user[0].CustomerId, 
+          Mobile1 : user[0].Mobile1, 
+          Email1 : user[0].Email1
         });
       
-        res.status(200).json({ token, CustId : user[0].CustId, UserUkeyId: user[0].UserUkeyId, Email: user[0].Email, UserName: user[0].UserName, Success : true });
+        res.status(200).json({ 
+          token, CustId : user[0].CustId, 
+          UserUkeyId: user[0].UserUkeyId, Email: user[0].Email, UserName: user[0].UserName, Role: Mode, Success : true });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: err.message, Success : false });

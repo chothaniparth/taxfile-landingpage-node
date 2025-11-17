@@ -29,7 +29,7 @@ export const createImpDate = async (req, res) => {
     `;
 
     await sequelize.query(query, {
-      replacements: { UkeyId, Name, ImpDate, Description, IsActive, IpAddress, UserName, flag },
+      replacements: { UkeyId, Name, ImpDate, Description, IsActive, IpAddress, UserName, flag, Mode, Links },
     });
 
     res.status(200).json({
