@@ -137,11 +137,11 @@ export const loginUser = async (req, res) => {
       }
       else if(Mode == 'User'){
         if(CustomerId){
-          query = `select * from Party where CustomerId = :CustomerId and CustomerPassword = :Password`
+          query = `select * from Party where CustomerId = :CustomerId and CustomerPassword = :Password and IsActive = 1`
         }else if(Mobile1){
-          query = `select * from Party where Mobile1 = :Mobile1 and CustomerPassword = :Password`
+          query = `select * from Party where Mobile1 = :Mobile1 and CustomerPassword = :Password and IsActive = 1`
         }else if(Email1){
-          query = `select * from Party where Email1 = :Email1 and CustomerPassword = :Password`
+          query = `select * from Party where Email1 = :Email1 and CustomerPassword = :Password and IsActive = 1`
         }
       }
         const [user] = await sequelize.query(query, {
@@ -174,4 +174,46 @@ export const loginUser = async (req, res) => {
     } finally {
         await sequelize.close();
     }
+};
+
+export const forgetPassword = async (req, res) => {
+  const { Password, Mobile1 } = req.body;   // FIXED typo
+  const sequelize = await dbConection();
+
+  try {
+
+    if (!Password || !Mobile1) {
+      return res.status(400).json({
+        Success: false,
+        error: "Password and Mobile1 are required",
+      });
+    }
+
+    const [result] = await sequelize.query(
+      `UPDATE Party 
+       SET CustomerPassword = :Password 
+       WHERE Mobile1 = :Mobile1 AND IsActive = 1`,
+      {
+        replacements: { Password, Mobile1 },
+      }
+    );    
+
+    if (result === 0) {
+      return res.status(400).json({
+        Success: false,
+        error: "No active user found with the given mobile number."
+      });
+    }
+
+    return res.status(200).json({
+      Success: true,
+      message: "Password updated successfully."
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message, Success: false });
+  } finally {
+    await sequelize.close();
+  }
 };

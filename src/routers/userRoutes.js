@@ -5,12 +5,14 @@ import {
   getUsers,
   updateUser,
   deleteUser,
+  forgetPassword
 } from "../controllers/user.js";
 import { validate } from "../middlewares/validate.js";
 import { authenticateJWT } from "../middlewares/authMiddleware.js";
 import {
   createUserSchema,
   updateUserSchema,
+  forgetPasswordSchema
 } from "../validations/userValidation.js";
 
 const router = express.Router();
@@ -22,6 +24,7 @@ router.post("/login", loginUser);
 // Protected routes
 router.get("/", getUsers);
 router.put("/", validate(updateUserSchema), updateUser);
+router.put('/forgetPassword', validate(forgetPasswordSchema), forgetPassword);
 router.delete("/:UserId", authenticateJWT, deleteUser);
 
 export default router;

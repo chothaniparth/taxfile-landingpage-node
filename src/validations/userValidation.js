@@ -23,3 +23,8 @@ export const updateUserSchema = Joi.object({
   Password: Joi.string().min(6).max(50).required(),
   IsActive: Joi.boolean(),
 });
+
+export const forgetPasswordSchema = Joi.object({
+  Password: Joi.string().max(20).required(), 
+  Mobile1: Joi.string().max(20).required()
+})
