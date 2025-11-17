@@ -20,7 +20,7 @@ export const createProductSchema = Joi.object({
     IsActive: Joi.boolean().required(),
     IsDeleted: Joi.boolean().required(),
     HSNCode: Joi.string().max(100).optional().allow(null, ""),
-    OrderId: Joi.number().integer().optional().allow(null),
+    // OrderId: Joi.number().integer().optional().allow(null),
     ProductWebsite: Joi.string().max(500).optional().allow(null, ""),
     crmProductUkeyId: Joi.string().max(100).optional().allow(null, ""),
   })

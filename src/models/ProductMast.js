@@ -58,8 +58,8 @@ const ProductMast = sequelize.define(
       allowNull: false,
     },
     OrderId: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
+      type: DataTypes.STRING(100),
+      allowNull: true,
     },
     ProductWebsite: {
       type: DataTypes.STRING(1000),
