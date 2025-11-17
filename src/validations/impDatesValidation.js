@@ -10,6 +10,8 @@ export const createImpDatesSchema = Joi.object({
   IpAddress: Joi.string().max(200).optional(),
   EntryDate: Joi.date().optional(),
   UserName: Joi.string().max(100).optional(),
+  Links: Joi.string().max(500).optional().allow(null, ''),
+  Mode: Joi.string().max(50).optional().allow(null, ''),
   flag: Joi.string()
     .valid("A", "U")
     .required()

@@ -4,7 +4,7 @@ import { dbConection } from "../config/db.js";
 export const createImpDate = async (req, res) => {
   const {
     UkeyId = "", Name = "", ImpDate = null, Description = "", IsActive = true, UserName = req.user?.UserName || "System",
-    flag = "A",
+    flag = "A", Mode, Links
   } = req.body;
 
   const sequelize = await dbConection();
@@ -23,9 +23,9 @@ export const createImpDate = async (req, res) => {
 
     query += `
       INSERT INTO ImpDates
-      (UkeyId, Name, ImpDate, Description, IsActive, IpAddress, EntryDate, UserName, flag)
+      (UkeyId, Name, ImpDate, Description, IsActive, IpAddress, EntryDate, UserName, flag, Mode, Links)
       VALUES
-      (:UkeyId, :Name, :ImpDate, :Description, :IsActive, :IpAddress, GETDATE(), :UserName, :flag);
+      (:UkeyId, :Name, :ImpDate, :Description, :IsActive, :IpAddress, GETDATE(), :UserName, :flag, :Mode, :Links);
     `;
 
     await sequelize.query(query, {
@@ -46,7 +46,7 @@ export const createImpDate = async (req, res) => {
 
 // Get ImpDates (with optional filters)
 export const getImpDates = async (req, res) => {
-  const { Name, Page, PageSize } = req.query;
+  const { Name, Page, PageSize, Mode } = req.query;
   const sequelize = await dbConection();
 
   try {
@@ -58,6 +58,11 @@ export const getImpDates = async (req, res) => {
       query += " AND Name LIKE :Name";
       countQuery += " AND Name LIKE :Name";
       replacements.Name = `%${Name}%`;
+    }
+    if (Mode) {
+      query += " AND Mode LIKE :Mode";
+      countQuery += " AND Mode LIKE :Mode";
+      replacements.Mode = Mode;
     }
 
     query += " ORDER BY EntryDate DESC";
