@@ -132,16 +132,16 @@ export const loginUser = async (req, res) => {
 
       if(Mode == 'Admin'){
         query = `
-            SELECT * FROM AdminLogin WHERE UserName = :UserName AND Password = :Password
+            SELECT UserUkeyId, Name, Email, Mobile1, Mobile2, CustId, UserName, IsActive FROM AdminLogin WHERE UserName = :UserName AND Password = :Password
         `;
       }
       else if(Mode == 'User'){
         if(CustomerId){
-          query = `select * from Party where CustomerId = :CustomerId and CustomerPassword = :Password and IsActive = 1`
+          query = `select CustomerId, Mobile1, Email1, FirmName from Party where CustomerId = :CustomerId and CustomerPassword = :Password and IsActive = 1`
         }else if(Mobile1){
-          query = `select * from Party where Mobile1 = :Mobile1 and CustomerPassword = :Password and IsActive = 1`
+          query = `select CustomerId, Mobile1, Email1, FirmName from Party where Mobile1 = :Mobile1 and CustomerPassword = :Password and IsActive = 1`
         }else if(Email1){
-          query = `select * from Party where Email1 = :Email1 and CustomerPassword = :Password and IsActive = 1`
+          query = `select CustomerId, Mobile1, Email1, FirmName from Party where Email1 = :Email1 and CustomerPassword = :Password and IsActive = 1`
         }
       }
         const [user] = await sequelize.query(query, {
@@ -166,8 +166,7 @@ export const loginUser = async (req, res) => {
         });
       
         res.status(200).json({ 
-          token, CustId : user[0].CustId, 
-          UserUkeyId: user[0].UserUkeyId, Email: user[0].Email, UserName: user[0].UserName, Role: Mode, Success : true });
+          token, ...user[0], Role: Mode, Success : true });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: err.message, Success : false });
