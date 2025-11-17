@@ -39,6 +39,7 @@ export const createProductSchema = Joi.object({
         UpdateSingle: Joi.string().allow(null, "").optional(),
         Updatemulti: Joi.string().allow(null, "").optional(),
         IsActive: Joi.boolean().required(),
+        Title: Joi.string().allow(null, "").optional(),
       })
     )
     .min(1)
