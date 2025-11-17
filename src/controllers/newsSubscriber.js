@@ -41,15 +41,31 @@ export const addUpdateNewsLetter = async (req , res)=> {
 }
 
 export const getNewsLetterSubscriber = async (req , res)=> {
+    const {Page, PageSize} = req.query
     const sequelize = await dbConection()
     try{
+        let query = " SELECT * FROM newsLetter WHERE 1=1";
+        let countQuery = "SELECT COUNT(*) as totalCount FROM newsLetter WHERE 1=1";
+        const replacements = {};
 
-        const [result] = await sequelize.query(`select * from newsLetter`)  
+        // Apply pagination if provided
+        const pageNum = parseInt(Page, 10);
+        const pageSizeNum = parseInt(PageSize, 10);
 
-        res.status(200).json(result)
+        const [CountResult] = await sequelize.query(countQuery, { replacements });
+
+        if (!isNaN(pageNum) && !isNaN(pageSizeNum) && pageNum > 0 && pageSizeNum > 0) {
+        const offset = (pageNum - 1) * pageSizeNum;
+        query += "ORDER BY Id OFFSET :offset ROWS FETCH NEXT :pageSize ROWS ONLY";
+        replacements.offset = offset;
+        replacements.pageSize = pageSizeNum;
+        }
+
+        const [results] = await sequelize.query(query, { replacements });
+        res.status(200).json({data : results, totalCount: CountResult[0].totalCount});
     }catch(error){
-        console.error(err);
-        res.status(500).json({ error: err.message, Success : false });
+        console.error(error);
+        res.status(500).json({ error: error.message, Success : false });
     }finally{
         await sequelize.close();
     }
