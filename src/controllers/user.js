@@ -137,11 +137,11 @@ export const loginUser = async (req, res) => {
       }
       else if(Mode == 'User'){
         if(CustomerId){
-          query = `select CustomerId, Mobile1, Email1, FirmName from Party where CustomerId = :CustomerId and CustomerPassword = :Password and IsActive = 1`
+          query = `select * from Party where CustomerId = :CustomerId and CustomerPassword = :Password and IsActive = 1`
         }else if(Mobile1){
-          query = `select CustomerId, Mobile1, Email1, FirmName from Party where Mobile1 = :Mobile1 and CustomerPassword = :Password and IsActive = 1`
+          query = `select * from Party where Mobile1 = :Mobile1 and CustomerPassword = :Password and IsActive = 1`
         }else if(Email1){
-          query = `select CustomerId, Mobile1, Email1, FirmName from Party where Email1 = :Email1 and CustomerPassword = :Password and IsActive = 1`
+          query = `select * from Party where Email1 = :Email1 and CustomerPassword = :Password and IsActive = 1`
         }
       }
         const [user] = await sequelize.query(query, {
