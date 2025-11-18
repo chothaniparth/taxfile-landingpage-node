@@ -59,6 +59,10 @@ const DocMast = sequelize.define(
       type: DataTypes.STRING(4),
       allowNull: true,
     },
+    CustomerID: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+    },
   },
   {
     tableName: "DocMast",

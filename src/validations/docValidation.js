@@ -12,7 +12,7 @@ export const createDocMastSchema = Joi.object({
   IpAddress: Joi.string().max(200).allow(null, "").optional(),
   EntryDate: Joi.date().optional(),              // Sequelize default NOW
   UserName: Joi.string().max(100).allow(null, "").optional(),
-
+  CustomerID: Joi.string().max(100).allow(null, '').optional(),
   // updated flag rule (A = add, U = update)
   flag: Joi.string()
     .valid("A", "U")

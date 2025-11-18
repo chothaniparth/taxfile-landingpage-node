@@ -4,7 +4,7 @@ import { dbConection } from "../config/db.js";
 
 // Create Carousel
 export const createDoc = async (req, res) => {
-  const { Master = '', MasterUkeyId = '', Link = '', IsActive = '', UserName = '', FileType = '', flag = "A", Message = '' } = req.body;
+  const { Master = '', MasterUkeyId = '', Link = '', IsActive = '', UserName = '', FileType = '', flag = "A", Message = '', CustomerID = '' } = req.body;
   const FileNames = req.files?.FileName?.map(file => file.filename) || [];
 
   const sequelize = await dbConection();
@@ -23,15 +23,15 @@ export const createDoc = async (req, res) => {
     FileNames.forEach((file, idx) => {
       query += `
         INSERT INTO DocMast 
-        (DocUkeyId, FileName, FileType, Master, MasterUkeyId, Link, IsActive, IpAddress, EntryDate, UserName, flag, Message)
-        VALUES (newid(), :FileName${idx}, :FileType, :Master, :MasterUkeyId, :Link, :IsActive, :IpAddress, GETDATE(), :UserName, :flag, :Message);
+        (DocUkeyId, FileName, FileType, Master, MasterUkeyId, Link, IsActive, IpAddress, EntryDate, UserName, flag, Message, CustomerID)
+        VALUES (newid(), :FileName${idx}, :FileType, :Master, :MasterUkeyId, :Link, :IsActive, :IpAddress, GETDATE(), :UserName, :flag, :Message, :CustomerID);
       `;
 
       replacements[`FileName${idx}`] = file;
     });
 
     Object.assign(replacements, {
-      Master, MasterUkeyId, Link, IsActive, UserName, flag, IpAddress, FileType, Message
+      Master, MasterUkeyId, Link, IsActive, UserName, flag, IpAddress, FileType, Message, CustomerID
     });
 
     await sequelize.query(query, { replacements, transaction });
@@ -69,7 +69,7 @@ export const createDoc = async (req, res) => {
 // Update Carousel
 export const updateDoc = async (req, res) => {
   const { 
-    DocUkeyId = '', Master = '', MasterUkeyId = '', Link = '', IsActive = '', UserName = req.user?.UserName, FileType, flag = "U" , Message = ''
+    DocUkeyId = '', Master = '', MasterUkeyId = '', Link = '', IsActive = '', UserName = req.user?.UserName, FileType, flag = "U" , Message = '', CustomerID = ''
   } = req.body;
 
   const sequelize = await dbConection();
@@ -113,7 +113,8 @@ export const updateDoc = async (req, res) => {
           UserName = :UserName, 
           Message = :Message,
           flag = :flag,
-          FileType = :FileType
+          FileType = :FileType,
+          CustomerID = :CustomerID
         WHERE DocUkeyId = :DocUkeyId`,
       {
         replacements: {
@@ -127,7 +128,8 @@ export const updateDoc = async (req, res) => {
           IpAddress,
           UserName,
           flag,
-          Message
+          Message,
+          CustomerID
         },
       }
     );
