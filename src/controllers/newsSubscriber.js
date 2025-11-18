@@ -10,7 +10,6 @@ export const addUpdateNewsLetter = async (req , res)=> {
                 email
             }
         })
-        console.log(checkEmailExist);
         
         if(checkEmailExist[1]){
             return res.status(400).json({Success : false, error : 'you already subscribed for news letter.'})
