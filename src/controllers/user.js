@@ -162,7 +162,8 @@ export const loginUser = async (req, res) => {
           Role: Mode,
           CustomerId : user[0].CustomerId, 
           Mobile1 : user[0].Mobile1, 
-          Email1 : user[0].Email1
+          Email1 : user[0].Email1,
+          UserName: user[0].FirmName
         });
       
         res.status(200).json({ 
