@@ -10,7 +10,7 @@ export default async (req, res) => {
 
         await fetch(url, { method: 'GET' })
 
-        res.status(200).json({ OTP: otp, message: "OTP sent successfully", Success : true, otp });
+        res.status(200).json({ pin: Buffer.from(String(otp)).toString("base64"), message: "OTP sent successfully", Success : true });
     }catch(error){
         res.status(500).json({ error: error.message, Success : false });
     }
