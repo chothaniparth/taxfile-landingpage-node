@@ -170,7 +170,7 @@ export const getdoc = async (req, res) => {
     if (CustomerID) {
       query += " AND dm.CustomerID = :CustomerID";
       countQuery += " AND dm.CustomerID = :CustomerID";
-      replacements.DocUkeyId = CustomerID;
+      replacements.CustomerID = CustomerID;
     }
     if (FileType) {
       query += " AND dm.FileType = :FileType";
