@@ -204,7 +204,7 @@ export const getdoc = async (req, res) => {
     }
 
     // Always order by EntryDate DESC
-    query += " ORDER BY ImpDate DESC";
+    query += " ORDER BY EntryDate DESC";
 
     // Apply pagination if provided
     const pageNum = parseInt(Page, 10);

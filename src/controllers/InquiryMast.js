@@ -120,7 +120,7 @@ WHERE 1=1`;
     }
 
     // Always order by EntryDate DESC
-    query += " ORDER BY EntryDate DESC";
+    query += " ORDER BY ImpDate DESC";
 
     // Get total count
     const [countResult] = await sequelize.query(countQuery, { replacements });
