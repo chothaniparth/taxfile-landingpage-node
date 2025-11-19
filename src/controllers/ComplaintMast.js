@@ -3,7 +3,7 @@ import { dbConection } from "../config/db.js";
 // CREATE / UPDATE Complaint
 export const createComplaint = async (req, res) => {
   const {
-    ComplaintUkeyId = "", PartyName = "", ComplaintBy = "", ContactNo = "", VisitingHours = "", Query = "", flag = "A", UserName = req.user?.UserName || "System", CustomerID = '', ProductUkeyId = '', InqueryCallDate = ''
+    ComplaintUkeyId = "", PartyName = "", ComplaintBy = "", ContactNo = "", VisitingHours = "", Query = "", flag = "A", UserName = req.user?.UserName || "System", CustomerID = '', ProductUkeyId = '', InqueryCallDate = '', Status = ''
   } = req.body;
 
   const sequelize = await dbConection();
@@ -26,14 +26,14 @@ export const createComplaint = async (req, res) => {
     // Insert record
     query += `
       INSERT INTO ComplaintMast
-      (ComplaintUkeyId, PartyName, ComplaintBy, ContactNo, VisitingHours, Query, flag, IpAddress, EntryDate, UserName, CustomerID, InqueryCallDate, ProductUkeyId)
+      (ComplaintUkeyId, PartyName, ComplaintBy, ContactNo, VisitingHours, Query, flag, IpAddress, EntryDate, UserName, CustomerID, InqueryCallDate, ProductUkeyId, Status)
       VALUES
-      (:ComplaintUkeyId, :PartyName, :ComplaintBy, :ContactNo, :VisitingHours, :Query, :flag, :IpAddress, GETDATE(), :UserName, :CustomerID, :InqueryCallDate, :ProductUkeyId);
+      (:ComplaintUkeyId, :PartyName, :ComplaintBy, :ContactNo, :VisitingHours, :Query, :flag, :IpAddress, GETDATE(), :UserName, :CustomerID, :InqueryCallDate, :ProductUkeyId, :Status);
     `;
 
     await sequelize.query(query, {
       replacements: {
-        ComplaintUkeyId, PartyName, ComplaintBy, ContactNo, VisitingHours, Query, flag, IpAddress, UserName, CustomerID, ProductUkeyId, InqueryCallDate : new Date(InqueryCallDate).toJSON()
+        ComplaintUkeyId, PartyName, ComplaintBy, ContactNo, VisitingHours, Query, flag, IpAddress, UserName, CustomerID, ProductUkeyId, InqueryCallDate : new Date(InqueryCallDate).toJSON(), Status
       },
     });
 
@@ -61,7 +61,8 @@ export const getComplaint = async (req, res) => {
     Page,
     PageSize,
     CustomerID,
-    InqueryCallDate
+    InqueryCallDate,
+    Status
   } = req.query;
 
   const sequelize = await dbConection();
@@ -75,6 +76,12 @@ export const getComplaint = async (req, res) => {
       query += " AND cm.ComplaintUkeyId = :ComplaintUkeyId";
       countQuery += " AND cm.ComplaintUkeyId = :ComplaintUkeyId";
       replacements.ComplaintUkeyId = ComplaintUkeyId;
+    }
+
+    if (Status) {
+      query += " AND cm.Status = :Status";
+      countQuery += " AND cm.Status = :Status";
+      replacements.Status = Status;
     }
 
     if (CustomerID) {

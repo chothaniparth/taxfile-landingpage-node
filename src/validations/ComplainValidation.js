@@ -13,6 +13,7 @@ export const createComplaintSchema = Joi.object({
   InqueryCallDate: Joi.string().max(100).optional().allow(null, ""),
   ProductUkeyId: Joi.string().max(100).optional().allow(null, ""),
   CustomerID: Joi.string().max(100).optional().allow(null, ""),
+  Status: Joi.string().max(20).optional().allow(null, ""),
   flag: Joi.string()
     .valid("A", "U")
     .required()
