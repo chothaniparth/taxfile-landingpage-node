@@ -67,37 +67,37 @@ export const getComplaint = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    let query = `SELECT * FROM ComplaintMast WHERE 1=1`;
-    let countQuery = `SELECT COUNT(*) as totalCount FROM ComplaintMast WHERE 1=1`;
+    let query = `select cm.*, pm.ProductName from ComplaintMast cm left join ProductMast pm on pm.ProductUkeyId = cm.ProductUkeyId WHERE 1=1`;
+    let countQuery = `SELECT COUNT(*) as totalCount FROM ComplaintMast cm WHERE 1=1`;
     const replacements = {};
 
     if (ComplaintUkeyId) {
-      query += " AND ComplaintUkeyId = :ComplaintUkeyId";
-      countQuery += " AND ComplaintUkeyId = :ComplaintUkeyId";
+      query += " AND cm.ComplaintUkeyId = :ComplaintUkeyId";
+      countQuery += " AND cm.ComplaintUkeyId = :ComplaintUkeyId";
       replacements.ComplaintUkeyId = ComplaintUkeyId;
     }
 
     if (CustomerID) {
-      query += " AND CustomerID = :CustomerID";
-      countQuery += " AND CustomerID = :CustomerID";
+      query += " AND cm.CustomerID = :CustomerID";
+      countQuery += " AND cm.CustomerID = :CustomerID";
       replacements.CustomerID = CustomerID;
     }
 
     if (InqueryCallDate) {
-      query += " AND InqueryCallDate = :InqueryCallDate";
-      countQuery += " AND InqueryCallDate = :InqueryCallDate";
+      query += " AND cm.InqueryCallDate = :InqueryCallDate";
+      countQuery += " AND cm.InqueryCallDate = :InqueryCallDate";
       replacements.InqueryCallDate = InqueryCallDate;
     }
 
     if (PartyName) {
-      query += " AND PartyName LIKE :PartyName";
-      countQuery += " AND PartyName LIKE :PartyName";
+      query += " AND cm.PartyName LIKE :PartyName";
+      countQuery += " AND cm.PartyName LIKE :PartyName";
       replacements.PartyName = `%${PartyName}%`;
     }
 
     if (ComplaintBy) {
-      query += " AND ComplaintBy LIKE :ComplaintBy";
-      countQuery += " AND ComplaintBy LIKE :ComplaintBy";
+      query += " AND cm.ComplaintBy LIKE :ComplaintBy";
+      countQuery += " AND cm.ComplaintBy LIKE :ComplaintBy";
       replacements.ComplaintBy = `%${ComplaintBy}%`;
     }
 
