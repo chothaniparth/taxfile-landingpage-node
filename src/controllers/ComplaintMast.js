@@ -33,7 +33,7 @@ export const createComplaint = async (req, res) => {
 
     await sequelize.query(query, {
       replacements: {
-        ComplaintUkeyId, PartyName, ComplaintBy, ContactNo, VisitingHours, Query, flag, IpAddress, UserName, CustomerID, ProductUkeyId, InqueryCallDate
+        ComplaintUkeyId, PartyName, ComplaintBy, ContactNo, VisitingHours, Query, flag, IpAddress, UserName, CustomerID, ProductUkeyId, InqueryCallDate : new Date(InqueryCallDate).toJSON()
       },
     });
 
