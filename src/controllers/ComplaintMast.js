@@ -3,7 +3,7 @@ import { dbConection } from "../config/db.js";
 // CREATE / UPDATE Complaint
 export const createComplaint = async (req, res) => {
   const {
-    ComplaintUkeyId = "", PartyName = "", ComplaintBy = "", ContactNo = "", VisitingHours = "", Query = "", flag = "A", UserName = req.user?.UserName || "System", CustomerID = ''
+    ComplaintUkeyId = "", PartyName = "", ComplaintBy = "", ContactNo = "", VisitingHours = "", Query = "", flag = "A", UserName = req.user?.UserName || "System", CustomerID = '', ProductUkeyId = '', InqueryCallDate = ''
   } = req.body;
 
   const sequelize = await dbConection();
@@ -26,14 +26,14 @@ export const createComplaint = async (req, res) => {
     // Insert record
     query += `
       INSERT INTO ComplaintMast
-      (ComplaintUkeyId, PartyName, ComplaintBy, ContactNo, VisitingHours, Query, flag, IpAddress, EntryDate, UserName, CustomerID)
+      (ComplaintUkeyId, PartyName, ComplaintBy, ContactNo, VisitingHours, Query, flag, IpAddress, EntryDate, UserName, CustomerID, InqueryCallDate, ProductUkeyId)
       VALUES
-      (:ComplaintUkeyId, :PartyName, :ComplaintBy, :ContactNo, :VisitingHours, :Query, :flag, :IpAddress, GETDATE(), :UserName, :CustomerID);
+      (:ComplaintUkeyId, :PartyName, :ComplaintBy, :ContactNo, :VisitingHours, :Query, :flag, :IpAddress, GETDATE(), :UserName, :CustomerID, InqueryCallDate, ProductUkeyId);
     `;
 
     await sequelize.query(query, {
       replacements: {
-        ComplaintUkeyId, PartyName, ComplaintBy, ContactNo, VisitingHours, Query, flag, IpAddress, UserName, CustomerID
+        ComplaintUkeyId, PartyName, ComplaintBy, ContactNo, VisitingHours, Query, flag, IpAddress, UserName, CustomerID, ProductUkeyId, InqueryCallDate
       },
     });
 
@@ -60,7 +60,8 @@ export const getComplaint = async (req, res) => {
     ComplaintBy,
     Page,
     PageSize,
-    CustomerID
+    CustomerID,
+    InqueryCallDate
   } = req.query;
 
   const sequelize = await dbConection();
@@ -80,6 +81,12 @@ export const getComplaint = async (req, res) => {
       query += " AND CustomerID = :CustomerID";
       countQuery += " AND CustomerID = :CustomerID";
       replacements.CustomerID = CustomerID;
+    }
+
+    if (InqueryCallDate) {
+      query += " AND InqueryCallDate = :InqueryCallDate";
+      countQuery += " AND InqueryCallDate = :InqueryCallDate";
+      replacements.InqueryCallDate = InqueryCallDate;
     }
 
     if (PartyName) {
