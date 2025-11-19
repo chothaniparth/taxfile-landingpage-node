@@ -28,7 +28,7 @@ export const createComplaint = async (req, res) => {
       INSERT INTO ComplaintMast
       (ComplaintUkeyId, PartyName, ComplaintBy, ContactNo, VisitingHours, Query, flag, IpAddress, EntryDate, UserName, CustomerID, InqueryCallDate, ProductUkeyId)
       VALUES
-      (:ComplaintUkeyId, :PartyName, :ComplaintBy, :ContactNo, :VisitingHours, :Query, :flag, :IpAddress, GETDATE(), :UserName, :CustomerID, InqueryCallDate, ProductUkeyId);
+      (:ComplaintUkeyId, :PartyName, :ComplaintBy, :ContactNo, :VisitingHours, :Query, :flag, :IpAddress, GETDATE(), :UserName, :CustomerID, :InqueryCallDate, :ProductUkeyId);
     `;
 
     await sequelize.query(query, {
