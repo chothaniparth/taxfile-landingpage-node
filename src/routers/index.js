@@ -20,7 +20,8 @@ import OTPController from '../controllers/OTP.js';
 import textContentRouters from './TextContents.js'; 
 import EmpSettingRouters from "./EmpSetting.js";
 import NewsLetterRouters from './newsLSubscriber.js';
-import ContentMastRouter from './ContentMastRouter.js'
+import ContentMastRouter from './ContentMastRouter.js';
+import ComplaintMast from "./ComplaintRoutes.js";
 
 const router = express.Router();
 
@@ -44,7 +45,8 @@ router.use('/vacencyApply', VacancyApplyRoutes);
 router.use('/textContents', textContentRouters);
 router.use('/empSetting', EmpSettingRouters);
 router.use('/newsLetter', NewsLetterRouters);
-router.use('/content', ContentMastRouter)
+router.use('/content', ContentMastRouter);
+router.use('/complaint', ComplaintMast);
 router.get('/sendOTP/:MobileNumber', OTPController);
 
 export default router;

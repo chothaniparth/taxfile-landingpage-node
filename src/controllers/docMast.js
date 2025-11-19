@@ -154,52 +154,57 @@ export const updateDoc = async (req, res) => {
 
 // Get AdminLogin (with optional filters)
 export const getdoc = async (req, res) => {
-  const { DocUkeyId, FileType, Master, MasterUkeyId, Link, IsActive, UserName, Page, PageSize } = req.query;
+  const { DocUkeyId, FileType, Master, MasterUkeyId, Link, IsActive, UserName, Page, PageSize, CustomerID } = req.query;
   const sequelize = await dbConection();
 
   try {
-    let query = "SELECT * FROM DocMast WHERE 1=1";
-    let countQuery = "SELECT COUNT(*) as totalCount FROM DocMast WHERE 1=1";
+    let query = "SELECT dm.*, pm.ProductName FROM DocMast dm left join ProductMast pm on dm.MasterUkeyId = pm.ProductUkeyId WHERE 1=1";
+    let countQuery = "SELECT COUNT(*) as totalCount FROM DocMast dm WHERE 1=1";
     const replacements = {};
 
     if (DocUkeyId) {
-      query += " AND DocUkeyId = :DocUkeyId";
-      countQuery += " AND DocUkeyId = :DocUkeyId";
+      query += " AND dm.DocUkeyId = :DocUkeyId";
+      countQuery += " AND dm.DocUkeyId = :DocUkeyId";
       replacements.DocUkeyId = DocUkeyId;
     }
+    if (CustomerID) {
+      query += " AND dm.CustomerID = :CustomerID";
+      countQuery += " AND dm.CustomerID = :CustomerID";
+      replacements.DocUkeyId = CustomerID;
+    }
     if (FileType) {
-      query += " AND FileType = :FileType";
-      countQuery += " AND FileType = :FileType";
+      query += " AND dm.FileType = :FileType";
+      countQuery += " AND dm.FileType = :FileType";
       replacements.FileType = FileType;
     }
     if (Master) {
-      query += " AND Master = :Master";
-      countQuery += " AND Master = :Master";
+      query += " AND dm.Master = :Master";
+      countQuery += " AND dm.Master = :Master";
       replacements.Master = Master;
     }
     if (IsActive !== undefined) {
-      query += " AND IsActive = :IsActive";
-      countQuery += " AND IsActive = :IsActive";
+      query += " AND dm.IsActive = :IsActive";
+      countQuery += " AND dm.IsActive = :IsActive";
       replacements.IsActive = IsActive;
     }
     if (MasterUkeyId) {
-      query += " AND MasterUkeyId = :MasterUkeyId";
-      countQuery += " AND MasterUkeyId = :MasterUkeyId";
+      query += " AND dm.MasterUkeyId = :MasterUkeyId";
+      countQuery += " AND dm.MasterUkeyId = :MasterUkeyId";
       replacements.MasterUkeyId = MasterUkeyId;
     }
     if (UserName) {
-      query += " AND UserName = :UserName";
-      countQuery += " AND UserName = :UserName";
+      query += " AND dm.UserName = :UserName";
+      countQuery += " AND dm.UserName = :UserName";
       replacements.UserName = UserName;
     }
     if (Link) {
-      query += " AND Link = :Link";
-      countQuery += " AND Link = :Link";
+      query += " AND dm.Link = :Link";
+      countQuery += " AND dm.Link = :Link";
       replacements.Link = Link;
     }
 
     // Always order by EntryDate DESC
-    query += " ORDER BY EntryDate DESC";
+    query += " ORDER BY ImpDate DESC";
 
     // Apply pagination if provided
     const pageNum = parseInt(Page, 10);
