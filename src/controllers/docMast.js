@@ -4,7 +4,7 @@ import { dbConection } from "../config/db.js";
 
 // Create Carousel
 export const createDoc = async (req, res) => {
-  const { Master = '', MasterUkeyId = '', Link = '', IsActive = '', UserName = '', FileType = '', flag = "A", Message = '', CustomerID = '' } = req.body;
+  const { Master = '', MasterUkeyId = '', Link = '', IsActive = '', UserName = '', FileType = '', flag = "A", Message = '', CustomerID = '', FileSize = '' } = req.body;
   const FileNames = req.files?.FileName?.map(file => file.filename) || [];
 
   const sequelize = await dbConection();
@@ -15,13 +15,6 @@ export const createDoc = async (req, res) => {
       return res.status(400).json({ error: "No files uploaded" });
     }
 
-    let FileSize = req.body.FileSize;
-
-    if (!FileSize && req.files && req.files.length > 0) {
-      const fileStats = await fs.stat(req.files[0].path);
-      FileSize = fileStats.size;  // in bytes
-    }
-
     const IpAddress =
       req?.headers["x-forwarded-for"] || req?.socket?.remoteAddress || "Not Found";
 
@@ -30,15 +23,15 @@ export const createDoc = async (req, res) => {
     FileNames.forEach((file, idx) => {
       query += `
         INSERT INTO DocMast 
-        (DocUkeyId, FileName, FileType, Master, MasterUkeyId, Link, IsActive, IpAddress, EntryDate, UserName, flag, Message, CustomerID)
-        VALUES (newid(), :FileName${idx}, :FileType, :Master, :MasterUkeyId, :Link, :IsActive, :IpAddress, GETDATE(), :UserName, :flag, :Message, :CustomerID);
+        (DocUkeyId, FileName, FileType, Master, MasterUkeyId, Link, IsActive, IpAddress, EntryDate, UserName, flag, Message, CustomerID, FileSize)
+        VALUES (newid(), :FileName${idx}, :FileType, :Master, :MasterUkeyId, :Link, :IsActive, :IpAddress, GETDATE(), :UserName, :flag, :Message, :CustomerID, :FileSize);
       `;
 
       replacements[`FileName${idx}`] = file;
     });
 
     Object.assign(replacements, {
-      Master, MasterUkeyId, Link, IsActive, UserName, flag, IpAddress, FileType, Message, CustomerID
+      Master, MasterUkeyId, Link, IsActive, UserName, flag, IpAddress, FileType, Message, CustomerID, FileSize
     });
 
     await sequelize.query(query, { replacements, transaction });
@@ -76,7 +69,7 @@ export const createDoc = async (req, res) => {
 // Update Carousel
 export const updateDoc = async (req, res) => {
   const { 
-    DocUkeyId = '', Master = '', MasterUkeyId = '', Link = '', IsActive = '', UserName = req.user?.UserName, FileType, flag = "U" , Message = '', CustomerID = ''
+    DocUkeyId = '', Master = '', MasterUkeyId = '', Link = '', IsActive = '', UserName = req.user?.UserName, FileType, flag = "U" , Message = '', CustomerID = '', FileSize = ''
   } = req.body;
 
   const sequelize = await dbConection();
@@ -121,7 +114,8 @@ export const updateDoc = async (req, res) => {
           Message = :Message,
           flag = :flag,
           FileType = :FileType,
-          CustomerID = :CustomerID
+          CustomerID = :CustomerID,
+          FileSize = :FileSize
         WHERE DocUkeyId = :DocUkeyId`,
       {
         replacements: {
@@ -136,7 +130,8 @@ export const updateDoc = async (req, res) => {
           UserName,
           flag,
           Message,
-          CustomerID
+          CustomerID,
+          FileSize
         },
       }
     );
@@ -161,7 +156,7 @@ export const updateDoc = async (req, res) => {
 
 // Get AdminLogin (with optional filters)
 export const getdoc = async (req, res) => {
-  const { DocUkeyId, FileType, Master, MasterUkeyId, Link, IsActive, UserName, Page, PageSize, CustomerID } = req.query;
+  const { DocUkeyId, FileType, Master, MasterUkeyId, Link, IsActive, UserName, Page, PageSize, CustomerID, FileSize } = req.query;
   const sequelize = await dbConection();
 
   try {
@@ -173,6 +168,11 @@ export const getdoc = async (req, res) => {
       query += " AND dm.DocUkeyId = :DocUkeyId";
       countQuery += " AND dm.DocUkeyId = :DocUkeyId";
       replacements.DocUkeyId = DocUkeyId;
+    }
+    if (FileSize) {
+      query += " AND dm.FileSize = :FileSize";
+      countQuery += " AND dm.FileSize = :FileSize";
+      replacements.FileSize = FileSize;
     }
     if (CustomerID) {
       query += " AND dm.CustomerID = :CustomerID";
