@@ -12,20 +12,13 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-const recipients = [
-    { name: 'jay', email: 'jay01.monarch@gmail.com' },
-    { name: 'ankit', email: 'bob01.monarch@gmail.com' },
-    { name: 'sudhitt', email: 'hiren01.monarch@gmail.com' },
-    { name: 'hirent', email: 'sudhit01.monarch@gmail.com' },
-];
-
-async function sendBulkEmails(recipients) {
+export const sendBulkEmails = async (recipients, subject, html) => {
     for (const recipient of recipients) {
         const mailOptions = {
             from: 'parth.taxfile@gmail.com',
             to: recipient.email,
-            subject: 'Hello from Node.js!',
-            html: `<p>Hi ${recipient.name},</p><p>This is a bulk email example.</p>`,
+            subject,
+            html: html,
         };
         try {
             const info = await transporter.sendMail(mailOptions);
@@ -36,5 +29,3 @@ async function sendBulkEmails(recipients) {
     }
 }
 
-
-sendBulkEmails();

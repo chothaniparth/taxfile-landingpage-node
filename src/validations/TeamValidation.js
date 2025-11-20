@@ -8,14 +8,14 @@ export const createTeamSchema = Joi.object({
   Links: Joi.string().max(1000).optional().allow(''), // optional links
   IsActive: Joi.boolean().default(true),
   IpAddress: Joi.string().max(200).optional(),
-  EntryDate: Joi.date().optional(),
-  UserName: Joi.string().max(100).optional(),
-  Discription: Joi.string().optional(),
-  Type: Joi.string().max(100).optional(),
-  INSTA: Joi.string().max(100).optional(),
-  TWITER: Joi.string().max(100).optional(),
-  YT: Joi.string().max(100).optional(),
-  FB: Joi.string().max(100).optional(),
+  EntryDate: Joi.date().optional().allow(null, ''),
+  UserName: Joi.string().max(100).optional().allow(null, ''),
+  Discription: Joi.string().optional().allow(null, ''),
+  Type: Joi.string().max(100).optional().allow(null, ''),
+  INSTA: Joi.string().max(100).optional().allow(null, ''),
+  TWITER: Joi.string().max(100).optional().allow(null, ''),
+  YT: Joi.string().max(100).optional().allow(null, ''),
+  FB: Joi.string().max(100).optional().allow(null, ''),
   LinkedIn: Joi.string().max(100).optional().allow('', null),
   flag: Joi.string()
     .valid("A", "U")
