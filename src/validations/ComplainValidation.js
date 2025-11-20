@@ -3,8 +3,8 @@ import Joi from "joi";
 // CREATE / UPDATE (POST /complaint)
 export const createComplaintSchema = Joi.object({
   ComplaintUkeyId: Joi.string().max(200).required(),
-  PartyName: Joi.string().max(100).optional().allow(null, ""),
-  ComplaintBy: Joi.string().max(100).optional().allow(null, ""),
+  PartyCGUID: Joi.string().max(100).optional().allow(null, ""),
+  OverBy: Joi.string().max(100).optional().allow(null, ""),
   ContactNo: Joi.string().max(30).optional().allow(null, ""),
   VisitingHours: Joi.string().max(40).optional().allow(null, ""),
   Query: Joi.string().optional().allow(null, ""), // NVARCHAR(MAX)
@@ -14,6 +14,11 @@ export const createComplaintSchema = Joi.object({
   ProductUkeyId: Joi.string().max(100).optional().allow(null, ""),
   CustomerID: Joi.string().max(100).optional().allow(null, ""),
   Status: Joi.string().max(20).optional().allow(null, ""),
+  CallerName: Joi.string().max(20).optional().allow(null, ""),
+  TicketNo: Joi.string().max(20).optional().allow(null, ""),
+  IsOver: Joi.boolean().optional().allow(null, ""),
+  OverDate: Joi.string().max(100).optional().allow(null, ""),
+  OverRemark: Joi.string().max(20).optional().allow(null, ""),
   flag: Joi.string()
     .valid("A", "U")
     .required()

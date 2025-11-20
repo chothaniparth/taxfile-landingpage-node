@@ -15,11 +15,11 @@ const ComplaintMast = sequelize.define(
       type: DataTypes.STRING(200),
       allowNull: false,
     },
-    PartyName: {
+    PartyCGUID: {
       type: DataTypes.STRING(100),
       allowNull: false,
     },
-    ComplaintBy: {
+    OverBy: {
       type: DataTypes.STRING(100),
       allowNull: false,
     },
@@ -49,6 +49,26 @@ const ComplaintMast = sequelize.define(
     },
     UserName: {
       type: DataTypes.STRING(100),
+      allowNull: false,
+    },
+    CallerName: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
+    TicketNo: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
+    IsOver: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+    OverDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    OverRemark: {
+      type: DataTypes.STRING(1000),
       allowNull: false,
     },
   },

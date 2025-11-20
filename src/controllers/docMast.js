@@ -15,6 +15,13 @@ export const createDoc = async (req, res) => {
       return res.status(400).json({ error: "No files uploaded" });
     }
 
+    let FileSize = req.body.FileSize;
+
+    if (!FileSize && req.files && req.files.length > 0) {
+      const fileStats = await fs.stat(req.files[0].path);
+      FileSize = fileStats.size;  // in bytes
+    }
+
     const IpAddress =
       req?.headers["x-forwarded-for"] || req?.socket?.remoteAddress || "Not Found";
 

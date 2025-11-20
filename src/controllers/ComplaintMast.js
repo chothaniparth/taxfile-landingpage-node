@@ -3,7 +3,7 @@ import { dbConection } from "../config/db.js";
 // CREATE / UPDATE Complaint
 export const createComplaint = async (req, res) => {
   const {
-    ComplaintUkeyId = "", PartyName = "", ComplaintBy = "", ContactNo = "", VisitingHours = "", Query = "", flag = "A", UserName = req.user?.UserName || "System", CustomerID = '', ProductUkeyId = '', InqueryCallDate = '', Status = ''
+    ComplaintUkeyId = "", PartyCGUID = "", OverBy = "", ContactNo = "", VisitingHours = "", Query = "", flag = "A", UserName = req.user?.UserName || "System", CustomerID = '', ProductUkeyId = '', InqueryCallDate = '', Status = '', CallerName = '', IsOver = false, OverDate = '', OverRemark = ''
   } = req.body;
 
   const sequelize = await dbConection();
@@ -16,6 +16,8 @@ export const createComplaint = async (req, res) => {
 
     let query = "";
 
+    let TicketNo = req.body.TicketNo  || ''
+
     // If update, delete old record first
     if (flag === "U") {
       query += `
@@ -23,17 +25,24 @@ export const createComplaint = async (req, res) => {
       `;
     }
 
+    if(flag == 'A'){
+       [TicketNo] = await sequelize.query("select ISNULL(MAX(TicketNo),0) + 1 TicketNo from ComplaintMast where CustomerID = :CustomerID", {
+        replacements: { CustomerID },
+      });
+      TicketNo = TicketNo?.[0]?.TicketNo
+    }
+
     // Insert record
     query += `
       INSERT INTO ComplaintMast
-      (ComplaintUkeyId, PartyName, ComplaintBy, ContactNo, VisitingHours, Query, flag, IpAddress, EntryDate, UserName, CustomerID, InqueryCallDate, ProductUkeyId, Status)
+      (ComplaintUkeyId, PartyCGUID, OverBy, ContactNo, VisitingHours, Query, flag, IpAddress, EntryDate, UserName, CustomerID, InqueryCallDate, ProductUkeyId, Status, CallerName, TicketNo, IsOver, OverDate, OverRemark)
       VALUES
-      (:ComplaintUkeyId, :PartyName, :ComplaintBy, :ContactNo, :VisitingHours, :Query, :flag, :IpAddress, GETDATE(), :UserName, :CustomerID, :InqueryCallDate, :ProductUkeyId, :Status);
+      (:ComplaintUkeyId, :PartyCGUID, :OverBy, :ContactNo, :VisitingHours, :Query, :flag, :IpAddress, GETDATE(), :UserName, :CustomerID, :InqueryCallDate, :ProductUkeyId, :Status, :CallerName, :TicketNo, :IsOver, :OverDate, :OverRemark);
     `;
 
     await sequelize.query(query, {
       replacements: {
-        ComplaintUkeyId, PartyName, ComplaintBy, ContactNo, VisitingHours, Query, flag, IpAddress, UserName, CustomerID, ProductUkeyId, InqueryCallDate : new Date(InqueryCallDate).toJSON(), Status
+        ComplaintUkeyId, PartyCGUID, OverBy, ContactNo, VisitingHours, Query, flag, IpAddress, UserName, CustomerID, ProductUkeyId, InqueryCallDate : new Date(InqueryCallDate).toJSON(), Status, CallerName, TicketNo, IsOver, OverDate : new Date(OverDate).toJSON(), OverRemark
       },
     });
 
@@ -56,8 +65,8 @@ export const createComplaint = async (req, res) => {
 export const getComplaint = async (req, res) => {
   const {
     ComplaintUkeyId,
-    PartyName,
-    ComplaintBy,
+    PartyCGUID,
+    OverBy,
     Page,
     PageSize,
     CustomerID,
@@ -68,7 +77,7 @@ export const getComplaint = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    let query = `select cm.*, pm.ProductName from ComplaintMast cm left join ProductMast pm on pm.ProductUkeyId = cm.ProductUkeyId WHERE 1=1`;
+    let query = `select cm.*, pm.ProductName, PartyName from ComplaintMast cm left join ProductMast pm on pm.ProductUkeyId = cm.ProductUkeyId left join Party p on cm.PartyCGUID = p.Cguid  WHERE 1=1`;
     let countQuery = `SELECT COUNT(*) as totalCount FROM ComplaintMast cm WHERE 1=1`;
     const replacements = {};
 
@@ -96,16 +105,16 @@ export const getComplaint = async (req, res) => {
       replacements.InqueryCallDate = InqueryCallDate;
     }
 
-    if (PartyName) {
-      query += " AND cm.PartyName LIKE :PartyName";
-      countQuery += " AND cm.PartyName LIKE :PartyName";
-      replacements.PartyName = `%${PartyName}%`;
+    if (PartyCGUID) {
+      query += " AND cm.PartyCGUID LIKE :PartyCGUID";
+      countQuery += " AND cm.PartyCGUID LIKE :PartyCGUID";
+      replacements.PartyCGUID = `%${PartyCGUID}%`;
     }
 
-    if (ComplaintBy) {
-      query += " AND cm.ComplaintBy LIKE :ComplaintBy";
-      countQuery += " AND cm.ComplaintBy LIKE :ComplaintBy";
-      replacements.ComplaintBy = `%${ComplaintBy}%`;
+    if (OverBy) {
+      query += " AND cm.OverBy LIKE :OverBy";
+      countQuery += " AND cm.OverBy LIKE :OverBy";
+      replacements.OverBy = `%${OverBy}%`;
     }
 
     // Always order by EntryDate DESC

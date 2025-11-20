@@ -13,6 +13,7 @@ export const createDocMastSchema = Joi.object({
   EntryDate: Joi.date().optional(),              // Sequelize default NOW
   UserName: Joi.string().max(100).allow(null, "").optional(),
   CustomerID: Joi.string().max(100).allow(null, '').optional(),
+  FileSize: Joi.string().max(100).allow(null, '').optional(),
   // updated flag rule (A = add, U = update)
   flag: Joi.string()
     .valid("A", "U")

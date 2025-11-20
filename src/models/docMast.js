@@ -63,6 +63,10 @@ const DocMast = sequelize.define(
       type: DataTypes.STRING(100),
       allowNull: true,
     },
+    FileSize: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
+    },
   },
   {
     tableName: "DocMast",
