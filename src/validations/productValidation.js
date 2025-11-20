@@ -24,10 +24,10 @@ export const createProductSchema = Joi.object({
     ProductWebsite: Joi.string().max(500).optional().allow(null, ""),
     crmProductUkeyId: Joi.string().max(100).optional().allow(null, ""),
   })
-    .required()
-    .messages({
-      "any.required": "Master object is required",
-    }),
+    .optional(),
+    // .messages({
+    //   "any.required": "Master object is required",
+    // }),
 
   price: Joi.array()
     .items(
@@ -42,12 +42,11 @@ export const createProductSchema = Joi.object({
         Title: Joi.string().allow(null, "").optional(),
       })
     )
-    .min(1)
-    .required()
-    .messages({
-      "array.min": "At least one price record is required",
-      "any.required": "price array is required",
-    }),
+    .optional(),
+    // .messages({
+    //   "array.min": "At least one price record is required",
+    //   "any.required": "price array is required",
+    // }),
 
   content: Joi.array()
     .items(
