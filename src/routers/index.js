@@ -25,6 +25,7 @@ import ComplaintMast from "./ComplaintRoutes.js";
 import PartyRoutes from "./PartyRoutes.js";
 import location from './locationRoutes.js';
 import mstCategory from './mst_CategoryRoutes.js'
+import mstForms from './mst_FormsRoutes.js';
 
 const router = express.Router();
 
@@ -52,7 +53,8 @@ router.use('/content', ContentMastRouter);
 router.use('/complaint', ComplaintMast);
 router.use('/party', PartyRoutes);
 router.use('/location', location);
-router.use('mstCategory', mstCategory);
+router.use('/mstCategory', mstCategory);
+router.use('/mstForms', mstForms);
 router.get('/sendOTP/:MobileNumber', OTPController);
 
 export default router;
