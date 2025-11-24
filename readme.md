@@ -76,7 +76,7 @@ Each route forwards requests to its respective controller in `src/controllers`.
 
 ## Architecture Flow Diagram
 
-![Project Flow Diagram](file:///C:/Users/TEXFILE/.gemini/antigravity/brain/4d501402-7c43-49a0-aeca-7e92a5eef3bd/project_flow_diagram_1763959787001.png)
+![Project Flow Diagram](./project_flow_diagram_1763959787001.png)
 
 *The diagram visualises server initialization, middleware stack, routing hierarchy, and controller flow.*
 
