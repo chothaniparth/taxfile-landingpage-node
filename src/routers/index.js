@@ -23,6 +23,7 @@ import NewsLetterRouters from './newsLSubscriber.js';
 import ContentMastRouter from './ContentMastRouter.js';
 import ComplaintMast from "./ComplaintRoutes.js";
 import PartyRoutes from "./PartyRoutes.js";
+import location from './locationRoutes.js'
 
 const router = express.Router();
 
@@ -49,6 +50,7 @@ router.use('/newsLetter', NewsLetterRouters);
 router.use('/content', ContentMastRouter);
 router.use('/complaint', ComplaintMast);
 router.use('/party', PartyRoutes);
+router.use('/location', location);
 router.get('/sendOTP/:MobileNumber', OTPController);
 
 export default router;
