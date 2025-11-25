@@ -27,6 +27,8 @@ import location from './locationRoutes.js';
 import mstCategory from './mst_CategoryRoutes.js'
 import mstForms from './mst_FormsRoutes.js';
 import PartyGroupRoutes from './PartyGroupRoutes.js';
+import AreaRoutes from './AreaRoutes.js';
+import DesignationRoutes from './DesignationRoutes.js';
 
 const router = express.Router();
 
@@ -57,6 +59,8 @@ router.use('/location', location);
 router.use('/mstCategory', mstCategory);
 router.use('/mstForms', mstForms);
 router.use('/partyGroup', PartyGroupRoutes);
+router.use('/area', AreaRoutes);
+router.use('/designation', DesignationRoutes);
 router.get('/sendOTP/:MobileNumber', OTPController);
 
 export default router;
