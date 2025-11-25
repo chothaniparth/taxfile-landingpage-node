@@ -15,7 +15,7 @@ export const createPartySchema = Joi.object({
   xAreaID: Joi.number().integer().allow(null, "").optional(),
   DealerID: Joi.number().integer().required(),
   DesignationID: Joi.number().integer().allow(null, "").optional(),
-  PartyGroupID: Joi.number().integer().allow(null, "").optional(),
+  GroupUkeyId: Joi.string().allow(null, "").optional(),
   DOB: Joi.date().allow(null, "").optional(),
   DOJ: Joi.date().allow(null, "").optional(),
   OldDOJ: Joi.date().allow(null, "").optional(),
@@ -94,6 +94,7 @@ export const createPartySchema = Joi.object({
   ReferencePartyID: Joi.number().integer().allow(null, "").optional(),
   LeadGenerationID: Joi.number().integer().allow(null, "").optional(),
   Cguid: Joi.string().max(200).allow(null, "").optional(),
+  StateID: Joi.number().integer().allow(null, "").optional(),
   flag: Joi.string()
     .valid("A", "U")
     .required()

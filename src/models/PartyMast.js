@@ -25,7 +25,7 @@ const Party = sequelize.define(
     xAreaID: { type: DataTypes.INTEGER, allowNull: true },
     DealerID: { type: DataTypes.INTEGER, allowNull: false },
     DesignationID: { type: DataTypes.INTEGER, allowNull: true },
-    PartyGroupID: { type: DataTypes.INTEGER, allowNull: true },
+    GroupUkeyId: { type: DataTypes.INTEGER, allowNull: true },
     DOB: { type: DataTypes.DATE, allowNull: true },
     DOJ: { type: DataTypes.DATE, allowNull: true },
     OldDOJ: { type: DataTypes.DATE, allowNull: true },
@@ -104,6 +104,7 @@ const Party = sequelize.define(
     ReferencePartyID: { type: DataTypes.INTEGER, allowNull: true },
     LeadGenerationID: { type: DataTypes.INTEGER, allowNull: true },
     Cguid: { type: DataTypes.STRING(200), allowNull: true },
+    StateID: { type: DataTypes.INTEGER, allowNull: true },
   },
   {
     tableName: "PartyMast",
