@@ -12,7 +12,7 @@ export const createInquirySchema = Joi.object({
   State: Joi.string().max(100).optional().allow("", null),
   PinCode: Joi.string().max(20).optional().allow("", null),
   Status: Joi.string().max(20).optional().allow("", null),
-  Email: Joi.string().email().max(200).required(),
+  Email: Joi.string().email().max(200).optional().allow("", null),
   Mobile: Joi.string().max(24).optional().allow("", null),
   Message: Joi.string().max(1000).required(),
   IsActive: Joi.boolean().default(true),
