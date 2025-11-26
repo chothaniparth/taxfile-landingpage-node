@@ -65,7 +65,7 @@ export const getImpDates = async (req, res) => {
       replacements.Mode = Mode;
     }
 
-    query += " ORDER BY EntryDate DESC";
+    query += " ORDER BY ImpDate DESC";
 
     // Total count
     const [countResult] = await sequelize.query(countQuery, { replacements });
