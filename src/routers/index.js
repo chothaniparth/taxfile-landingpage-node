@@ -29,6 +29,7 @@ import mstForms from './mst_FormsRoutes.js';
 import PartyGroupRoutes from './PartyGroupRoutes.js';
 import AreaRoutes from './AreaRoutes.js';
 import DesignationRoutes from './DesignationRoutes.js';
+import autoUpdateHistory from './autoUpdateHistory.js';
 
 const router = express.Router();
 
@@ -61,6 +62,7 @@ router.use('/mstForms', mstForms);
 router.use('/partyGroup', PartyGroupRoutes);
 router.use('/area', AreaRoutes);
 router.use('/designation', DesignationRoutes);
+router.use('/autoUpdateHistory', autoUpdateHistory);
 router.get('/sendOTP/:MobileNumber', OTPController);
 
 export default router;

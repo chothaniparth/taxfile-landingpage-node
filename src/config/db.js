@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
 
-export const dbConection = async () => {
+export const dbConection = async (MASTER_DB_NAME = process.env.MASTER_DB_NAME, DB_USER = process.env.DB_USER, DB_PASSWORD = process.env.DB_PASSWORD, DB_SERVER = process.env.DB_SERVER ) => {
   const MAX_RETRIES = 5;
   const RETRY_DELAY_MS = 15000; // 3 seconds
 
@@ -10,11 +10,11 @@ export const dbConection = async () => {
   while (attempt < MAX_RETRIES) {
     try {
       masterConnection = new Sequelize(
-        process.env.MASTER_DB_NAME,
-        process.env.DB_USER,
-        process.env.DB_PASSWORD,
+        MASTER_DB_NAME,
+        DB_USER,
+        DB_PASSWORD,
         {
-          host: process.env.DB_SERVER,
+          host: DB_SERVER,
           dialect: "mssql",
           dialectOptions: {
             options: {
