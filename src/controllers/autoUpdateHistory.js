@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const getUpdateHistory = async (req, res) => {
-  const {  Page, PageSize } = req.query;
+  const {  Page, PageSize, PartyId } = req.query;
   const sequelize = await dbConection(process.env.ITAX_MASTER_DB_NAME, process.env.ITAX_DB_USER, process.env.ITAX_DB_PASSWORD, process.env.ITAX_DB_SERVER);
 
   try {
@@ -16,6 +16,12 @@ export const getUpdateHistory = async (req, res) => {
     LEFT JOIN [Party] p ON dh.[PartyId] = p.[PartyId] WHERE 1=1`;
 
     const replacements = {};
+
+    if (PartyId) {
+      query += " AND dh.PartyId = :PartyId ";
+      countQuery += " AND dh.PartyId = :PartyId ";
+      replacements.PartyId = PartyId;
+    }
 
     // Always order by EntryDate DESC
     query += " ORDER BY StartTime DESC";
@@ -34,7 +40,7 @@ export const getUpdateHistory = async (req, res) => {
       replacements.offset = offset;
       replacements.pageSize = pageSizeNum;
     }
-
+    
     const [results] = await sequelize.query(query, { replacements });
 
     res.status(200).json({ data: results, totalCount });
