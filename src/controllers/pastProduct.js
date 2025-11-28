@@ -28,8 +28,22 @@ export const getPastProduct = async (req, res) => {
         PartyId, ExpiryYear
       },
     });    
+
+    const [RegDetails] = await sequelize.query(`
+      select ProductName,BankName,isnull(ChequeDate,Trans.IdDate) ChequeDate,Amount,
+      Remarks + isnull('Chq No :' + Chequeno,'') Remarks,isnull(BillNo,'') BillNo,
+      BillDate,ReceiptNo,ReceiptDate
+      from Trans with (nolock) inner join (Select ProductId From Trans with (nolock)
+      where PartyId=:PartyId and exdate>CONVERT(DateTime, CONVERT(Char, GETDATE(), 103), 103) Group by
+      ProductId) as m on m.ProductId=Trans.ProductId left join Product on Product.ProductId=Trans.ProductId
+      Where PartyId=:PartyId and datepart(year,dateadd(YY,1,IDDate))=:ExpiryYear
+    `, {
+      replacements: {
+        PartyId, ExpiryYear
+      },
+    });    
     
-    res.status(200).json({ data: uearResults, selectParty: selectPartyResults });
+    res.status(200).json({ data: uearResults, selectParty: selectPartyResults, regDetails: RegDetails });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });
