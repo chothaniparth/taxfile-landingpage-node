@@ -124,7 +124,7 @@ export const deleteUser = async (req, res) => {
 
 // LOGIN (Generate JWT)
 export const loginUser = async (req, res) => {
-    const { UserName = '', Password = '', Mode = 'Admin', CustomerId = '', Mobile1 = '', Email1 = '' } = req.body;
+    const { UserName, Password, Mode = 'Admin', CustomerId, Mobile1, Email1 } = req.body;
     const sequelize = await dbConection();
 
     try {
@@ -132,34 +132,24 @@ export const loginUser = async (req, res) => {
 
       if(Mode == 'Admin'){
         query = `
-            SELECT UserUkeyId, Name, Email, Mobile1, Mobile2, CustId, UserName, IsActive, Password FROM AdminLogin 
+            SELECT UserUkeyId, Name, Email, Mobile1, Mobile2, CustId, UserName, IsActive FROM AdminLogin WHERE UserName = :UserName AND Password = :Password
         `;
       }
       else if(Mode == 'User'){
-        query = `select CustomerId, Mobile1, Email1, CustomerPassword from Party where CustomerID = :CustomerId or Mobile1 = :Mobile1 or Email1 = :Email1`
+        if(CustomerId){
+          query = `select * from Party where CustomerId = :CustomerId and CustomerPassword = :Password and IsActive = 1`
+        }else if(Mobile1){
+          query = `select * from Party where Mobile1 = :Mobile1 and CustomerPassword = :Password and IsActive = 1`
+        }else if(Email1){
+          query = `select * from Party where Email1 = :Email1 and CustomerPassword = :Password and IsActive = 1`
+        }
       }
         const [user] = await sequelize.query(query, {
             replacements: { UserName, Password, CustomerId, Mobile1, Email1},
         });
-
-        if (Mode == 'Admin') {
-          if (user?.[0]?.UserName != UserName && user?.[0]?.Password != Password) {
-            return res.status(400).json({ error: "Invalid username and password" });
-          } else if(user?.[0]?.UserName != UserName){
-            return res.status(400).json({error: 'invelid User Name'})
-          } else if(user?.[0]?.Password != Password){
-            return res.status(400).json({error: 'invelid password'})
-          }
-        }else if(Mode == 'User'){
-           if(Email1 && user[0].Email1 != Email1){
-            return res.status(400).json({error: `invelid Email ${user[0].CustomerPassword != Password ? 'and Password' : ''}`})
-          } else if(Mobile1 && user?.[0]?.Mobile1 != Mobile1){
-            return res.status(400).json({error: `invelid Mobile ${user?.[0]?.CustomerPassword != Password ? 'and Password' : ''}`})
-          } else if(CustomerId && user[0].CustomerId != CustomerId){
-            return res.status(400).json({error: `invelid Customer Id ${user[0].CustomerPassword != Password ? 'and Password' : ''}`})
-          } else if (user[0].CustomerPassword != Password) {
-            return res.status(400).json({ error: "Invalid password" });
-          }
+      
+        if (!user || user.length === 0) {
+            return res.status(401).json({ error: "Invalid credentials" });
         }
       
         const token = generateJWTT(Mode == 'Admin' ? {
