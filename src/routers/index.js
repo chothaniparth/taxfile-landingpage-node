@@ -30,6 +30,7 @@ import PartyGroupRoutes from './PartyGroupRoutes.js';
 import AreaRoutes from './AreaRoutes.js';
 import DesignationRoutes from './DesignationRoutes.js';
 import autoUpdateHistory from './autoUpdateHistory.js';
+import whatsNew from './whatsNew.js';
 import pastProduct from './pastProductRoutes.js';
 
 const router = express.Router();
@@ -65,6 +66,7 @@ router.use('/area', AreaRoutes);
 router.use('/designation', DesignationRoutes);
 router.use('/autoUpdateHistory', autoUpdateHistory);
 router.use('/pastProduct', pastProduct);
+router.use('/whatsNew', whatsNew);
 router.get('/sendOTP/:MobileNumber', OTPController);
 
 export default router;
