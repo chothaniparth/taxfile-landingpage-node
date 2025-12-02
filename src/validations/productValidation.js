@@ -12,10 +12,10 @@ export const createProductSchema = Joi.object({
   Master: Joi.object({
     ProductUkeyId: Joi.string().max(200).optional().allow(null, ""),
     ProductName: Joi.string().max(400).optional().allow(null, ""),
-    ShortCode: Joi.string().max(50).optional(),
+    ShortCode: Joi.string().max(50).optional().allow(null, ""),
     CategoryId: Joi.number().integer().optional().allow(null, ""),
-    SubUkeyId: Joi.string().max(200).optional(),
-    Tagline1: Joi.string().max(500).optional(),
+    SubUkeyId: Joi.string().max(200).optional().allow(null, ""),
+    Tagline1: Joi.string().max(500).optional().allow(null, ""),
     Tagline2: Joi.string().max(500).optional().allow(null, ""),
     IsActive: Joi.boolean().optional().allow(null, ""),
     IsDeleted: Joi.boolean().optional().allow(null, ""),
@@ -34,10 +34,10 @@ export const createProductSchema = Joi.object({
       Joi.object({
         PriceUkeyId: Joi.string().max(200).required(),
         ProductUkeyId: Joi.string().max(200).required(),
-        SingleUser: Joi.string().allow(null, "").optional(),
-        MultiUser: Joi.string().allow(null, "").optional(),
-        UpdateSingle: Joi.string().allow(null, "").optional(),
-        Updatemulti: Joi.string().allow(null, "").optional(),
+        SingleUser: Joi.number().allow(null, "").optional(),
+        MultiUser: Joi.number().allow(null, "").optional(),
+        UpdateSingle: Joi.number().allow(null, "").optional(),
+        Updatemulti: Joi.number().allow(null, "").optional(),
         IsActive: Joi.boolean().optional().allow(null, ""),
         Title: Joi.string().allow(null, "").optional(),
       })
