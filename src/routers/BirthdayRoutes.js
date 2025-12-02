@@ -1,9 +1,16 @@
 import express from "express";
-import { getBirthdayList } from "../controllers/Birthday.js";
+import { validate } from "../middlewares/validate.js";
+import { authenticateJWT } from "../middlewares/authMiddleware.js";
+import { createBirthdaySchema, deleteBirthdaySchema } from "../validations/Birthday.js";
+import { getBirthdayList, createBirthday, deleteBirthday } from "../controllers/Birthday.js";
 
 const router = express.Router();
 
 // Public routes
 router.get("/birthdayList", getBirthdayList);
+
+router.post("/addandupdatebirthday", authenticateJWT, validate(createBirthdaySchema), createBirthday);
+
+router.delete("/deletebirthday/:id", authenticateJWT, validate(deleteBirthdaySchema), deleteBirthday)
 
 export default router;

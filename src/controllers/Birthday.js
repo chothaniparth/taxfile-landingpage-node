@@ -65,7 +65,7 @@ export const getBirthdayList = async (req, res) => {
         Anniversary,111) FAnniversary FROM tblBirthdayAnniversary tB LEFT OUTER JOIN tblrelation tR ON 
         tB.RelationID = tR.RID WHERE FORMAT(Anniversary,'MMdd')!=FORMAT((SWITCHOFFSET(SYSDATETIMEOFFSET(),'+05:30')),'MMdd') ORDER BY DaysRemain
     `);
-    
+
     res.status(200).json({ todayB, todayA, lastweekB, lastweekA, upcomingBirthday, upcomingAnniversary });
   } catch (err) {
     console.error(err);
@@ -74,3 +74,88 @@ export const getBirthdayList = async (req, res) => {
     await sequelize.close();
   }
 };
+
+export const createBirthday = async (req, res) => {
+  const { id, Name, RelationId, Mobile, Email, Birthday, Anniversary, PartyId, IsActive = true, RegionID, Degree, Flag = "A" } = req.body
+  const sequelize = await dbConection()
+
+  try {
+
+    if (Flag === "U") {
+
+      if (!id) {
+        return res.status(400).json({ message: "ID is required for update", Success: false });
+      }
+
+      const result = await sequelize.query(`
+      UPDATE tblBirthdayAnniversary set 
+      Name = :Name, 
+      RelationId = :RelationId,
+      Mobile = :Mobile,
+      Email = :Email,
+      Birthday = :Birthday,
+      Anniversary = :Anniversary,
+      PartyId = :PartyId,
+      IsActive = :IsActive,
+      RegionID = :RegionID,
+      Degree = :Degree,
+      Flag = :Flag 
+      where id = :id`,
+        {
+          replacements: {
+            id, Name, RelationId, Mobile, Email, Birthday, Anniversary, PartyId, IsActive, RegionID, Degree, Flag
+          },
+        });
+      
+      // console.log("result => ", result);
+        
+      return res.status(200).json({
+        message: "Birthday And Anniversary record updated successfully",
+        Success: true
+      });
+    }
+
+    await sequelize.query(`
+      INSERT INTO tblBirthdayAnniversary
+      (Name, RelationId, Mobile, Email, Birthday, Anniversary, PartyId, IsActive, RegionID, Degree, Flag )
+      VALUES
+      (:Name, :RelationId, :Mobile, :Email, :Birthday, :Anniversary, :PartyId, :IsActive, :RegionID, :Degree, :Flag)`, {
+      replacements: {
+        Name, RelationId, Mobile, Email, Birthday, Anniversary, PartyId, IsActive, RegionID, Degree, Flag
+      },
+    }
+    );
+
+    res.status(200).json({
+      message: "Birthday And Anniversary record created successfully",
+      Success: true
+    })
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err.message, Success: false });
+  } finally {
+    await sequelize.close();
+  }
+}
+
+export const deleteBirthday = async (req, res) => {
+  const { id } = req.params;
+  const sequelize = await dbConection();
+
+  try {
+    const query = "DELETE FROM tblBirthdayAnniversary WHERE id = :id";
+    const result = await sequelize.query(query, { replacements: { id } });
+
+    if (result[1] === 0) {
+      return res.status(404).json({ error: "Birthday record not found" });
+    }
+
+    res.status(200).json({ message: "Birthday And Anniversary record deleted successfully", Success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message, Success: false });
+  } finally {
+    await sequelize.close();
+  }
+}
