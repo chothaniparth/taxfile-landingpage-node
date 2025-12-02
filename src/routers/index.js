@@ -32,6 +32,7 @@ import DesignationRoutes from './DesignationRoutes.js';
 import autoUpdateHistory from './autoUpdateHistory.js';
 import whatsNew from './whatsNew.js';
 import pastProduct from './pastProductRoutes.js';
+import birthdayController from './BirthdayRoutes.js';
 
 const router = express.Router();
 
@@ -67,6 +68,7 @@ router.use('/designation', DesignationRoutes);
 router.use('/autoUpdateHistory', autoUpdateHistory);
 router.use('/pastProduct', pastProduct);
 router.use('/whatsNew', whatsNew);
+router.use('/birthday', birthdayController);
 router.get('/sendOTP/:MobileNumber', OTPController);
 
 export default router;
