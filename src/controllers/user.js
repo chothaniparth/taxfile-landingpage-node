@@ -124,18 +124,22 @@ export const deleteUser = async (req, res) => {
 
 // LOGIN (Generate JWT)
 export const loginUser = async (req, res) => {
-    const { UserName, Password, Mode = 'Admin', CustomerId, Mobile1, Email1 } = req.body;
+    const { UserName = '', Password , Mode = 'Admin', CustomerId = '', Mobile1 = '', Email1 = '' } = req.body;
     const sequelize = await dbConection();
 
     try {
       let query = ''
+      let tokenPayload = {}
 
       if(Mode == 'Admin'){
         query = `
             SELECT UserUkeyId, Name, Email, Mobile1, Mobile2, CustId, UserName, IsActive FROM AdminLogin WHERE UserName = :UserName AND Password = :Password
         `;
-      }
-      else if(Mode == 'User'){
+      } else if(Mode == 'Dealer'){
+        query = `
+            SELECT * FROM dealer WHERE CustomerID = :CustomerId AND Password = :Password
+        `
+      } else if(Mode == 'User'){
         if(CustomerId){
           query = `select * from Party where CustomerId = :CustomerId and CustomerPassword = :Password and IsActive = 1`
         }else if(Mobile1){
@@ -151,20 +155,26 @@ export const loginUser = async (req, res) => {
         if (!user || user.length === 0) {
             return res.status(401).json({ error: "Invalid credentials" });
         }
+
+        if(Mode == 'Admin'){
+          tokenPayload = {
+            UserId: user[0].UserId,
+            UserName: user[0].UserName,
+            UserUkeyId: user[0].UserUkeyId,
+            Email: user[0].Email,
+            Role: Mode
+          }
+        } else if (Mode == 'Dealer'){
+          tokenPayload = {
+            Role: Mode,
+            CustomerId : user[0].CustomerId, 
+            Mobile1 : user[0].MobileNo, 
+            Email1 : user[0].Email,
+            UserName: user[0].FirmName
+          }
+        }
       
-        const token = generateJWTT(Mode == 'Admin' ? {
-          UserId: user[0].UserId,
-          UserName: user[0].UserName,
-          UserUkeyId: user[0].UserUkeyId,
-          Email: user[0].Email,
-          Role: Mode
-        } : {
-          Role: Mode,
-          CustomerId : user[0].CustomerId, 
-          Mobile1 : user[0].Mobile1, 
-          Email1 : user[0].Email1,
-          UserName: user[0].FirmName
-        });
+        const token =  generateJWTT(tokenPayload);
       
         res.status(200).json({ 
           token, ...user[0], Role: Mode, Success : true });
