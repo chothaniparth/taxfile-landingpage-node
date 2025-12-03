@@ -75,6 +75,78 @@ export const getBirthdayList = async (req, res) => {
   }
 };
 
+export const getBirthdayandAnniversarylist = async (req, res) => {
+  const { id, Name, Mobile, Email, PartyId, IsActive, Page, PageSize } = req.query
+  const sequelize = await dbConection()
+  try {
+    let query = `SELECT * FROM tblBirthdayAnniversary WHERE 1=1`;
+    let countQuery = `SELECT COUNT(*) AS totalcount FROM tblBirthdayAnniversary WHERE 1=1`;
+    const replacements = {};
+
+    if (id) {
+      query += `AND id = :id`;
+      countQuery += `AND id = :id`;
+      replacements.id = id
+    }
+
+    if (Name) {
+      query += ` AND Name LIKE :Name`;
+      countQuery += ` AND Name LIKE :Name`;
+      replacements.Name = `%${Name}%`;
+    }
+
+    if (Mobile) {
+      query += ` AND Mobile LIKE :Mobile`;
+      countQuery += ` AND Mobile LIKE :Mobile`;
+      replacements.Mobile = `%${Mobile}%`;
+    }
+
+    if (Email) {
+      query += ` AND Email LIKE :Email`;
+      countQuery += ` AND Email LIKE :Email`;
+      replacements.Email = `%${Email}%`;
+    }
+
+    if (PartyId) {
+      query += ` AND PartyId = :PartyId`;
+      countQuery += ` AND PartyId = :PartyId`;
+      replacements.PartyId = PartyId
+    }
+
+    if (IsActive !== undefined) {
+      query += ` AND IsActive = :IsActive`;
+      countQuery += ` AND IsActive = :IsActive`;
+      replacements.IsActive = IsActive;
+    }
+
+    query += ` ORDER BY id ASC`;
+
+    const [countResult] = await sequelize.query(countQuery, { replacements });
+    const totalCount = countResult[0]?.totalcount || 0;
+
+    // Apply pagination if provided
+    const pageNum = parseInt(Page, 10);
+    const pageSizeNum = parseInt(PageSize, 10);
+
+    if (!isNaN(pageNum) && !isNaN(pageSizeNum) && pageNum > 0 && pageSizeNum > 0) {
+      const offset = (pageNum - 1) * pageSizeNum;
+      query += " OFFSET :offset ROWS FETCH NEXT :pageSize ROWS ONLY";
+      replacements.offset = offset;
+      replacements.pageSize = pageSizeNum;
+    }
+
+    const [results] = await sequelize.query(query, { replacements });
+
+    res.status(200).json({ data: results, totalCount });
+
+  } catch (error) {
+    res.status(500).json({ error: "Database error", Success: false });
+    console.error(error);
+  } finally {
+    await sequelize.close();
+  }
+}
+
 export const createBirthday = async (req, res) => {
   const { id, Name, RelationId, Mobile, Email, Birthday, Anniversary, PartyId, IsActive = true, RegionID, Degree, Flag = "A" } = req.body
   const sequelize = await dbConection()
@@ -106,9 +178,9 @@ export const createBirthday = async (req, res) => {
             id, Name, RelationId, Mobile, Email, Birthday, Anniversary, PartyId, IsActive, RegionID, Degree, Flag
           },
         });
-      
+
       // console.log("result => ", result);
-        
+
       return res.status(200).json({
         message: "Birthday And Anniversary record updated successfully",
         Success: true
