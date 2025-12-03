@@ -96,10 +96,10 @@ export const createOrUpdateProduct = async (req, res) => {
         `,
         {
           replacements: {
-            ContentUkeyId: c.ContentUkeyId,
-            ProductUkeyId: c.ProductUkeyId,
-            Details: c.Details,
-            IsActive: c.IsActive,
+            ContentUkeyId: c.ContentUkeyId || '',
+            ProductUkeyId: c.ProductUkeyId || '',
+            Details: c.Details || '',
+            IsActive: c.IsActive || '',
             IpAddress,
             UserName,
             flag
