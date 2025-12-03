@@ -174,7 +174,7 @@ export const loginUser = async (req, res) => {
           }
         }
       
-        const token = '' // generateJWTT(tokenPayload);
+        const token =  generateJWTT(tokenPayload);
       
         res.status(200).json({ 
           token, ...user[0], Role: Mode, Success : true });
