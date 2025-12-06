@@ -49,23 +49,25 @@ export const getDealer = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    let query = `SELECT * FROM Dealer WHERE 1=1`;
-    let countQuery = `SELECT COUNT(*) as totalCount FROM Dealer WHERE 1=1`;
+    let query = `SELECT d.*, c.CityName, dg.DesignationName FROM Dealer d
+    left join City c on c.CityID = d.CityID
+    left join Designation dg on d.DesignationID = dg.DesignationID WHERE 1=1`;
+    let countQuery = `SELECT COUNT(*) as totalCount FROM Dealer d WHERE 1=1`;
     const replacements = {};
 
     if (DealerCguid) {
-      query += " AND DealerCguid = :DealerCguid";
-      countQuery += " AND DealerCguid = :DealerCguid";
+      query += " AND d.DealerCguid = :DealerCguid";
+      countQuery += " AND d.DealerCguid = :DealerCguid";
       replacements.DealerCguid = DealerCguid;
     }
     if (DealerName) {
-      query += " AND DealerName LIKE :DealerName";
-      countQuery += " AND DealerName LIKE :DealerName";
+      query += " AND d.DealerName LIKE :DealerName";
+      countQuery += " AND d.DealerName LIKE :DealerName";
       replacements.DealerName = `%${DealerName}%`;
     }
     if (CityID) {
-      query += " AND CityID = :CityID";
-      countQuery += " AND CityID = :CityID";
+      query += " AND d.CityID = :CityID";
+      countQuery += " AND d.CityID = :CityID";
       replacements.CityID = CityID;
     }
 
