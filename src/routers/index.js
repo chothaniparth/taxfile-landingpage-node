@@ -36,6 +36,7 @@ import birthdayController from './BirthdayRoutes.js';
 import relationRoutes from './relationRouter.js';
 import DealerRoutes from './DealerRoutes.js';
 import DealerSectionRoutes from './DealerSectionRoutes.js';
+import DealerLevelRoutes from './DealerLevelRoutes.js';
 
 const router = express.Router();
 
@@ -75,6 +76,7 @@ router.use('/birthday', birthdayController);
 router.use('/relation', relationRoutes);
 router.use('/dealer', DealerRoutes);
 router.use('/dealerSection', DealerSectionRoutes);
+router.use('/dealerLevel', DealerLevelRoutes);
 router.get('/sendOTP/:MobileNumber', OTPController);
 
 export default router;
