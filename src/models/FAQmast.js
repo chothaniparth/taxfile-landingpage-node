@@ -15,6 +15,10 @@ const FAQ = sequelize.define(
       type: DataTypes.STRING(200),
       allowNull: false,
     },
+    Type: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
     Ques: {
       type: DataTypes.STRING(1000),
       allowNull: false,

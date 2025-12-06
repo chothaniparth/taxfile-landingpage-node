@@ -3,6 +3,7 @@ import Joi from "joi";
 // CREATE (POST /faqs)
 export const createFAQSchema = Joi.object({
   FaqUkeyId: Joi.string().max(200).required(),
+  Type: Joi.string().max(100).required(),
   Ques: Joi.string().max(1000).required(),
   Ans: Joi.string().max(1000).required(),
   IsActive: Joi.boolean().default(true),
@@ -18,7 +19,7 @@ export const createFAQSchema = Joi.object({
       "any.required": "flag is required",
     }),
 });
-
+  
 // DELETE (DELETE /faqs/:FaqUkeyId)
 export const deleteFAQSchema = Joi.object({
   FaqUkeyId: Joi.string().required(),

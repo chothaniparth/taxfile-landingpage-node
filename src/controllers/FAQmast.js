@@ -2,8 +2,8 @@ import { dbConection } from "../config/db.js";
 
 // Create/Update FAQ
 export const createFAQ = async (req, res) => {
-  const { 
-    FaqUkeyId = "", Ques = "", Ans = "", IsActive = true, UserName = req.user.UserName, flag = "A" 
+  const {
+    FaqUkeyId = "", Type = "", Ques = "", Ans = "", IsActive = true, UserName = req.user.UserName, flag = "A"
   } = req.body;
 
   const sequelize = await dbConection();
@@ -20,20 +20,20 @@ export const createFAQ = async (req, res) => {
     }
 
     query += `
-      INSERT INTO FAQmast (FaqUkeyId, Ques, Ans, IsActive, IpAddress, EntryDate, UserName, flag)
-      VALUES (:FaqUkeyId, :Ques, :Ans, :IsActive, :IpAddress, GETDATE(), :UserName, :flag);
+      INSERT INTO FAQmast (FaqUkeyId, Type, Ques, Ans, IsActive, IpAddress, EntryDate, UserName, flag)
+      VALUES (:FaqUkeyId, :Type, :Ques, :Ans, :IsActive, :IpAddress, GETDATE(), :UserName, :flag);
     `;
 
     await sequelize.query(query, {
-      replacements: { FaqUkeyId, Ques, Ans, IsActive, IpAddress, UserName, flag },
+      replacements: { FaqUkeyId, Ques, Type, Ans, IsActive, IpAddress, UserName, flag },
     });
 
     res.status(200).json({
-      message: flag === "A" ? "FAQ created successfully" : "FAQ updated successfully", Success : true
+      message: flag === "A" ? "FAQ created successfully" : "FAQ updated successfully", Success: true
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message, Success : false });
+    res.status(500).json({ error: err.message, Success: false });
   } finally {
     await sequelize.close();
   }
@@ -41,7 +41,7 @@ export const createFAQ = async (req, res) => {
 
 // Get FAQ (with optional filters)
 export const getFAQ = async (req, res) => {
-  const { FaqUkeyId, Ques, Ans, IsActive, Page, PageSize } = req.query;
+  const { FaqUkeyId, Type, Ques, Ans, IsActive, Page, PageSize } = req.query;
   const sequelize = await dbConection();
 
   try {
@@ -54,16 +54,26 @@ export const getFAQ = async (req, res) => {
       countQuery += " AND FaqUkeyId = :FaqUkeyId";
       replacements.FaqUkeyId = FaqUkeyId;
     }
+
+    if (Type) {
+      query += " AND Type = :Type";
+      countQuery += " AND Type = :Type";
+      replacements.Type = Type;
+      console.log("==>", query);
+    }
+
     if (Ques) {
       query += " AND Ques LIKE :Ques";
       countQuery += " AND Ques LIKE :Ques";
       replacements.Ques = `%${Ques}%`;
     }
+
     if (Ans) {
       query += " AND Ans LIKE :Ans";
       countQuery += " AND Ans LIKE :Ans";
       replacements.Ans = `%${Ans}%`;
     }
+
     if (IsActive !== undefined) {
       query += " AND IsActive = :IsActive";
       countQuery += " AND IsActive = :IsActive";
@@ -107,10 +117,10 @@ export const deleteFAQ = async (req, res) => {
     const query = "DELETE FROM FAQmast WHERE FaqUkeyId = :FaqUkeyId";
     await sequelize.query(query, { replacements: { FaqUkeyId } });
 
-    res.status(200).json({ message: "FAQ deleted successfully", Success : true });
+    res.status(200).json({ message: "FAQ deleted successfully", Success: true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message, Success : false });
+    res.status(500).json({ error: err.message, Success: false });
   } finally {
     await sequelize.close();
   }
