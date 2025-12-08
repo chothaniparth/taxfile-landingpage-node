@@ -61,7 +61,7 @@ export const getDealerSection = async (req, res) => {
     if (Sectiontype) {
       query += " AND Sectiontype LIKE :Sectiontype";
       countQuery += " AND Sectiontype LIKE :Sectiontype";
-      replacements.Sectiontype = `%${Sectiontype}%`;
+      replacements.Sectiontype = Sectiontype;
     }
 
     // Order by Id DESC
