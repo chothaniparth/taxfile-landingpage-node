@@ -20,9 +20,9 @@ export const createDealerLevel = async (req, res) => {
 
     query += `
       INSERT INTO DealerLevel
-      (Cguid, LevelName, CommissionPercentNew, CommissionPercentRenew, OverridePercent, TargetAmount, Notes, flag, IpAddress, EntryDate, UserName, Notes1, Notes2)
+      (Cguid, LevelName, CommissionPercentNew, CommissionPercentRenew, OverridePercent, TargetAmount, flag, IpAddress, EntryDate, UserName, Notes1, Notes2)
       VALUES
-      (:Cguid, :LevelName, :CommissionPercentNew, :CommissionPercentRenew, :OverridePercent, :TargetAmount, :Notes, :flag, :IpAddress, GETDATE(), :UserName, :Notes1, :Notes2);
+      (:Cguid, :LevelName, :CommissionPercentNew, :CommissionPercentRenew, :OverridePercent, :TargetAmount, :flag, :IpAddress, GETDATE(), :UserName, :Notes1, :Notes2);
     `;
 
     await sequelize.query(query, {
