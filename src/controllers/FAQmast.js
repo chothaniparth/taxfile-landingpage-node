@@ -59,7 +59,6 @@ export const getFAQ = async (req, res) => {
       query += " AND Type = :Type";
       countQuery += " AND Type = :Type";
       replacements.Type = Type;
-      console.log("==>", query);
     }
 
     if (Ques) {
