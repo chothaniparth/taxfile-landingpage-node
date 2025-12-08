@@ -34,7 +34,11 @@ const DealerLevel = sequelize.define(
       type: DataTypes.DECIMAL(18, 2),
       allowNull: true,
     },
-    Notes: {
+    Notes1: {
+      type: DataTypes.STRING(2000),
+      allowNull: true,
+    },
+    Notes2: {
       type: DataTypes.STRING(2000),
       allowNull: true,
     },

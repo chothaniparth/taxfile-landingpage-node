@@ -3,7 +3,7 @@ import { dbConection } from "../config/db.js";
 // Create / Update DealerLevel
 export const createDealerLevel = async (req, res) => {
   const {
-    Cguid = null, LevelName, CommissionPercentNew, CommissionPercentRenew, OverridePercent = null, TargetAmount = null, Notes = null, UserName = req.user?.UserName || "System", flag = "A"
+    Cguid = null, LevelName, CommissionPercentNew, CommissionPercentRenew, OverridePercent = null, TargetAmount = null, Notes1 = null, Notes2 = null, UserName = req.user?.UserName || "System", flag = "A"
   } = req.body;
 
   const sequelize = await dbConection();
@@ -20,14 +20,14 @@ export const createDealerLevel = async (req, res) => {
 
     query += `
       INSERT INTO DealerLevel
-      (Cguid, LevelName, CommissionPercentNew, CommissionPercentRenew, OverridePercent, TargetAmount, Notes, flag, IpAddress, EntryDate, UserName)
+      (Cguid, LevelName, CommissionPercentNew, CommissionPercentRenew, OverridePercent, TargetAmount, Notes, flag, IpAddress, EntryDate, UserName, Notes1, Notes2)
       VALUES
-      (:Cguid, :LevelName, :CommissionPercentNew, :CommissionPercentRenew, :OverridePercent, :TargetAmount, :Notes, :flag, :IpAddress, GETDATE(), :UserName);
+      (:Cguid, :LevelName, :CommissionPercentNew, :CommissionPercentRenew, :OverridePercent, :TargetAmount, :Notes, :flag, :IpAddress, GETDATE(), :UserName, :Notes1, :Notes2);
     `;
 
     await sequelize.query(query, {
       replacements: {
-        Cguid, LevelName, CommissionPercentNew, CommissionPercentRenew, OverridePercent, TargetAmount, Notes, flag, IpAddress, UserName
+        Cguid, LevelName, CommissionPercentNew, CommissionPercentRenew, OverridePercent, TargetAmount, flag, IpAddress, UserName, Notes1, Notes2
       },
     });
 
@@ -97,7 +97,7 @@ export const getDealerLevelforLP = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    const [results] = await sequelize.query(`select * from dealercategory`);
+    const [results] = await sequelize.query(`select * from DealerLevelview`);
 
     res.status(200).json({ data: results, Success: true });
   } catch (err) {
