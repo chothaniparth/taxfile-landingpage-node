@@ -14,10 +14,6 @@ const DealerSection = sequelize.define(
       type: DataTypes.STRING(200),
       allowNull: true,
     },
-    Dealerlevelcguid: {
-      type: DataTypes.STRING(200),
-      allowNull: true,
-    },
     Sectiontype: {
       type: DataTypes.STRING(200),
       allowNull: true,

@@ -4,7 +4,6 @@ import Joi from "joi";
 export const createDealerSectionSchema = Joi.object({
   Cguid: Joi.string().max(200).allow(null, "").required(),
   Sectiontype: Joi.string().max(200).allow(null, "").optional(),
-  Dealerlevelcguid: Joi.string().max(200).allow(null, "").optional(),
   Notes: Joi.string().allow(null, "").optional(),
   IsActive: Joi.boolean().allow(null, "").optional(),
   flag: Joi.string()

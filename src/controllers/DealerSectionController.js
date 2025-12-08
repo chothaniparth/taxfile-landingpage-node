@@ -3,7 +3,7 @@ import { dbConection } from "../config/db.js";
 // Create / Update DealerSection
 export const createDealerSection = async (req, res) => {
   const {
-    Cguid = null, Sectiontype = null, Notes = null, IsActive = null, UserName = req.user?.UserName || "System", flag = "A", Dealerlevelcguid
+    Cguid = null, Sectiontype = null, Notes = null, IsActive = null, UserName = req.user?.UserName || "System", flag = "A"
   } = req.body;
 
   const sequelize = await dbConection();
@@ -20,14 +20,14 @@ export const createDealerSection = async (req, res) => {
 
     query += `
       INSERT INTO dealersection
-      (Cguid, Sectiontype, Notes, IsActive, IpAddress, EntryDate, UserName, flag, Dealerlevelcguid)
+      (Cguid, Sectiontype, Notes, IsActive, IpAddress, EntryDate, UserName, flag)
       VALUES
-      (:Cguid, :Sectiontype, :Notes, :IsActive, :IpAddress, GETDATE(), :UserName, :flag, :Dealerlevelcguid);
+      (:Cguid, :Sectiontype, :Notes, :IsActive, :IpAddress, GETDATE(), :UserName, :flag);
     `;
 
     await sequelize.query(query, {
       replacements: {
-        Cguid, Sectiontype, Notes, IsActive, IpAddress, UserName, flag, Dealerlevelcguid
+        Cguid, Sectiontype, Notes, IsActive, IpAddress, UserName, flag
       },
     });
 
@@ -45,7 +45,7 @@ export const createDealerSection = async (req, res) => {
 
 // Get DealerSection (with optional filters)
 export const getDealerSection = async (req, res) => {
-  const { Cguid, Sectiontype, Page, PageSize, Dealerlevelcguid } = req.query;
+  const { Cguid, Sectiontype, Page, PageSize } = req.query;
   const sequelize = await dbConection();
 
   try {
@@ -57,11 +57,6 @@ export const getDealerSection = async (req, res) => {
       query += " AND Cguid = :Cguid";
       countQuery += " AND Cguid = :Cguid";
       replacements.Cguid = Cguid;
-    }
-    if (Dealerlevelcguid) {
-      query += " AND Dealerlevelcguid = :Dealerlevelcguid";
-      countQuery += " AND Dealerlevelcguid = :Dealerlevelcguid";
-      replacements.Dealerlevelcguid = Dealerlevelcguid;
     }
     if (Sectiontype) {
       query += " AND Sectiontype LIKE :Sectiontype";
