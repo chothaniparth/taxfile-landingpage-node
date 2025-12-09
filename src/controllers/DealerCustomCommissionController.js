@@ -60,8 +60,8 @@ export const getDealerCustomCommission = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    let query = `SELECT * FROM DealerCustomCommission WHERE 1=1`;
-    let countQuery = `SELECT COUNT(*) as totalCount FROM DealerCustomCommission WHERE 1=1`;
+    let query = `select dcc.*, dl.DealerName, pm.ProductName from DealerCustomCommission dcc left join Dealer dl on dcc.DealerCguid = dl.DealerCguid left join ProductMast pm on pm.ProductUkeyId = dcc.ProductCguid WHERE 1=1`;
+    let countQuery = `SELECT COUNT(*) as totalCount FROM DealerCustomCommission dcc WHERE 1=1`;
     const replacements = {};
 
     if (DealerCustomCommissionID) {
@@ -70,23 +70,23 @@ export const getDealerCustomCommission = async (req, res) => {
       replacements.DealerCustomCommissionID = DealerCustomCommissionID;
     }
     if (IsActive) {
-      query += " AND IsActive = :IsActive";
-      countQuery += " AND IsActive = :IsActive";
+      query += " AND dcc.IsActive = :IsActive";
+      countQuery += " AND dcc.IsActive = :IsActive";
       replacements.IsActive = IsActive;
     }
     if (DealerCguid) {
-      query += " AND DealerCguid = :DealerCguid";
-      countQuery += " AND DealerCguid = :DealerCguid";
+      query += " AND dcc.DealerCguid = :DealerCguid";
+      countQuery += " AND dcc.DealerCguid = :DealerCguid";
       replacements.DealerCguid = DealerCguid;
     }
     if (ProductCguid) {
-      query += " AND ProductCguid = :ProductCguid";
-      countQuery += " AND ProductCguid = :ProductCguid";
+      query += " AND dcc.ProductCguid = :ProductCguid";
+      countQuery += " AND dcc.ProductCguid = :ProductCguid";
       replacements.ProductCguid = ProductCguid;
     }
 
     // Order by DealerCustomCommissionID DESC
-    query += " ORDER BY EntryDate DESC";
+    query += " ORDER BY dcc.EntryDate DESC";
 
     // Get total count
     const [countResult] = await sequelize.query(countQuery, { replacements });

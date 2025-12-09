@@ -59,33 +59,33 @@ export const getProductCommission = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    let query = `SELECT * FROM ProductCommission WHERE 1=1`;
-    let countQuery = `SELECT COUNT(*) as totalCount FROM ProductCommission WHERE 1=1`;
+    let query = `SELECT pc.*, pm.ProductName FROM ProductCommission pc left join ProductMast pm on pc.ProductCguid = pm.ProductUkeyId WHERE 1=1`;
+    let countQuery = `SELECT COUNT(*) as totalCount FROM ProductCommission pc WHERE 1=1`;
     const replacements = {};
 
     if (ProductCommissionID) {
-      query += " AND ProductCommissionID = :ProductCommissionID";
-      countQuery += " AND ProductCommissionID = :ProductCommissionID";
+      query += " AND pc.ProductCommissionID = :ProductCommissionID";
+      countQuery += " AND pc.ProductCommissionID = :ProductCommissionID";
       replacements.ProductCommissionID = ProductCommissionID;
     }
     if (IsActive) {
-      query += " AND IsActive = :IsActive";
-      countQuery += " AND IsActive = :IsActive";
+      query += " AND pc.IsActive = :IsActive";
+      countQuery += " AND pc.IsActive = :IsActive";
       replacements.IsActive = IsActive;
     }
     if (ProductCguid) {
-      query += " AND ProductCguid = :ProductCguid";
-      countQuery += " AND ProductCguid = :ProductCguid";
+      query += " AND pc.ProductCguid = :ProductCguid";
+      countQuery += " AND pc.ProductCguid = :ProductCguid";
       replacements.ProductCguid = ProductCguid;
     }
     if (DealerLevelCguid) {
-      query += " AND DealerLevelCguid = :DealerLevelCguid";
-      countQuery += " AND DealerLevelCguid = :DealerLevelCguid";
+      query += " AND pc.DealerLevelCguid = :DealerLevelCguid";
+      countQuery += " AND pc.DealerLevelCguid = :DealerLevelCguid";
       replacements.DealerLevelCguid = DealerLevelCguid;
     }
 
     // Order by ProductCommissionID DESC
-    query += " ORDER BY EntryDate DESC";
+    query += " ORDER BY pc.EntryDate DESC";
 
     // Get total count
     const [countResult] = await sequelize.query(countQuery, { replacements });
