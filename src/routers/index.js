@@ -37,6 +37,7 @@ import relationRoutes from './relationRouter.js';
 import DealerRoutes from './DealerRoutes.js';
 import DealerSectionRoutes from './DealerSectionRoutes.js';
 import DealerLevelRoutes from './DealerLevelRoutes.js';
+import DealerCustomCommissionRoutes from './DealerCustomCommissionRoutes.js';
 
 const router = express.Router();
 
@@ -77,6 +78,7 @@ router.use('/relation', relationRoutes);
 router.use('/dealer', DealerRoutes);
 router.use('/dealerSection', DealerSectionRoutes);
 router.use('/dealerLevel', DealerLevelRoutes);
+router.use('/dealerCustomCommission', DealerCustomCommissionRoutes);
 router.get('/sendOTP/:MobileNumber', OTPController);
 
 export default router;
