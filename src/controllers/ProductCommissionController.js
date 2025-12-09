@@ -59,7 +59,7 @@ export const getProductCommission = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    let query = `SELECT pc.*, pm.ProductName FROM ProductCommission pc left join ProductMast pm on pc.ProductCguid = pm.ProductUkeyId WHERE 1=1`;
+    let query = `SELECT pc.*, pm.ProductName, dl.LevelName FROM ProductCommission pc left join ProductMast pm on pc.ProductCguid = pm.ProductUkeyId left join DealerLevel dl on dl.Cguid = pc.DealerLevelCguid WHERE 1=1`;
     let countQuery = `SELECT COUNT(*) as totalCount FROM ProductCommission pc WHERE 1=1`;
     const replacements = {};
 
