@@ -113,6 +113,21 @@ export const getParty = async (req, res) => {
   }
 };
 
+export const cityWisePartyCount = async (req, res) => {
+  const sequelize = await dbConection();
+  try{
+    const [results] = await sequelize.query(`select * from cityWisePartyCount`);
+
+    res.status(200).json({ data: results, Success: true });
+
+  }catch(error){
+    console.error(error);
+    res.status(500).json({ error: "Database error", Success: false });
+  }finally{
+    await sequelize.close();
+  }
+}
+
 // Delete Party
 export const deleteParty = async (req, res) => {
   const { CustomerID, Cguid } = req.params;
