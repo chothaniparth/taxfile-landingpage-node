@@ -60,7 +60,7 @@ export const getDealerCustomCommission = async (req, res) => {
   const sequelize = await dbConection();
 
   try {
-    let query = `select dcc.*, dl.DealerName, pm.ProductName, dm.FileName from DealerCustomCommission dcc left join Dealer dl on dcc.DealerCguid = dl.DealerCguid left join ProductMast pm on pm.ProductUkeyId = dcc.ProductCguid left join DocMast dm on dm.MasterUkeyId = dcc.ProductCguid WHERE 1=1`;
+    let query = `select dcc.*, dl.DealerName, pm.ProductName, dm.FileName from DealerCustomCommission dcc left join Dealer dl on dcc.DealerCguid = dl.DealerCguid left join ProductMast pm on pm.ProductUkeyId = dcc.ProductCguid left join DocMast dm on dm.MasterUkeyId = dcc.ProductCguid and dm.FileType <> 'pdf' WHERE 1=1`;
     let countQuery = `SELECT COUNT(*) as totalCount FROM DealerCustomCommission dcc WHERE 1=1`;
     const replacements = {};
 
