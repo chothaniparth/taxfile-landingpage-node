@@ -44,7 +44,9 @@ export const getProductCategoryCommission = async (req, res) => {
 
     const [results] = await sequelize.query(query, { replacements });
 
-    res.status(200).json({ data: results, totalCount });
+    const [categoryname] = await sequelize.query(`select cm.CategoryName, pcc.* from CategoryMast cm left join ProductCategoryCommission pcc on cm.CategoryId = pcc.CategoryID`);
+    
+    res.status(200).json({ data: results, totalCount, categoryname });
 
   } catch (error) {
     res.status(500).json({ error: "Database error", Success: false });
