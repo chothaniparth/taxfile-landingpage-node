@@ -4,7 +4,10 @@ export const getProductCategoryCommission = async (req, res) => {
   const { ProductCategoryCommissionID, CategoryID, IsActive, Page, PageSize } = req.query
   const sequelize = await dbConection()
   try {
-    let query = `SELECT * FROM ProductCategoryCommission WHERE 1=1`;
+
+    let query = `select pcc.*,cat.CategoryName,dl.LevelName from ProductCategoryCommission as pcc left join 
+CategoryMast as cat on pcc.CategoryID = cat.CategoryId left join DealerLevel as dl
+on pcc.DealerLevelCguid =dl.Cguid WHERE 1=1`;
     let countQuery = `SELECT COUNT(*) AS totalcount FROM ProductCategoryCommission WHERE 1=1`;
     const replacements = {};
 
@@ -44,9 +47,10 @@ export const getProductCategoryCommission = async (req, res) => {
 
     const [results] = await sequelize.query(query, { replacements });
 
-    const [categoryname] = await sequelize.query(`select cm.CategoryName, pcc.* from CategoryMast cm left join ProductCategoryCommission pcc on cm.CategoryId = pcc.CategoryID`);
-    
-    res.status(200).json({ data: results, totalCount, categoryname });
+    //     const [categoryname] = await sequelize.query(`select pcc.*,cat.CategoryName from ProductCategoryCommission as pcc left join 
+    // CategoryMast as cat on pcc.CategoryID = cat.CategoryId`);
+
+    res.status(200).json({ data: results, totalCount });
 
   } catch (error) {
     res.status(500).json({ error: "Database error", Success: false });
@@ -57,20 +61,20 @@ export const getProductCategoryCommission = async (req, res) => {
 }
 
 export const createProductCategoryCommission = async (req, res) => {
-    const { ProductCategoryCommissionID = "", CategoryID = "", DealerLevelCguid = "", NewSaleCommission = "", RenewalCommission = "", IsActive = true, UserName = req.user?.UserName || "System", flag = "A" } = req.body
-    const sequelize = await dbConection()
+  const { ProductCategoryCommissionID = "", CategoryID = "", DealerLevelCguid = "", NewSaleCommission = "", RenewalCommission = "", IsActive = true, UserName = req.user?.UserName || "System", flag = "A" } = req.body
+  const sequelize = await dbConection()
 
-    try {
+  try {
 
-        const IpAddress = req?.headers["x-forwarded-for"] || req?.socket?.remoteAddress || "Not Found";
+    const IpAddress = req?.headers["x-forwarded-for"] || req?.socket?.remoteAddress || "Not Found";
 
-        if (flag === "U") {
+    if (flag === "U") {
 
-            if (!ProductCategoryCommissionID) {
-                return res.status(400).json({ message: "ID is required for update", Success: false });
-            }
+      if (!ProductCategoryCommissionID) {
+        return res.status(400).json({ message: "ID is required for update", Success: false });
+      }
 
-            const result = await sequelize.query(`
+      const result = await sequelize.query(`
       UPDATE ProductCategoryCommission set    
       CategoryID = :CategoryID,
       DealerLevelCguid = :DealerLevelCguid,
@@ -82,42 +86,42 @@ export const createProductCategoryCommission = async (req, res) => {
       UserName = :UserName,
       flag = :flag
       where ProductCategoryCommissionID = :ProductCategoryCommissionID`,
-                {
-                    replacements: {
-                        ProductCategoryCommissionID, CategoryID, DealerLevelCguid, NewSaleCommission, RenewalCommission, IsActive, IpAddress, UserName, flag
-                    },
-                });
+        {
+          replacements: {
+            ProductCategoryCommissionID, CategoryID, DealerLevelCguid, NewSaleCommission, RenewalCommission, IsActive, IpAddress, UserName, flag
+          },
+        });
 
-            // console.log("result => ", result);
+      // console.log("result => ", result);
 
-            return res.status(200).json({
-                message: "Product Category Commission Record Updated Successfully",
-                Success: true
-            });
-        }
+      return res.status(200).json({
+        message: "Product Category Commission Record Updated Successfully",
+        Success: true
+      });
+    }
 
-        await sequelize.query(`
+    await sequelize.query(`
       INSERT INTO ProductCategoryCommission
       (CategoryID, DealerLevelCguid, NewSaleCommission, RenewalCommission, IsActive, IpAddress, EntryDate, UserName, flag)
       VALUES
       (:CategoryID, :DealerLevelCguid, :NewSaleCommission, :RenewalCommission, :IsActive, :IpAddress, GETDATE(), :UserName, :flag)`, {
-            replacements: {
-                CategoryID, DealerLevelCguid, NewSaleCommission, RenewalCommission, IsActive, IpAddress, UserName, flag
-            },
-        }
-        );
-
-        res.status(200).json({
-            message: "Product Category Commission Record Created Successfully",
-            Success: true
-        })
-
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ error: err.message, Success: false });
-    } finally {
-        await sequelize.close();
+      replacements: {
+        CategoryID, DealerLevelCguid, NewSaleCommission, RenewalCommission, IsActive, IpAddress, UserName, flag
+      },
     }
+    );
+
+    res.status(200).json({
+      message: "Product Category Commission Record Created Successfully",
+      Success: true
+    })
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err.message, Success: false });
+  } finally {
+    await sequelize.close();
+  }
 }
 
 export const deleteProductCategoryCommission = async (req, res) => {
