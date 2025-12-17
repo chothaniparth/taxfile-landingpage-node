@@ -40,3 +40,11 @@ export const createTransaction = Joi.object({
 export const deleteTransactionSchema = Joi.object({
   TransactionUkeyId: Joi.string().required(),
 });
+
+export const managePaymentSchema = Joi.object({
+  Mode : Joi.string().optional().max(50).allow(null, ''),
+  PeriodStart : Joi.date().optional(),
+  PeriodEnd : Joi.date().optional(),
+  PayoutCguid : Joi.string().optional().max(100).allow(null, ''),
+  PaymentReferencePrefix : Joi.string().optional().max(50).allow(null, ''),
+})

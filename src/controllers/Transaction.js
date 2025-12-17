@@ -11,14 +11,18 @@ export const addUpdateTransaction = async (req, res) => {
     try {
         if (flag === "U") {
         // Delete existing product data
-        await sequelize.query(
-            "DELETE FROM TransactionMast WHERE TransactionUkeyId = :TransactionUkeyId",
-            { replacements: { TransactionUkeyId: Master.TransactionUkeyId }, transaction }
-        );
-        await sequelize.query(
-            "DELETE FROM TransactionProduct WHERE TransactionUkeyId = :TransactionUkeyId",
-            { replacements: { TransactionUkeyId: Master.TransactionUkeyId }, transaction }
-        );
+            await sequelize.query(
+                "DELETE FROM TransactionMast WHERE TransactionUkeyId = :TransactionUkeyId",
+                { replacements: { TransactionUkeyId: Master.TransactionUkeyId }, transaction }
+            );
+            await sequelize.query(
+                "DELETE FROM TransactionProduct WHERE TransactionUkeyId = :TransactionUkeyId",
+                { replacements: { TransactionUkeyId: Master.TransactionUkeyId }, transaction }
+            );
+            await sequelize.query(
+                "DELETE FROM Commission WHERE TransactionUkeyId = :TransactionUkeyId and status = 'Pending'",
+                { replacements: { TransactionUkeyId: Master.TransactionUkeyId }, transaction }
+            );
         }
 
         // Insert into ProductMast
@@ -55,7 +59,18 @@ export const addUpdateTransaction = async (req, res) => {
         );
         }
 
+        await sequelize.query(
+            `EXEC CalculateCommissionForTransaction @TransactionUkeyId = :TransactionUkeyId`,
+            {
+                replacements: {
+                TransactionUkeyId: Master.TransactionUkeyId
+                },
+                transaction   // 👈 IMPORTANT
+            }
+        );
+
         await transaction.commit();
+
         res.status(200).json({
         message: flag === "A" ? "Transaction added successfully" : "Transaction updated successfully",
         Success: true
@@ -65,6 +80,29 @@ export const addUpdateTransaction = async (req, res) => {
         console.error(err);
         res.status(500).json({ error: err.message, Success: false });
     } finally {
+        await sequelize.close();
+    }
+}
+
+export const managePayout = async (req, res)=> {
+    const {Mode, PeriodStart, PeriodEnd, PayoutCguid, PaymentReferencePrefix} = req.body;
+    const sequelize = await dbConection();
+    try {
+        let result = []
+        switch (Mode){
+            case "GeneratePayoutRun":
+                [result] = await sequelize.query(`EXEC GeneratePayoutRun  @PeriodStart = :PeriodStart,@PeriodEnd   = :PeriodEnd`, {replacements: {PeriodStart, PeriodEnd}})
+                break
+            case "MarkPayoutAsPaid":
+                [result] = await sequelize.query(`EXEC MarkPayoutAsPaid  @PayoutCguid = :PayoutCguid, @PaymentReferencePrefix = :PaymentReferencePrefix `, {replacements: { PayoutCguid, PaymentReferencePrefix }})
+                break
+        }
+
+        return res.status(200).json({data: result, Success: true, ...req.body})
+    }catch(error){
+        console.error(error);
+        res.status(500).json({ error: error.message, Success: false });
+    }finally{
         await sequelize.close();
     }
 }
