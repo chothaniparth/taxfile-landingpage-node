@@ -29,13 +29,13 @@ export const addUpdateTransaction = async (req, res) => {
         await sequelize.query(
         `
             INSERT INTO TransactionMast
-                (TransactionUkeyId, InvoiceNo, InvoiceDate, PartyID, DealerCguid, ProductCguid, TxnType, AmountExGST, GSTAmount, GrossAmount, IpAddress, EntryDate, UserName, flag)
+                (TransactionUkeyId, InvoiceNo, InvoiceDate, PartyID, DealerCguid, TxnType, AmountExGST, GSTAmount, GrossAmount, IpAddress, EntryDate, UserName, flag)
             VALUES
-                (:TransactionUkeyId, :InvoiceNo, :InvoiceDate, :PartyID, :DealerCguid, :ProductCguid, :TxnType, :AmountExGST, :GSTAmount, :GrossAmount, :IpAddress, GETDATE(), :UserName, :flag)
+                (:TransactionUkeyId, :InvoiceNo, :InvoiceDate, :PartyID, :DealerCguid, :TxnType, :AmountExGST, :GSTAmount, :GrossAmount, :IpAddress, GETDATE(), :UserName, :flag)
         `,
         {
             replacements: {
-                TransactionUkeyId : Master.TransactionUkeyId, InvoiceNo : Master.InvoiceNo, InvoiceDate : Master.InvoiceDate, PartyID : Master.PartyID, DealerCguid : Master.DealerCguid, ProductCguid : Master.ProductCguid, TxnType : Master.TxnType, AmountExGST : Master.AmountExGST, GSTAmount : Master.GSTAmount, GrossAmount : Master.GrossAmount, IpAddress, UserName, flag,            
+                TransactionUkeyId : Master.TransactionUkeyId, InvoiceNo : Master.InvoiceNo, InvoiceDate : Master.InvoiceDate, PartyID : Master.PartyID, DealerCguid : Master.DealerCguid, TxnType : Master.TxnType, AmountExGST : Master.AmountExGST, GSTAmount : Master.GSTAmount, GrossAmount : Master.GrossAmount, IpAddress, UserName, flag,            
             },
             transaction
         }
