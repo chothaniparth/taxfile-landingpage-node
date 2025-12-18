@@ -1,6 +1,6 @@
 import express from "express";
 import {
-    addUpdateTransaction, transactionList, deleteTransaction, managePayout
+    addUpdateTransaction, transactionList, deleteTransaction, managePayout, commissionList
 } from "../controllers/Transaction.js";
 import { validate } from "../middlewares/validate.js";
 import { authenticateJWT } from "../middlewares/authMiddleware.js";
@@ -12,6 +12,7 @@ const router = express.Router();
 
 // Public routes
 router.get("/transasctionList", transactionList);
+router.get("/commissionList", commissionList);
 
 // Protected routes
 router.post("/addUpdateTransaction", authenticateJWT, validate(createTransaction), addUpdateTransaction);

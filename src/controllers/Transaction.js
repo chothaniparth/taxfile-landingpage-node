@@ -169,6 +169,73 @@ export const transactionList = async (req, res) => {
     }
 }
 
+export const commissionList = async (req, res) => {
+    const { CommissionUkeyId, TransactionUkeyId, ProductCguid, DealerCguid, Status, Page, PageSize } = req.query;
+    const sequelize = await dbConection();
+
+    try {
+        let query = `SELECT * FROM Commission WHERE 1=1`;
+        let countQuery = `SELECT COUNT(*) as totalCount FROM Commission WHERE 1=1`;
+        const replacements = {};
+
+        if (CommissionUkeyId) {
+        query += " AND CommissionUkeyId = :CommissionUkeyId";
+        countQuery += " AND CommissionUkeyId = :CommissionUkeyId";
+        replacements.CommissionUkeyId = CommissionUkeyId;
+        }
+        if (TransactionUkeyId) {
+        query += " AND TransactionUkeyId = :TransactionUkeyId";
+        countQuery += " AND TransactionUkeyId = :TransactionUkeyId";
+        replacements.TransactionUkeyId = TransactionUkeyId;
+        }
+        if (ProductCguid) {
+        query += " AND ProductCguid LIKE :ProductCguid";
+        countQuery += " AND ProductCguid LIKE :ProductCguid";
+        replacements.ProductCguid = ProductCguid;
+        }
+        if (DealerCguid) {
+        query += " AND DealerCguid = :DealerCguid";
+        countQuery += " AND DealerCguid = :DealerCguid";
+        replacements.DealerCguid = DealerCguid;
+        }
+        if (Status) {
+        query += " AND Status = :Status";
+        countQuery += " AND Status = :Status";
+        replacements.Status = Status;
+        }
+
+        // Always order by EntryDate DESC
+        query += " ORDER BY CommissionID DESC";
+
+        // Get total count first
+        const [countResult] = await sequelize.query(countQuery, { replacements });
+        const totalCount = countResult[0]?.totalCount || 0;
+
+        // Apply pagination if provided
+        const pageNum = parseInt(Page, 10);
+        const pageSizeNum = parseInt(PageSize, 10);
+
+        if (!isNaN(pageNum) && !isNaN(pageSizeNum) && pageNum > 0 && pageSizeNum > 0) {
+        const offset = (pageNum - 1) * pageSizeNum;
+        query += " OFFSET :offset ROWS FETCH NEXT :pageSize ROWS ONLY";
+        replacements.offset = offset;
+        replacements.pageSize = pageSizeNum;
+        }
+
+        const [results] = await sequelize.query(query, { replacements });
+
+        res.status(200).json({
+        data: results,
+        totalCount,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Database error" });
+    } finally {
+        await sequelize.close();
+    }
+}
+
 export const deleteTransaction = async (req, res) => {
     const { TransactionUkeyId } = req.params;
     const sequelize = await dbConection();
