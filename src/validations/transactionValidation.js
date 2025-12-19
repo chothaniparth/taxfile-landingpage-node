@@ -8,7 +8,6 @@ export const createTransaction = Joi.object({
     InvoiceDate: Joi.date().allow('', null),
     PartyID: Joi.number().allow(null),
     DealerCguid: Joi.string().max(200).required(),
-    ProductCguid: Joi.string().max(200).required(),
     TxnType: Joi.string().max(200).required(),
     AmountExGST: Joi.number().allow(null),
     GSTAmount: Joi.number().allow(null),
