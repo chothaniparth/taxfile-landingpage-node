@@ -175,6 +175,7 @@ export const transactionList = async (req, res) => {
 
 export const transactionListById = async (req, res) => {
     const { TransactionUkeyId } = req.params;
+
     if (!TransactionUkeyId) {
     return res.status(400).json({ error: "TransactionUkeyId is required" });
   }
@@ -189,7 +190,7 @@ export const transactionListById = async (req, res) => {
     );
 
     if (!transactiontResult || transactiontResult.length === 0) {
-      return res.status(404).json({ error: "Product not found" });
+      return res.status(404).json({ error: "Transaction not found" });
     }
 
     const transaction = transactiontResult[0];
@@ -207,7 +208,6 @@ export const transactionListById = async (req, res) => {
     res.status(200).json({
       Master: transaction,
       TransactionProduct: transactionproductResult,
-    //   Commission : commissionResult,
       Success: true
     });
   } catch (err) {
