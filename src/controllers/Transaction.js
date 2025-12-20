@@ -177,45 +177,45 @@ export const transactionListById = async (req, res) => {
     const { TransactionUkeyId } = req.params;
 
     if (!TransactionUkeyId) {
-    return res.status(400).json({ error: "TransactionUkeyId is required" });
-  }
-
-  const sequelize = await dbConection();
-
-  try {
-  
-    const [transactiontResult] = await sequelize.query(
-      "select * from TransactionMast where TransactionUkeyId = :TransactionUkeyId",
-      { replacements: { TransactionUkeyId } }
-    );
-
-    if (!transactiontResult || transactiontResult.length === 0) {
-      return res.status(404).json({ error: "Transaction not found" });
+        return res.status(400).json({ error: "TransactionUkeyId is required" });
     }
 
-    const transaction = transactiontResult[0];
+    const sequelize = await dbConection();
 
-    const [transactionproductResult] = await sequelize.query(
-      "SELECT * FROM TransactionProduct WHERE TransactionUkeyId = :TransactionUkeyId ORDER BY EntryDate ASC",
-      { replacements: { TransactionUkeyId } }
-    );
+    try {
 
-    // const [commissionResult] = await sequelize.query(
-    //   "SELECT * FROM Commission WHERE TransactionUkeyId = :TransactionUkeyId ORDER BY EntryDate ASC",
-    //   { replacements: { TransactionUkeyId } }
-    // );
+        const [transactiontResult] = await sequelize.query(
+            "select * from TransactionMast where TransactionUkeyId = :TransactionUkeyId",
+            { replacements: { TransactionUkeyId } }
+        );
 
-    res.status(200).json({
-      Master: transaction,
-      TransactionProduct: transactionproductResult,
-      Success: true
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message, Success: false });
-  } finally {
-    await sequelize.close();
-  }
+        if (!transactiontResult || transactiontResult.length === 0) {
+            return res.status(404).json({ error: "Transaction not found" });
+        }
+
+        const transaction = transactiontResult[0];
+
+        const [transactionproductResult] = await sequelize.query(
+            "SELECT * FROM TransactionProduct WHERE TransactionUkeyId = :TransactionUkeyId ORDER BY EntryDate ASC",
+            { replacements: { TransactionUkeyId } }
+        );
+
+        // const [commissionResult] = await sequelize.query(
+        //   "SELECT * FROM Commission WHERE TransactionUkeyId = :TransactionUkeyId ORDER BY EntryDate ASC",
+        //   { replacements: { TransactionUkeyId } }
+        // );
+
+        res.status(200).json({
+            Master: transaction,
+            TransactionProduct: transactionproductResult,
+            Success: true
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message, Success: false });
+    } finally {
+        await sequelize.close();
+    }
 };
 
 export const commissionList = async (req, res) => {
@@ -223,7 +223,15 @@ export const commissionList = async (req, res) => {
     const sequelize = await dbConection();
 
     try {
-        let query = `SELECT * FROM Commission WHERE 1=1`;
+        let query = `select c.*, tm.InvoiceNo, pm.ProductName, d.DealerName, dl.LevelName from Commission c
+                     left join TransactionMast tm
+                     on c.TransactionUkeyId = tm.TransactionUkeyId
+                     left join ProductMast pm
+                     on c.ProductCguid = pm.ProductUkeyId
+                     left join Dealer d
+                     on c.DealerCguid = d.DealerCguid
+                     left join DealerLevel dl
+                     on c.DealerLevelCguid = dl.Cguid WHERE 1=1`;
         let countQuery = `SELECT COUNT(*) as totalCount FROM Commission WHERE 1=1`;
         const replacements = {};
 
