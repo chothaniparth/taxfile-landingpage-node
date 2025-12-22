@@ -10,7 +10,7 @@ export const dashboardList = async (req, res) =>{
             group by cm.CategoryName    
         `);
         const TotalDealer = await sequelize.query(`
-            select COUNT(DealerID) AS totalDealer from Dealer
+            select COUNT(DealerID) AS totalDealer from Dealer where IsActive = 1
         `);
         const DealerIncom = await sequelize.query(`
             select SUM(tm.AmountExGST) AS totalAmountExGST, SUM(tm.GrossAmount) AS TotalGrossAmount, SUM(tm.GSTAmount) AS totalGSTAmount, dl.DealerName, tm.DealerCguid from TransactionMast tm
