@@ -41,6 +41,7 @@ import DealerCustomCommissionRoutes from './DealerCustomCommissionRoutes.js';
 import ProductCommissionRoutes from './ProductCommissionRoutes.js';
 import ProductCategoryCommission from './ProductCategoryCommissionRoutes.js';
 import TransactionRoutes from './transactionRoutes.js';
+import Payout from "./payout.js"
 
 const router = express.Router();
 
@@ -85,6 +86,7 @@ router.use('/productcatcom', ProductCategoryCommission);
 router.use('/dealerCustomCommission', DealerCustomCommissionRoutes);
 router.use('/productCommission', ProductCommissionRoutes);
 router.use('/transaction', TransactionRoutes);
+router.use('/payout', Payout)
 router.get('/sendOTP/:MobileNumber', OTPController);
 
 export default router;
