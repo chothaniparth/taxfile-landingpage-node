@@ -46,12 +46,12 @@ export const payoutlineList = async (req, res) => {
     const sequelize = await dbConection()
     
     try {
-        let query = `select * from PayoutLine WHERE 1=1`;
-        let countQuery = `SELECT COUNT(*) as totalCount FROM PayoutLine WHERE 1=1`;
+        let query = `select pl.*, dl.DealerName from PayoutLine pl left join Dealer dl on pl.DealerCguid = dl.DealerCguid WHERE 1=1`;
+        let countQuery = `SELECT COUNT(*) as totalCount FROM PayoutLine pl WHERE 1=1`;
         const replacements = {};
 
         // Always order by EntryDate DESC
-        query += " ORDER BY PayoutLineID asc";
+        query += " ORDER BY pl.PayoutLineID asc";
 
         // Get total count first
         const [countResult] = await sequelize.query(countQuery, { replacements });
