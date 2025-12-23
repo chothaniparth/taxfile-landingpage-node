@@ -3,19 +3,20 @@ import nodemailer from 'nodemailer'
 // emce qrgk rfxi aapp
 
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com', // e.g., 'smtp.gmail.com'
+    host: 'smtp.taxcrm.in', // e.g., 'smtp.gmail.com'
     port: 587, // or 465 for secure SSL
     secure: false, // true for 465, false for other ports
+    tls: { rejectUnauthorized: false },
     auth: {
-        user: 'parth.taxfile@gmail.com',
-        pass: 'emce qrgk rfxi aapp', // or app-specific password
+        user: 'info@taxcrm.in',
+        pass: 'SZHQBWm3', // or app-specific password
     },
 });
 
 export const sendBulkEmails = async (recipients, subject, html) => {
     for (const recipient of recipients) {
         const mailOptions = {
-            from: 'parth.taxfile@gmail.com',
+            from: 'info@taxcrm.in',
             to: recipient.email,
             subject,
             html: html,

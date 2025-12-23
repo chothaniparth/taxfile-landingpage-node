@@ -33,6 +33,7 @@ export const createInquirySchema = Joi.object({
   ExpStartDate: Joi.date().optional().allow("", null),
   Industry: Joi.string().max(500).optional().allow("", null),
   ExpBudget: Joi.number().optional().allow("", null),
+  InqueryModeName: Joi.string().optional().allow("", null),
   flag: Joi.string()
     .valid("A", "U")
     .required()

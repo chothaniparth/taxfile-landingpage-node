@@ -1,9 +1,10 @@
 import { dbConection } from "../config/db.js";
+import { sendBulkEmails } from "../services/email.js";
 
 // Create / Update Inquiry
 export const createInquiry = async (req, res) => {
   const {
-    UkeyId = "", ProductUkeyId = "", inquiryMode = "", Name = "", CompanyName = "", Address = "", City = "", State = "", PinCode = "", Email = "", Mobile = "", Message = "", IsActive = true, UserName = req.user?.UserName || "System", flag = "A", Status = "", EstablishmentYear = "", PAN = "", GST = "", ContactPerson = "", Remark1 = "", Remark2 = "", Remark3 = "", Remark4 = "", Remark5 = "", Remark6 = "", Subject = "", ExpStartDate = "" , Industry = "", ExpBudget = ""
+    UkeyId = "", ProductUkeyId = "", inquiryMode = "", Name = "", CompanyName = "", Address = "", City = "", State = "", PinCode = "", Email = "", Mobile = "", Message = "", IsActive = true, UserName = req.user?.UserName || "System", flag = "A", Status = "", EstablishmentYear = "", PAN = "", GST = "", ContactPerson = "", Remark1 = "", Remark2 = "", Remark3 = "", Remark4 = "", Remark5 = "", Remark6 = "", Subject = "", ExpStartDate = "" , Industry = "", ExpBudget = "",InqueryModeName = ''
   } = req.body;
 
   const sequelize = await dbConection();
@@ -62,6 +63,135 @@ export const createInquiry = async (req, res) => {
         ExpBudget
       },
     });
+    let ProductName 
+
+    if(ProductUkeyId) {
+       ProductName = await sequelize.query(`select * from ProductMast where ProductUkeyId = '${ProductUkeyId}'`)
+    }
+    console.log(ProductName);
+    
+    const emailHTML = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8" />
+      <style>
+        body {
+          font-family: Arial, Helvetica, sans-serif;
+          background-color: #f4f6f8;
+          padding: 20px;
+        }
+        .container {
+          max-width: 650px;
+          margin: auto;
+          background: #ffffff;
+          border-radius: 6px;
+          overflow: hidden;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .header {
+          background: #0d6efd;
+          color: #ffffff;
+          padding: 15px 20px;
+          font-size: 18px;
+          font-weight: bold;
+        }
+        .content {
+          padding: 20px;
+          color: #333;
+          font-size: 14px;
+          line-height: 1.6;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 10px;
+        }
+        table td {
+          padding: 8px;
+          border-bottom: 1px solid #eee;
+        }
+        table td.label {
+          font-weight: bold;
+          width: 35%;
+          background: #f8f9fa;
+        }
+        .footer {
+          padding: 12px 20px;
+          background: #f1f1f1;
+          font-size: 12px;
+          color: #666;
+          text-align: center;
+        }
+      </style>
+    </head>
+
+    <body>
+      <div class="container">
+        <div class="header">
+          New Inquiry Received
+        </div>
+
+        <div class="content">
+          <p>You have received a new inquiry with the following details:</p>
+
+          <table>
+            <tr>
+              <td class="label">Inquiry Mode</td>
+              <td>${InqueryModeName}</td>
+            </tr>
+            ${ProductUkeyId && ProductName?.[0]?.[0]?.ProductName ? `
+            <tr>
+              <td class="label">Product Name</td>
+              <td>${ProductName?.[0]?.[0]?.ProductName}</td>
+            </tr>
+            ` : ''}
+            <tr>
+              <td class="label">Name</td>
+              <td>${Name}</td>
+            </tr>
+            <tr>
+              <td class="label">Company Name</td>
+              <td>${CompanyName}</td>
+            </tr>
+            <tr>
+              <td class="label">Email</td>
+              <td>${Email}</td>
+            </tr>
+            <tr>
+              <td class="label">Mobile</td>
+              <td>${Mobile}</td>
+            </tr>
+            <tr>
+              <td class="label">City / State</td>
+              <td>${City}, ${State}</td>
+            </tr>
+            <tr>
+              <td class="label">Industry</td>
+              <td>${Industry}</td>
+            </tr>
+            <tr>
+              <td class="label">Expected Budget</td>
+              <td>${ExpBudget}</td>
+            </tr>
+            <tr>
+              <td class="label">Message</td>
+              <td>${Message}</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="footer">
+          This inquiry was generated from the system on ${new Date().toLocaleString()}.
+        </div>
+      </div>
+    </body>
+    </html>
+    `;
+
+    if(flag == 'A'){
+      sendBulkEmails([{email : 'helpsurat@gmail.com'}], `There is an inquiry for ${InqueryModeName}`, emailHTML)
+    }
 
     res.status(200).json({
       message: flag === "A" ? "Inquiry created successfully" : "Inquiry updated successfully",
