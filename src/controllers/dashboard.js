@@ -7,10 +7,6 @@ export const dashboardList = async (req, res) => {
 
         const { fromDate, toDate } = req.query;
 
-        if (!fromDate || !toDate) {
-            return res.status(400).json({ message: "fromDate and toDate are required" });
-        }
-
         const NumberOfProductOncategory = await sequelize.query(`
             select cm.CategoryName, COUNT(pm.CategoryId) AS TotalProduct from CategoryMast cm
             left join ProductMast pm on pm.CategoryId = cm.CategoryId
@@ -48,10 +44,68 @@ export const dashboardList = async (req, res) => {
             SUM(pl.Amount + pl.GSTonPayout) AS TotalAmountWithGST, COUNT(pl.DealerCguid) AS DealerEntry
             FROM PayoutLine pl LEFT JOIN Dealer dl
             ON pl.DealerCguid = dl.DealerCguid
-            WHERE pl.PaidDate >= :fromDate
-            AND pl.PaidDate < DATEADD(DAY, 1, :toDate)
+            ${fromDate && toDate ?
+                `            
+                    WHERE pl.PaidDate >= :fromDate
+                    AND pl.PaidDate <= DATEADD(DAY, 1, :toDate)
+                ` : ''
+            }
             GROUP BY dl.DealerCguid, dl.DealerName
             ORDER BY TotalAmount DESC`, {
+            replacements: {
+                fromDate, toDate
+            },
+        })
+        const chartSalesData = await sequelize.query(`
+            SELECT tm.DealerCguid, dl.DealerName,
+            SUM(tm.AmountExGST) AS TotalAmount, SUM(tm.GSTAmount) AS TotalGST,
+            SUM(tm.AmountExGST + tm.GSTAmount) AS TotalAmountWithGST, COUNT(tm.DealerCguid) AS DealerEntry
+            FROM TransactionMast tm LEFT JOIN Dealer dl
+            ON tm.DealerCguid = dl.DealerCguid
+            ${fromDate && toDate ?
+                `
+                    WHERE tm.InvoiceDate >= :fromDate
+                    AND tm.InvoiceDate <= :toDate
+                ` : ''
+            }
+            GROUP BY tm.DealerCguid, dl.DealerName
+            ORDER BY TotalAmount DESC
+            `, {
+            replacements: {
+                fromDate, toDate
+            },
+        })
+        const ProductIncomeData = await sequelize.query(`
+            select pm.ProductName, SUM(tp.AmountExGST) totalAmountExGST, SUM(tp.GrossAmount) totalGrossAmount, SUM(tp.GSTAmount) totalGSTAmount from TransactionProduct tp
+            left join ProductMast pm on tp.ProductCguid = pm.ProductUkeyId
+            left join TransactionMast tm on tm.TransactionUkeyId = tp.TransactionUkeyId
+            ${fromDate && toDate ?
+                `
+                    WHERE tm.InvoiceDate >= :fromDate
+                    AND tm.InvoiceDate <= :toDate
+                ` : ''
+            }
+            group by pm.ProductName
+            order by totalAmountExGST desc
+            `, {
+            replacements: {
+                fromDate, toDate
+            },
+        })
+        const monthlyIncomeData = await sequelize.query(`
+            SELECT SUM(tm.AmountExGST) AS TotalAmount, SUM(tm.GSTAmount) AS TotalGST,
+            SUM(tm.AmountExGST + tm.GSTAmount) AS TotalAmountWithGST, YEAR(InvoiceDate) AS
+            Year, MONTH(InvoiceDate) AS Month
+            FROM TransactionMast tm LEFT JOIN Dealer dl
+            ON tm.DealerCguid = dl.DealerCguid
+            ${fromDate && toDate ?
+                `
+                    WHERE tm.InvoiceDate >= :fromDate
+                    AND tm.InvoiceDate <= :toDate
+                ` : ''
+            }
+            GROUP BY YEAR(InvoiceDate), MONTH(InvoiceDate)
+            `, {
             replacements: {
                 fromDate, toDate
             },
@@ -65,7 +119,10 @@ export const dashboardList = async (req, res) => {
             totalVacencyApply: numberOfTotalVacencyApply?.[0]?.[0]?.totalVacencyApply,
             TotalInqueryOfEachMode: TotalInqueryOfEachMode[0],
             TotalInqueryOfEachProduct: TotalInqueryOfEachProduct[0],
-            TotalDealerIncomeWithDate: TotalDealerIncomeWithDate[0]
+            TotalDealerIncomeWithDate: TotalDealerIncomeWithDate[0],
+            chartSalesData: chartSalesData[0],
+            ProductIncomeData: ProductIncomeData[0],
+            monthlyIncomeData: monthlyIncomeData[0],
         });
 
     } catch (err) {
