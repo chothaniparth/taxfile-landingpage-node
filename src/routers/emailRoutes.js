@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/emailList", getEmail);
 
 // Protected routes
-router.post("/AddUpdateEmail", createEmail);
-router.delete("/DeleteEmail/:id", deleteEmail);
+router.post("/AddUpdateEmail", authenticateJWT, createEmail);
+router.delete("/DeleteEmail/:id", authenticateJWT, deleteEmail);
 
 export default router;
