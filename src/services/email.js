@@ -1,32 +1,64 @@
-import nodemailer from 'nodemailer'
+import nodemailer from "nodemailer";
+import { dbConection } from "../config/db.js";
 
-// emce qrgk rfxi aapp
+let cachedTransporter = null;
 
-const transporter = nodemailer.createTransport({
-    host: 'smtp.taxcrm.in', // e.g., 'smtp.gmail.com'
-    port: 587, // or 465 for secure SSL
-    secure: false, // true for 465, false for other ports
-    tls: { rejectUnauthorized: false },
-    auth: {
-        user: 'info@taxcrm.in',
-        pass: 'SZHQBWm3', // or app-specific password
-    },
-});
+const getMailTransporter = async () => {
+  if (cachedTransporter) return cachedTransporter;
+
+  const sequelize = await dbConection();
+
+  try {
+    const [rows] = await sequelize.query(
+      `SELECT TOP 1 * FROM MailSetting WHERE IsActive = 1`
+    );
+
+    if (!rows.length) {
+      throw new Error("No active MailSetting found");
+    }
+
+    const setting = rows[0];
+
+    cachedTransporter = nodemailer.createTransport({
+      host: setting.MailServer,
+      port: 587,
+      secure: false,
+      tls: { rejectUnauthorized: false },
+      auth: {
+        user: setting.Email,
+        pass: setting.Password,
+      },
+    });
+
+    cachedTransporter.fromAddress = {
+      email: setting.Email,
+      name: setting.ServerName || "",
+    };
+
+    return cachedTransporter;
+  } finally {
+    await sequelize.close();
+  }
+};
 
 export const sendBulkEmails = async (recipients, subject, html) => {
-    for (const recipient of recipients) {
-        const mailOptions = {
-            from: 'info@taxcrm.in',
-            to: recipient.email,
-            subject,
-            html: html,
-        };
-        try {
-            const info = await transporter.sendMail(mailOptions);
-            console.log(`Email sent to ${recipient.email}: ${info.messageId}`);
-        } catch (error) {
-            console.error(`Error sending email to ${recipient.email}:`, error);
-        }
-    }
-}
+  const transporter = await getMailTransporter();
 
+  console.log("transport => ", transporter );
+  
+
+  for (const recipient of recipients) {
+    try {
+      await transporter.sendMail({
+        from: `"${transporter.fromAddress.name}" <${transporter.fromAddress.email}>`,
+        to: recipient.email,
+        subject,
+        html,
+      });
+
+      console.log(`Email sent to ${recipient.email}`);
+    } catch (err) {
+      console.error(`Error sending email to ${recipient.email}:`, err.message);
+    }
+  }
+};
