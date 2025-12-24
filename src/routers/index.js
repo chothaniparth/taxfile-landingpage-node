@@ -42,6 +42,7 @@ import ProductCommissionRoutes from './ProductCommissionRoutes.js';
 import ProductCategoryCommission from './ProductCategoryCommissionRoutes.js';
 import TransactionRoutes from './transactionRoutes.js';
 import Payout from "./payout.js";
+import emailMast from "./emailRoutes.js"
 import {dashboardList} from '../controllers/dashboard.js';
 
 const router = express.Router();
@@ -88,7 +89,9 @@ router.use('/dealerCustomCommission', DealerCustomCommissionRoutes);
 router.use('/productCommission', ProductCommissionRoutes);
 router.use('/transaction', TransactionRoutes);
 router.use('/payout', Payout)
+router.use('/email', emailMast)
 router.get('/sendOTP/:MobileNumber', OTPController);
 router.get('/dashboard', dashboardList);
+
 
 export default router;
