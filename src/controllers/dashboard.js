@@ -92,6 +92,7 @@ export const dashboardList = async (req, res) => {
                 fromDate, toDate
             },
         })
+
         const monthlyIncomeData = await sequelize.query(`
             SELECT SUM(tm.AmountExGST) AS TotalAmount, SUM(tm.GSTAmount) AS TotalGST,
             SUM(tm.AmountExGST + tm.GSTAmount) AS TotalAmountWithGST, YEAR(InvoiceDate) AS
@@ -111,6 +112,14 @@ export const dashboardList = async (req, res) => {
             },
         })
 
+        const jobApplicationCount = await sequelize.query(`
+            select count(*) as jobApplication, MONTH(EntryDate) as month, Year(EntryDate) as Year from VacancyApply 
+            group by MONTH(EntryDate), Year(EntryDate)`)
+
+        const DealerCountWithMonth = await sequelize.query(`
+                select count(*) as TotalDelar, month(DOJ) as Month, Year(DOJ) as Year from Dealer 
+                group by MONTH(DOJ), YEAR(DOJ)`) 
+
         res.status(200).json({
             NumberOfProductOncategory: NumberOfProductOncategory[0],
             TotalDealer: TotalDealer?.[0]?.[0]?.totalDealer,
@@ -123,7 +132,10 @@ export const dashboardList = async (req, res) => {
             chartSalesData: chartSalesData[0],
             ProductIncomeData: ProductIncomeData[0],
             monthlyIncomeData: monthlyIncomeData[0],
+            JobApplicationCountWithMonth: jobApplicationCount[0],
+            DealerCountWithMonth : DealerCountWithMonth[0]
         });
+
 
     } catch (err) {
         console.error(err);
