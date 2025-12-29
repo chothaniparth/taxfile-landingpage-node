@@ -117,8 +117,23 @@ export const dashboardList = async (req, res) => {
             group by MONTH(EntryDate), Year(EntryDate)`)
 
         const DealerCountWithMonth = await sequelize.query(`
-                select count(*) as TotalDelar, month(DOJ) as Month, Year(DOJ) as Year from Dealer 
-                group by MONTH(DOJ), YEAR(DOJ)`) 
+                select count(*) as TotalDealer, month(DOJ) as Month, Year(DOJ) as Year from Dealer 
+                group by MONTH(DOJ), YEAR(DOJ)`)
+
+        const TotalCilentCount = await sequelize.query(`
+            select Count(*) AS TotalCilent from Party`)
+
+        const TotalCilentCountPerMonth = await sequelize.query(`
+            select count(*) AS TotalParty, Month(DOJ) as Month, YEAR(DOJ) as Year from Party
+            group by MONTH(DOJ), YEAR(DOJ) order by Year desc`)
+
+        const TotalRevenue = await sequelize.query(`
+            select sum(GrossAmount) AS TotalGrossAmount from TransactionMast`)
+
+        const TotalRevenuePerMonth = await sequelize.query(`
+            select SUM(GrossAmount) AS TotalGrossAmount, MONTH(InvoiceDate) as Month, 
+            YEAR(InvoiceDate) as Year from TransactionMast 
+            group by MONTH(InvoiceDate), YEAR(InvoiceDate) order by Year desc`)
 
         res.status(200).json({
             NumberOfProductOncategory: NumberOfProductOncategory[0],
@@ -133,7 +148,11 @@ export const dashboardList = async (req, res) => {
             ProductIncomeData: ProductIncomeData[0],
             monthlyIncomeData: monthlyIncomeData[0],
             JobApplicationCountWithMonth: jobApplicationCount[0],
-            DealerCountWithMonth : DealerCountWithMonth[0]
+            DealerCountWithMonth: DealerCountWithMonth[0],
+            TotalCilentCount: TotalCilentCount?.[0]?.[0]?.TotalCilent,
+            TotalCilentCountPerMonth: TotalCilentCountPerMonth[0],
+            TotalRevenue: TotalRevenue?.[0]?.[0]?.TotalGrossAmount,
+            TotalRevenuePerMonth: TotalRevenuePerMonth[0]
         });
 
 
