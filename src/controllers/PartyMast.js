@@ -45,7 +45,7 @@ export const createParty = async (req, res) => {
 
 // Get Party (with optional filters)
 export const getParty = async (req, res) => {
-  const { CustomerID, Cguid, PartyName, Mobile1, Email1, Page, PageSize, StateID } = req.query;
+  const { CustomerID, Cguid, DealerCguid, Mobile1, Email1, Page, PageSize, StateID } = req.query;
   const sequelize = await dbConection();
 
   try {
@@ -68,10 +68,10 @@ export const getParty = async (req, res) => {
       countQuery += " AND StateID = :StateID";
       replacements.StateID = StateID;
     }
-    if (PartyName) {
-      query += " AND PartyName LIKE :PartyName";
-      countQuery += " AND PartyName LIKE :PartyName";
-      replacements.PartyName = `%${PartyName}%`;
+    if (DealerCguid) {
+      query += " AND DealerCguid LIKE :DealerCguid";
+      countQuery += " AND DealerCguid LIKE :DealerCguid";
+      replacements.DealerCguid = DealerCguid;
     }
     if (Mobile1) {
       query += " AND Mobile1 LIKE :Mobile1";
