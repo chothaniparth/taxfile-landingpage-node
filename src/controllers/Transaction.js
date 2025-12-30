@@ -112,7 +112,7 @@ export const transactionList = async (req, res) => {
     const sequelize = await dbConection();
 
     try {
-        let query = `select tm.*, p.PartyName, d.DealerName from TransactionMast tm left join Party p on tm.PartyID = p.ParentID left join Dealer d on tm.DealerCguid = d.DealerCguid WHERE 1=1`;
+        let query = `select tm.*, p.PartyName, d.DealerName from TransactionMast tm left join Party p on tm.PartyID = p.PartyID left join Dealer d on tm.DealerCguid = d.DealerCguid WHERE 1=1`;
         let countQuery = `SELECT COUNT(*) as totalCount FROM TransactionMast WHERE 1=1`;
         const replacements = {};
 
