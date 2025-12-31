@@ -228,37 +228,37 @@ export const commissionList = async (req, res) => {
                      on c.DealerCguid = d.DealerCguid
                      left join DealerLevel dl
                      on c.DealerLevelCguid = dl.Cguid WHERE 1=1`;
-        let countQuery = `SELECT COUNT(*) as totalCount FROM Commission WHERE 1=1`;
+        let countQuery = `SELECT COUNT(*) as totalCount FROM Commission c WHERE 1=1`;
         const replacements = {};
 
         if (CommissionUkeyId) {
-            query += " AND CommissionUkeyId = :CommissionUkeyId";
-            countQuery += " AND CommissionUkeyId = :CommissionUkeyId";
+            query += " AND c.CommissionUkeyId = :CommissionUkeyId";
+            countQuery += " AND c.CommissionUkeyId = :CommissionUkeyId";
             replacements.CommissionUkeyId = CommissionUkeyId;
         }
         if (TransactionUkeyId) {
-            query += " AND TransactionUkeyId = :TransactionUkeyId";
-            countQuery += " AND TransactionUkeyId = :TransactionUkeyId";
+            query += " AND c.TransactionUkeyId = :TransactionUkeyId";
+            countQuery += " AND c.TransactionUkeyId = :TransactionUkeyId";
             replacements.TransactionUkeyId = TransactionUkeyId;
         }
         if (ProductCguid) {
-            query += " AND ProductCguid LIKE :ProductCguid";
-            countQuery += " AND ProductCguid LIKE :ProductCguid";
+            query += " AND c.ProductCguid LIKE :ProductCguid";
+            countQuery += " AND c.ProductCguid LIKE :ProductCguid";
             replacements.ProductCguid = ProductCguid;
         }
         if (DealerCguid) {
-            query += " AND DealerCguid = :DealerCguid";
-            countQuery += " AND DealerCguid = :DealerCguid";
+            query += " AND c.DealerCguid = :DealerCguid";
+            countQuery += " AND c.DealerCguid = :DealerCguid";
             replacements.DealerCguid = DealerCguid;
         }
         if (Status) {
-            query += " AND Status = :Status";
-            countQuery += " AND Status = :Status";
+            query += " AND c.Status = :Status";
+            countQuery += " AND c.Status = :Status";
             replacements.Status = Status;
         }
 
         // Always order by EntryDate DESC
-        query += " ORDER BY CommissionID DESC";
+        query += " ORDER BY c.CommissionID DESC";
 
         // Get total count first
         const [countResult] = await sequelize.query(countQuery, { replacements });
