@@ -108,7 +108,7 @@ export const managePayout = async (req, res) => {
 }
 
 export const transactionList = async (req, res) => {
-    const { SubUkeyId, SubCateName, CategoryId, IsActive, Page, PageSize } = req.query;
+    const { SubUkeyId, SubCateName, DealerCguid, CategoryId, IsActive, Page, PageSize } = req.query;
     const sequelize = await dbConection();
 
     try {
@@ -125,6 +125,11 @@ export const transactionList = async (req, res) => {
             query += " AND SubCateName = :SubCateName";
             countQuery += " AND SubCateName = :SubCateName";
             replacements.SubCateName = SubCateName;
+        }
+        if (DealerCguid) {
+            query += " AND tm.DealerCguid = :DealerCguid";
+            countQuery += " AND DealerCguid = :DealerCguid";
+            replacements.DealerCguid = DealerCguid;
         }
         if (CategoryId) {
             query += " AND CategoryId LIKE :CategoryId";
@@ -212,7 +217,7 @@ export const transactionListById = async (req, res) => {
     } finally {
         await sequelize.close();
     }
-};
+}
 
 export const commissionList = async (req, res) => {
     const { CommissionUkeyId, TransactionUkeyId, ProductCguid, DealerCguid, Status, Page, PageSize } = req.query;
