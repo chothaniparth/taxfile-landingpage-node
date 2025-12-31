@@ -54,6 +54,8 @@ export const createDealerSchema = Joi.object({
   IpAddress: Joi.string().max(200).allow(null, "").optional(),
   EntryDate: Joi.date().allow(null, "").optional(),
   UserName: Joi.string().max(100).allow(null, "").optional(),
+  Dealerlevelcguid : Joi.string().max(100).allow(null, "").optional(),
+  ParentDealerCguid : Joi.string().max(100).allow(null, "").optional(),
   flag: Joi.string()
     .valid("A", "U")
     .required()
