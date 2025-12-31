@@ -11,7 +11,7 @@ export const createDealer = async (req, res) => {
     IsActive = null, MobileNo2 = null, MobileNo3 = null, IsLocalDealer = null, IsST = null, FirmID = null, 
     dTerms1 = null, dTerms2 = null, dTerms3 = null, BillingFirmID = null, opening = null, IsPrint = null, 
     IsIncludeST = null, GSTNo = null, BankId = null, CompanyEmail = null, Password = null, Flag = null, 
-    UserName = req.user?.UserName || "System", Dealerlevelcguid = "", ParentDealerCguid = "" ,flag = "A"
+    UserName = req.user?.UserName || "System", Dealerlevelcguid = "", ParentDealerCguid = "", flag = "A"
   } = req.body;
 
   const sequelize = await dbConection();
@@ -30,8 +30,7 @@ export const createDealer = async (req, res) => {
       INSERT INTO Dealer
       (DealerCguid, CityID, DesignationID, rCityID, DealerPartyID, DOB, DOJ, DOA, BlackListed, DealerName, Address1, Address2, Address3, Address4, MobileNo, rAddress3, rAddress4, rMobileNo, rPhoneNo, rFaxNo, PhoneNo, FirmName, FaxNo, Email, rAddress1, rAddress2, CustomerID, DealerFileCode, AcName, BankName, AcNo, IsActive, MobileNo2, MobileNo3, IsLocalDealer, IsST, FirmID, dTerms1, dTerms2, dTerms3, BillingFirmID, opening, IsPrint, IsIncludeST, GSTNo, BankId, CompanyEmail, Password, Flag, IpAddress, EntryDate, UserName, Dealerlevelcguid, ParentDealerCguid)
       VALUES
-      (:DealerCguid, :CityID, :DesignationID, :rCityID, :DealerPartyID, :DOB, :DOJ, :DOA, :BlackListed, :DealerName, :Address1, :Address2, :Address3, :Address4, :MobileNo, :rAddress3, :rAddress4, :rMobileNo, :rPhoneNo, :rFaxNo, :PhoneNo, :FirmName, :FaxNo, :Email, :rAddress1, :rAddress2, :CustomerID, :DealerFileCode, :AcName, :BankName, :AcNo, :IsActive, :MobileNo2, :MobileNo3, :IsLocalDealer, :IsST, :FirmID, :dTerms1, :dTerms2, :dTerms3, :BillingFirmID, :opening, :IsPrint, :IsIncludeST, :GSTNo, :BankId, :CompanyEmail, :Password, :Flag, :IpAddress, GETDATE(), :UserName,
-      :Dealerlevelcguid :ParentDealerCguid);
+      (:DealerCguid, :CityID, :DesignationID, :rCityID, :DealerPartyID, :DOB, :DOJ, :DOA, :BlackListed, :DealerName, :Address1, :Address2, :Address3, :Address4, :MobileNo, :rAddress3, :rAddress4, :rMobileNo, :rPhoneNo, :rFaxNo, :PhoneNo, :FirmName, :FaxNo, :Email, :rAddress1, :rAddress2, :CustomerID, :DealerFileCode, :AcName, :BankName, :AcNo, :IsActive, :MobileNo2, :MobileNo3, :IsLocalDealer, :IsST, :FirmID, :dTerms1, :dTerms2, :dTerms3, :BillingFirmID, :opening, :IsPrint, :IsIncludeST, :GSTNo, :BankId, :CompanyEmail, :Password, :Flag, :IpAddress, GETDATE(), :UserName, :Dealerlevelcguid, :ParentDealerCguid);
     `;
 
     await sequelize.query(query, {
