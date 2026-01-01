@@ -42,13 +42,19 @@ export const payoutrunList = async (req, res) => {
 }
 
 export const payoutlineList = async (req, res) => {
-    const { Page, PageSize } = req.query;
+    const { DealerCguid, Page, PageSize } = req.query;
     const sequelize = await dbConection()
     
     try {
         let query = `select pl.*, dl.DealerName from PayoutLine pl left join Dealer dl on pl.DealerCguid = dl.DealerCguid WHERE 1=1`;
         let countQuery = `SELECT COUNT(*) as totalCount FROM PayoutLine pl WHERE 1=1`;
         const replacements = {};
+
+        if (DealerCguid) {
+            query += " AND pl.DealerCguid = :DealerCguid";
+            countQuery += " AND DealerCguid = :DealerCguid";
+            replacements.DealerCguid = DealerCguid;
+        }
 
         // Always order by EntryDate DESC
         query += " ORDER BY pl.PayoutLineID asc";
