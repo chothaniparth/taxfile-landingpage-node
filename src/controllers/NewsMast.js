@@ -3,7 +3,7 @@ import { dbConection } from "../config/db.js";
 // CREATE / UPDATE News
 export const createNews = async (req, res) => {
   const {
-    UkeyId, Title = "", Descrption = "", NewsDate = null, IsActive = true, IsDeleted = false, UserName = req.user?.UserName, flag = "A", Type = "",
+    UkeyId, Title = "", Descrption = "", NewsDate = null, IsActive = true, IsDeleted = false, UserName = req.user?.UserName, flag = "A", Type = "", NewsCatUkeyId = '',
   } = req.body;
 
   const sequelize = await dbConection();
@@ -21,13 +21,13 @@ export const createNews = async (req, res) => {
 
     query += `
       INSERT INTO NewsMast
-        (UkeyId, Title, Descrption, NewsDate, IsActive, IsDeleted, IpAddress, EntryDate, UserName, flag, Type)
+        (UkeyId, Title, Descrption, NewsDate, IsActive, IsDeleted, IpAddress, EntryDate, UserName, flag, Type, NewsCatUkeyId)
       VALUES
-        (:UkeyId, :Title, :Descrption, :NewsDate, :IsActive, :IsDeleted, :IpAddress, GETDATE(), :UserName, :flag, :Type);
+        (:UkeyId, :Title, :Descrption, :NewsDate, :IsActive, :IsDeleted, :IpAddress, GETDATE(), :UserName, :flag, :Type, :NewsCatUkeyId);
     `;
 
     await sequelize.query(query, {
-      replacements: { Title, Descrption, NewsDate, IsActive, IsDeleted, IpAddress, UserName, flag, UkeyId, Type },
+      replacements: { Title, Descrption, NewsDate, IsActive, IsDeleted, IpAddress, UserName, flag, UkeyId, Type, NewsCatUkeyId },
     });
 
     res.status(200).json({
@@ -43,7 +43,7 @@ export const createNews = async (req, res) => {
 
 // GET News (with optional filters and pagination)
 export const getNews = async (req, res) => {
-  const { UkeyId, Title, IsActive, IsDeleted, Page, PageSize, Type } = req.query;
+  const { UkeyId, Title, IsActive, IsDeleted, Page, PageSize, Type, NewsCatUkeyId } = req.query;
   const sequelize = await dbConection();
 
   try {
@@ -75,6 +75,11 @@ export const getNews = async (req, res) => {
       query += " AND IsDeleted = :IsDeleted";
       countQuery += " AND IsDeleted = :IsDeleted";
       replacements.IsDeleted = IsDeleted;
+    }
+    if (NewsCatUkeyId) {
+      query += " AND NewsCatUkeyId = :NewsCatUkeyId";
+      countQuery += " AND NewsCatUkeyId = :NewsCatUkeyId";
+      replacements.NewsCatUkeyId = NewsCatUkeyId;
     }
 
     // Always order by EntryDate DESC
