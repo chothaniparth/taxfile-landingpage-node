@@ -44,6 +44,7 @@ import TransactionRoutes from './transactionRoutes.js';
 import Payout from "./payout.js";
 import emailMast from "./emailRoutes.js"
 import {dashboardList} from '../controllers/dashboard.js';
+import blogCategory from '../routers/blogCategoryRouter.js'
 
 const router = express.Router();
 
@@ -92,6 +93,7 @@ router.use('/payout', Payout)
 router.use('/email', emailMast)
 router.get('/sendOTP/:MobileNumber', OTPController);
 router.get('/dashboard', dashboardList);
+router.use('/blogCategory', blogCategory);
 
 
 export default router;
