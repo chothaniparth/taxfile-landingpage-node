@@ -83,7 +83,7 @@ export const getNews = async (req, res) => {
     }
 
     // Always order by EntryDate DESC
-    query += " ORDER BY EntryDate DESC";
+    query += " ORDER BY NewsDate DESC";
 
     // Apply pagination if provided
     const pageNum = parseInt(Page, 10);
