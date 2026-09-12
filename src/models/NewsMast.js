@@ -57,6 +57,10 @@ const News = sequelize.define(
       type: DataTypes.STRING(10),
       allowNull: true,
     },
+    NewsSeq: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
   },
   {
     tableName: "NewsMast",

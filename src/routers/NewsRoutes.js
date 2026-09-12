@@ -1,6 +1,6 @@
 import express from "express";
 import {
-    createNews, getNews, deleteNews, updateCategoryStatus
+    createNews, getNews, deleteNews, updateCategoryStatus, getNewsPrivate
 } from "../controllers/NewsMast.js";
 import { validate } from "../middlewares/validate.js";
 import { authenticateJWT } from "../middlewares/authMiddleware.js";
@@ -14,6 +14,7 @@ const router = express.Router();
 router.get("/newsList", getNews);
 
 // Protected routes
+router.get("/getNewsPrivate", authenticateJWT, getNewsPrivate);
 router.post("/addUpdateNews", authenticateJWT, validate(createNewsSchema), createNews);
 router.put("/updateCategoryStatus", authenticateJWT, updateCategoryStatus);
 router.delete("/deleteNews/:UkeyId", authenticateJWT, validate(deleteNewsSchema), deleteNews);
