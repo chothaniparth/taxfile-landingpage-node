@@ -17,7 +17,8 @@ export const createNewsSchema = Joi.object({
       "any.required": "flag is required",
     }),
   Type: Joi.string().allow(null, "").optional(),
-  NewsCatUkeyId: Joi.string().max(200).allow(null, "").optional()
+  NewsCatUkeyId: Joi.string().max(200).allow(null, "").optional(),
+  NewsSeq: Joi.number().max(200).allow(null, 0).optional()
 });
 
 // DELETE NewsMast

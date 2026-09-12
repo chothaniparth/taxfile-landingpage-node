@@ -31,11 +31,11 @@ export const createNews = async (req, res) => {
     });
 
     res.status(200).json({
-      message: flag === "A" ? "News created successfully" : "News updated successfully", Success : true
+      message: flag === "A" ? "News created successfully" : "News updated successfully", Success: true
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message, Success : false });
+    res.status(500).json({ error: err.message, Success: false });
   } finally {
     await sequelize.close();
   }
@@ -65,11 +65,11 @@ export const updateCategoryStatus = async (req, res) => {
     });
 
     res.status(200).json({
-      message: "Category status updated successfully", Success : true
+      message: "Category status updated successfully", Success: true
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message, Success : false });
+    res.status(500).json({ error: err.message, Success: false });
   } finally {
     await sequelize.close();
   }
@@ -133,7 +133,7 @@ export const getNews = async (req, res) => {
     }
 
     const [results] = await sequelize.query(query, { replacements });
-    res.status(200).json({data : results, totalCount: CountResult.length});
+    res.status(200).json({ data: results, totalCount: CountResult.length });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });
@@ -200,7 +200,7 @@ export const getNewsPrivate = async (req, res) => {
     }
 
     const [results] = await sequelize.query(query, { replacements });
-    res.status(200).json({data : results, totalCount: CountResult.length});
+    res.status(200).json({ data: results, totalCount: CountResult.length });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Database error" });
@@ -222,10 +222,10 @@ export const deleteNews = async (req, res) => {
       return res.status(404).json({ error: "News record not found" });
     }
 
-    res.status(200).json({ message: "News deleted successfully", Success : true });
+    res.status(200).json({ message: "News deleted successfully", Success: true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message, Success : false });
+    res.status(500).json({ error: err.message, Success: false });
   } finally {
     await sequelize.close();
   }
